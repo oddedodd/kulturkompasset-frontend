@@ -39,3 +39,12 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Ignore all environment variable files
+.env
+.env.*
+.env.local
+.env.development
+.env.production
+.env.test
+.env.example
