@@ -5,6 +5,7 @@
 import Link from "next/link";
 import { useEffect, useRef } from "react";
 import { navItems } from "./navItems";
+import { MenuButton } from "./MenuButton";
 
 type MenuOverlayProps = {
   isOpen: boolean;
@@ -56,45 +57,56 @@ export function MenuOverlay({ isOpen, onClose }: MenuOverlayProps) {
       <div className="absolute inset-0 bg-white" onClick={onClose} />
 
       {/* Innhold */}
-      <div className="relative mx-auto flex h-full max-w-md flex-col items-center justify-center px-6 text-center">
-        <nav aria-label="Hovedmeny" className="w-full">
-          <ul className="flex flex-col items-center gap-7">
-            {navItems.map((item, idx) => (
-              <li key={item.href} className="w-full">
-                <Link
-                  href={item.href}
-                  ref={idx === 0 ? firstLinkRef : undefined}
-                  onClick={onClose}
-                  className="group inline-flex w-full items-center justify-center gap-3 text-2xl tracking-wide outline-none focus:ring-2 focus:ring-black/30"
-                >
-                  {/* Bullet for featured (Backstage i skissa) */}
-                  {item.featured ? (
-                    <span aria-hidden className="text-xl leading-none">
-                      •
-                    </span>
-                  ) : (
-                    <span aria-hidden className="w-[1ch]" />
-                  )}
+      {/* Ytre container matcher headerens bredde/padding så X-knappen havner samme sted */}
+      <div className="relative mx-auto flex h-full max-w-7xl flex-col px-4 text-center">
+        {/* Lukk-knapp øverst til høyre (samme layout som i headeren) */}
+        <div className="flex items-center justify-end py-4">
+          <MenuButton isOpen={isOpen} onToggle={onClose} />
+        </div>
 
-                  <span className="relative">
-                    {item.label}
-                    {/* Understrek */}
-                    <span className="absolute left-0 right-0 top-[110%] mx-auto block h-px w-[110%] bg-black/40 transition-opacity group-hover:opacity-70" />
-                  </span>
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </nav>
+        {/* Selve menyen sentrert i en smalere kolonne */}
+        <div className="flex flex-1 flex-col items-center justify-center">
+          <div className="w-full max-w-md">
+            <nav aria-label="Hovedmeny" className="w-full">
+              <ul className="flex flex-col items-center gap-7">
+                {navItems.map((item, idx) => (
+                  <li key={item.href} className="w-full">
+                    <Link
+                      href={item.href}
+                      ref={idx === 0 ? firstLinkRef : undefined}
+                      onClick={onClose}
+                      className="group inline-flex w-full items-center justify-center gap-3 text-2xl tracking-wide outline-none focus:ring-2 focus:ring-black/30"
+                    >
+                      {/* Bullet for featured (Backstage i skissa) */}
+                      {item.featured ? (
+                        <span aria-hidden className="text-xl leading-none">
+                          •
+                        </span>
+                      ) : (
+                        <span aria-hidden className="w-[1ch]" />
+                      )}
 
-        {/* Lite hint nederst (valgfritt) */}
-        <button
-          type="button"
-          onClick={onClose}
-          className="mt-12 text-sm text-black/60 underline underline-offset-4 hover:text-black"
-        >
-          Lukk
-        </button>
+                      <span className="relative">
+                        {item.label}
+                        {/* Understrek */}
+                        <span className="absolute left-0 right-0 top-[110%] mx-auto block h-px w-[110%] bg-black/40 transition-opacity group-hover:opacity-70" />
+                      </span>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+
+            {/* Lite hint nederst (valgfritt) */}
+            <button
+              type="button"
+              onClick={onClose}
+              className="mt-12 text-sm text-black/60 underline underline-offset-4 hover:text-black"
+            >
+              Lukk
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   );
