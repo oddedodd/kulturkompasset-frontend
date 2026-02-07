@@ -20,6 +20,11 @@ const sectionToPath: Record<string, string> = {
   "om-kulturkompasset": "/om",
 };
 
+const homeNavItem: NavItem = {
+  label: "Hjem",
+  href: "/",
+};
+
 function mapToNavItem(item: SanityMenuItem): NavItem | null {
   if (!item.label || !item.section) return null;
 
@@ -38,8 +43,13 @@ export async function getMainNavigation(): Promise<NavItem[]> {
         ?.map(mapToNavItem)
         .filter((item): item is NavItem => item !== null) ?? [];
 
-    return menuItems.length > 0 ? menuItems : defaultNavItems;
+    const baseItems = menuItems.length > 0 ? menuItems : defaultNavItems;
+    return baseItems.some((item) => item.href === "/")
+      ? baseItems
+      : [homeNavItem, ...baseItems];
   } catch {
-    return defaultNavItems;
+    return defaultNavItems.some((item) => item.href === "/")
+      ? defaultNavItems
+      : [homeNavItem, ...defaultNavItems];
   }
 }

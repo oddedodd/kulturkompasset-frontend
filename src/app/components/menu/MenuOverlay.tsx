@@ -3,6 +3,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useEffect, useRef } from "react";
 import type { NavItem } from "../../lib/types";
 import { MenuButton } from "./MenuButton";
@@ -15,6 +16,12 @@ type MenuOverlayProps = {
 
 export function MenuOverlay({ isOpen, onClose, navItems }: MenuOverlayProps) {
   const firstLinkRef = useRef<HTMLAnchorElement | null>(null);
+  const pathname = usePathname();
+
+  const isActivePath = (href: string) => {
+    if (href === "/") return pathname === "/";
+    return pathname === href || pathname?.startsWith(`${href}/`);
+  };
 
   // ESC for å lukke
   useEffect(() => {
@@ -61,7 +68,15 @@ export function MenuOverlay({ isOpen, onClose, navItems }: MenuOverlayProps) {
       {/* Ytre container matcher headerens bredde/padding så X-knappen havner samme sted */}
       <div className="relative mx-auto flex h-full max-w-7xl flex-col px-4 text-center">
         {/* Lukk-knapp øverst til høyre (samme layout som i headeren) */}
-        <div className="flex items-center justify-end py-4">
+        <div className="flex items-center justify-between py-4">
+          <Link
+            href="/"
+            onClick={onClose}
+            className="text-xl font-medium tracking-wide"
+            aria-label="Gå til forsiden"
+          >
+            KulturKompasset
+          </Link>
           <MenuButton isOpen={isOpen} onToggle={onClose} />
         </div>
 
@@ -72,21 +87,17 @@ export function MenuOverlay({ isOpen, onClose, navItems }: MenuOverlayProps) {
               <ul className="flex flex-col items-center gap-7">
                 {navItems.map((item, idx) => (
                   <li key={item.href} className="w-full">
+                    {/** Aktiv side markeres med fet tekst i stedet for border/ring */}
                     <Link
                       href={item.href}
                       ref={idx === 0 ? firstLinkRef : undefined}
                       onClick={onClose}
-                      className="group inline-flex w-full items-center justify-center gap-3 text-2xl tracking-wide outline-none focus:ring-2 focus:ring-black/30"
+                      className={[
+                        "group inline-flex w-full items-center justify-center text-2xl tracking-wide outline-none",
+                        "focus-visible:underline focus-visible:underline-offset-4",
+                        isActivePath(item.href) ? "font-semibold" : "font-normal",
+                      ].join(" ")}
                     >
-                      {/* Bullet for featured (Backstage i skissa) */}
-                      {item.featured ? (
-                        <span aria-hidden className="text-xl leading-none">
-                          •
-                        </span>
-                      ) : (
-                        <span aria-hidden className="w-[1ch]" />
-                      )}
-
                       <span className="relative">
                         {item.label}
                         {/* Understrek */}
