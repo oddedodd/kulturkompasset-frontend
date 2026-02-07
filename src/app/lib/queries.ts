@@ -14,3 +14,15 @@ export const latestNewsQuery = groq`
     }
   }
 `;
+
+export const mainNavigationQuery = groq`
+  *[
+    _type == "siteSettings" &&
+    (_id == "site-settings" || _id == "drafts.site-settings")
+  ][0]{
+    mainNavigation[]{
+      label,
+      section
+    }
+  }
+`;

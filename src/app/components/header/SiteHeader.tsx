@@ -3,10 +3,15 @@
 "use client";
 
 import { useState } from "react";
+import type { NavItem } from "../../lib/types";
 import { MenuButton } from "../menu/MenuButton";
 import { MenuOverlay } from "../menu/MenuOverlay";
 
-export function SiteHeader() {
+type SiteHeaderProps = {
+  navItems: NavItem[];
+};
+
+export function SiteHeader({ navItems }: SiteHeaderProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const toggle = () => setIsMenuOpen((v) => !v);
@@ -20,7 +25,7 @@ export function SiteHeader() {
         </div>
       </header>
 
-      <MenuOverlay isOpen={isMenuOpen} onClose={close} />
+      <MenuOverlay isOpen={isMenuOpen} onClose={close} navItems={navItems} />
     </>
   );
 }

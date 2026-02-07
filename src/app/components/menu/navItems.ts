@@ -1,12 +1,8 @@
-// Hardkodet navigasjonsmeny
+// Standard/fallback navigasjonsmeny
 
-export type NavItem = {
-  label: string;
-  href: string;
-  featured?: boolean; // brukes for f.eks. "Backstage" med bullet/markering
-};
+import type { NavItem } from "../../lib/types";
 
-export const navItems: NavItem[] = [
+export const defaultNavItems: NavItem[] = [
   { label: "Kalender", href: "/kalender" },
   { label: "Backstage", href: "/backstage", featured: true },
   { label: "Barn og familie", href: "/barn-og-familie" },

@@ -4,15 +4,16 @@
 
 import Link from "next/link";
 import { useEffect, useRef } from "react";
-import { navItems } from "./navItems";
+import type { NavItem } from "../../lib/types";
 import { MenuButton } from "./MenuButton";
 
 type MenuOverlayProps = {
   isOpen: boolean;
   onClose: () => void;
+  navItems: NavItem[];
 };
 
-export function MenuOverlay({ isOpen, onClose }: MenuOverlayProps) {
+export function MenuOverlay({ isOpen, onClose, navItems }: MenuOverlayProps) {
   const firstLinkRef = useRef<HTMLAnchorElement | null>(null);
 
   // ESC for å lukke
