@@ -2,6 +2,7 @@
 
 "use client";
 
+import Link from "next/link";
 import { useState } from "react";
 import type { NavItem } from "../../lib/types";
 import { MenuButton } from "../menu/MenuButton";
@@ -20,7 +21,14 @@ export function SiteHeader({ navItems }: SiteHeaderProps) {
   return (
     <>
       <header className="absolute left-0 right-0 top-0 z-40">
-        <div className="mx-auto flex max-w-7xl items-center justify-end px-4 py-4">
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4">
+          <Link
+            href="/"
+            className="text-xl font-medium tracking-wide"
+            aria-label="Gå til forsiden"
+          >
+            KulturKompasset
+          </Link>
           <MenuButton isOpen={isMenuOpen} onToggle={toggle} />
         </div>
       </header>

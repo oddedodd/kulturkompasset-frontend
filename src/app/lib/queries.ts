@@ -26,3 +26,20 @@ export const mainNavigationQuery = groq`
     }
   }
 `;
+
+export const featuredEventsQuery = groq`
+  *[
+    _type == "siteSettings" &&
+    _id == "site-settings"
+  ][0]{
+    featuredEvents[]->{
+      _id,
+      title,
+      startsAt,
+      "slug": slug.current,
+      "heroImageUrl": heroImage.asset->url,
+      "heroImageAlt": heroImage.alt,
+      "contributors": contributors[]->name
+    }
+  }
+`;
