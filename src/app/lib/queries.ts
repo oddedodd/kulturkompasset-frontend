@@ -43,3 +43,24 @@ export const featuredEventsQuery = groq`
     }
   }
 `;
+
+export const eventBySlugQuery = groq`
+  *[
+    _type == "event" &&
+    slug.current == $slug
+  ][0]{
+    _id,
+    title,
+    startsAt,
+    endsAt,
+    "slug": slug.current,
+    "heroImageUrl": heroImage.asset->url,
+    "heroImageAlt": heroImage.alt,
+    "contributors": contributors[]->name,
+    location,
+    ticketUrl,
+    ingress,
+    description,
+    body
+  }
+`;

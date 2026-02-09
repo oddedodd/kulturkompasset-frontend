@@ -1,3 +1,5 @@
+import type { PortableTextBlock } from "@portabletext/types";
+
 export type NavItem = {
   label: string;
   href: string;
@@ -12,4 +14,20 @@ export type FeaturedEvent = {
   heroImageUrl?: string;
   heroImageAlt?: string;
   contributors?: string[];
+};
+
+export type EventDetail = {
+  _id: string;
+  title: string;
+  startsAt?: string;
+  endsAt?: string;
+  slug?: string;
+  heroImageUrl?: string;
+  heroImageAlt?: string;
+  contributors?: string[];
+  location?: string;
+  ticketUrl?: string;
+  ingress?: string;
+  description?: string;
+  body?: PortableTextBlock[];
 };

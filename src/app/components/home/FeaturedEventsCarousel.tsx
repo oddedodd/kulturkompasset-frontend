@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { A11y, Autoplay, Pagination } from "swiper/modules";
 import "swiper/css";
@@ -50,35 +51,73 @@ export function FeaturedEventsCarousel({ events }: FeaturedEventsCarouselProps) 
       >
         {safeEvents.map((event) => (
           <SwiperSlide key={event._id}>
-            <article className="relative h-[420px] w-full overflow-hidden rounded-2xl">
-              {event.heroImageUrl ? (
-                <div
-                  className="absolute inset-0 bg-cover bg-center"
-                  style={{ backgroundImage: `url(${event.heroImageUrl})` }}
-                  aria-hidden
-                />
-              ) : (
-                <div className="absolute inset-0 bg-gray-300" aria-hidden />
-              )}
+            {event.slug ? (
+              <Link
+                href={`/event/${event.slug}`}
+                className="group block rounded-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black/60 focus-visible:ring-offset-2"
+                aria-label={`Gå til arrangement: ${event.title}`}
+              >
+                <article className="relative h-[420px] w-full overflow-hidden rounded-2xl">
+                  {event.heroImageUrl ? (
+                    <div
+                      className="absolute inset-0 bg-cover bg-center transition-transform duration-300 group-hover:scale-105"
+                      style={{ backgroundImage: `url(${event.heroImageUrl})` }}
+                      aria-hidden
+                    />
+                  ) : (
+                    <div className="absolute inset-0 bg-gray-300" aria-hidden />
+                  )}
 
-              <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/35 to-black/20" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/35 to-black/20" />
 
-              <div className="absolute bottom-0 left-0 right-0 p-6 text-white sm:p-8">
-                <p className="text-sm font-medium uppercase tracking-wide text-white/85">
-                  {event.startsAt
-                    ? dateFormatter.format(new Date(event.startsAt))
-                    : "Dato kommer"}
-                </p>
-                <h2 className="mt-2 text-3xl font-semibold leading-tight sm:text-4xl">
-                  {event.title}
-                </h2>
-                <p className="mt-3 text-base text-white/90">
-                  {event.contributors && event.contributors.length > 0
-                    ? event.contributors.join(", ")
-                    : "Medvirkende kommer"}
-                </p>
-              </div>
-            </article>
+                  <div className="absolute bottom-0 left-0 right-0 p-6 text-white sm:p-8">
+                    <p className="text-sm font-medium uppercase tracking-wide text-white/85">
+                      {event.startsAt
+                        ? dateFormatter.format(new Date(event.startsAt))
+                        : "Dato kommer"}
+                    </p>
+                    <h2 className="mt-2 text-3xl font-semibold leading-tight sm:text-4xl">
+                      {event.title}
+                    </h2>
+                    <p className="mt-3 text-base text-white/90">
+                      {event.contributors && event.contributors.length > 0
+                        ? event.contributors.join(", ")
+                        : "Medvirkende kommer"}
+                    </p>
+                  </div>
+                </article>
+              </Link>
+            ) : (
+              <article className="relative h-[420px] w-full overflow-hidden rounded-2xl">
+                {event.heroImageUrl ? (
+                  <div
+                    className="absolute inset-0 bg-cover bg-center"
+                    style={{ backgroundImage: `url(${event.heroImageUrl})` }}
+                    aria-hidden
+                  />
+                ) : (
+                  <div className="absolute inset-0 bg-gray-300" aria-hidden />
+                )}
+
+                <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/35 to-black/20" />
+
+                <div className="absolute bottom-0 left-0 right-0 p-6 text-white sm:p-8">
+                  <p className="text-sm font-medium uppercase tracking-wide text-white/85">
+                    {event.startsAt
+                      ? dateFormatter.format(new Date(event.startsAt))
+                      : "Dato kommer"}
+                  </p>
+                  <h2 className="mt-2 text-3xl font-semibold leading-tight sm:text-4xl">
+                    {event.title}
+                  </h2>
+                  <p className="mt-3 text-base text-white/90">
+                    {event.contributors && event.contributors.length > 0
+                      ? event.contributors.join(", ")
+                      : "Medvirkende kommer"}
+                  </p>
+                </div>
+              </article>
+            )}
           </SwiperSlide>
         ))}
       </Swiper>
