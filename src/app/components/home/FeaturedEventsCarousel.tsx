@@ -26,21 +26,24 @@ export function FeaturedEventsCarousel({ events }: FeaturedEventsCarouselProps) 
       typeof event.title === "string",
   );
 
+  const sectionHeader = (
+    <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+      <h2 className="whitespace-nowrap text-3xl font-semibold leading-tight tracking-tight sm:text-2xl">
+        Fremhevede arrangement
+      </h2>
+      <Link
+        href="/kalender"
+        className="inline-flex w-fit items-center gap-2 text-base font-medium text-black underline-offset-4 hover:underline sm:text-sm"
+      >
+        Alle arrangementer <span aria-hidden>→</span>
+      </Link>
+    </div>
+  );
+
   if (safeEvents.length === 0) {
     return (
       <section className="mx-auto w-full max-w-6xl px-4 pt-8">
-        <div className="mb-4 grid grid-cols-[1fr_auto_1fr] items-center gap-3">
-          <span aria-hidden />
-          <h2 className="text-center text-2xl font-semibold tracking-tight">
-            Fremhevede arrangement
-          </h2>
-          <Link
-            href="/kalender"
-            className="justify-self-end text-sm font-medium text-black hover:underline hover:underline-offset-4"
-          >
-            Alle arrangementer <span aria-hidden>→</span>
-          </Link>
-        </div>
+        {sectionHeader}
         <div className="rounded-2xl bg-gray-100 px-6 py-16 text-center text-black/70">
           Ingen utvalgte arrangement publisert ennå.
         </div>
@@ -50,18 +53,7 @@ export function FeaturedEventsCarousel({ events }: FeaturedEventsCarouselProps) 
 
   return (
     <section className="mx-auto w-full max-w-6xl px-4 pt-8">
-      <div className="mb-4 grid grid-cols-[1fr_auto_1fr] items-center gap-3">
-        <span aria-hidden />
-        <h2 className="text-center text-2xl font-semibold tracking-tight">
-          Fremhevede arrangement
-        </h2>
-        <Link
-          href="/kalender"
-          className="justify-self-end text-sm font-medium text-black hover:underline hover:underline-offset-4"
-        >
-          Alle arrangementer <span aria-hidden>→</span>
-        </Link>
-      </div>
+      {sectionHeader}
       <Swiper
         modules={[Pagination, A11y, Autoplay]}
         slidesPerView={1}
