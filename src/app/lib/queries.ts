@@ -85,3 +85,47 @@ export const upcomingEventsQuery = groq`
     "categories": categories[]->title
   }
 `;
+
+export const upcomingEventsPaginatedQuery = groq`
+  *[
+    _type == "event" &&
+    status == "upcoming" &&
+    startsAt >= now() &&
+    ($venueName == "" || venue->name == $venueName) &&
+    ($dateStart == "" || startsAt >= $dateStart) &&
+    ($dateEnd == "" || startsAt < $dateEnd) &&
+    (
+      $searchPattern == "" ||
+      title match $searchPattern ||
+      venue->name match $searchPattern ||
+      count(contributors[]->name[@ match $searchPattern]) > 0 ||
+      count(categories[]->title[@ match $searchPattern]) > 0
+    )
+  ] | order(startsAt asc)[$offset...$end]{
+    _id,
+    title,
+    startsAt,
+    "slug": slug.current,
+    "heroImageUrl": heroImage.asset->url,
+    "heroImageAlt": heroImage.alt,
+    "venue": venue->{
+      name,
+      city
+    },
+    "contributors": contributors[]->name,
+    "categories": categories[]->title
+  }
+`;
+
+export const upcomingEventVenuesQuery = groq`
+  array::compact(
+    array::unique(
+      *[
+        _type == "event" &&
+        status == "upcoming" &&
+        startsAt >= now() &&
+        defined(venue->name)
+      ].venue->name
+    )
+  )
+`;

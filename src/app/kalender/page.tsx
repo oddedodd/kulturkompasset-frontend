@@ -1,13 +1,16 @@
 import type { Metadata } from "next";
-import EventCard from "../components/events/EventCard";
-import { getUpcomingEvents } from "../lib/events";
+import CalendarEventsGrid from "../components/events/CalendarEventsGrid";
+import { getUpcomingEventsPage, getUpcomingEventVenues } from "../lib/events";
 
 export const metadata: Metadata = {
   title: "Kalender",
 };
 
 export default async function KalenderPage() {
-  const events = await getUpcomingEvents();
+  const [events, venueOptions] = await Promise.all([
+    getUpcomingEventsPage({ offset: 0, limit: 9 }),
+    getUpcomingEventVenues(),
+  ]);
 
   return (
     <main className="min-h-screen bg-white px-4 py-20">
@@ -18,17 +21,7 @@ export default async function KalenderPage() {
         </p>
       </section>
 
-      {events.length === 0 ? (
-        <section className="mx-auto mt-8 w-full max-w-6xl rounded-2xl bg-gray-100 px-6 py-16 text-center text-black/70">
-          Ingen kommende arrangementer akkurat nå.
-        </section>
-      ) : (
-        <section className="mx-auto mt-8 grid w-full max-w-6xl grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
-          {events.map((event) => (
-            <EventCard key={event._id} event={event} />
-          ))}
-        </section>
-      )}
+      <CalendarEventsGrid initialEvents={events} venueOptions={venueOptions} pageSize={9} />
     </main>
   );
 }
