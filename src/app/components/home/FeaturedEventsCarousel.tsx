@@ -28,7 +28,19 @@ export function FeaturedEventsCarousel({ events }: FeaturedEventsCarouselProps) 
 
   if (safeEvents.length === 0) {
     return (
-      <section className="mx-auto w-full max-w-6xl px-4 pt-24">
+      <section className="mx-auto w-full max-w-6xl px-4 pt-8">
+        <div className="mb-4 grid grid-cols-[1fr_auto_1fr] items-center gap-3">
+          <span aria-hidden />
+          <h2 className="text-center text-2xl font-semibold tracking-tight">
+            Fremhevede arrangement
+          </h2>
+          <Link
+            href="/kalender"
+            className="justify-self-end text-sm font-medium text-black hover:underline hover:underline-offset-4"
+          >
+            Alle arrangementer <span aria-hidden>→</span>
+          </Link>
+        </div>
         <div className="rounded-2xl bg-gray-100 px-6 py-16 text-center text-black/70">
           Ingen utvalgte arrangement publisert ennå.
         </div>
@@ -37,7 +49,19 @@ export function FeaturedEventsCarousel({ events }: FeaturedEventsCarouselProps) 
   }
 
   return (
-    <section className="mx-auto w-full max-w-6xl px-4 pt-24">
+    <section className="mx-auto w-full max-w-6xl px-4 pt-8">
+      <div className="mb-4 grid grid-cols-[1fr_auto_1fr] items-center gap-3">
+        <span aria-hidden />
+        <h2 className="text-center text-2xl font-semibold tracking-tight">
+          Fremhevede arrangement
+        </h2>
+        <Link
+          href="/kalender"
+          className="justify-self-end text-sm font-medium text-black hover:underline hover:underline-offset-4"
+        >
+          Alle arrangementer <span aria-hidden>→</span>
+        </Link>
+      </div>
       <Swiper
         modules={[Pagination, A11y, Autoplay]}
         slidesPerView={1}

@@ -20,8 +20,8 @@ export function SiteHeader({ navItems }: SiteHeaderProps) {
 
   return (
     <>
-      <header className="absolute left-0 right-0 top-0 z-40">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4">
+      <header className="relative z-40">
+        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4">
           <Link
             href="/"
             className="text-xl font-medium tracking-wide"

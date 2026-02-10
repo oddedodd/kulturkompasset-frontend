@@ -64,3 +64,24 @@ export const eventBySlugQuery = groq`
     body
   }
 `;
+
+export const upcomingEventsQuery = groq`
+  *[
+    _type == "event" &&
+    status == "upcoming" &&
+    startsAt >= now()
+  ] | order(startsAt asc){
+    _id,
+    title,
+    startsAt,
+    "slug": slug.current,
+    "heroImageUrl": heroImage.asset->url,
+    "heroImageAlt": heroImage.alt,
+    "venue": venue->{
+      name,
+      city
+    },
+    "contributors": contributors[]->name,
+    "categories": categories[]->title
+  }
+`;
