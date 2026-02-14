@@ -54,9 +54,38 @@ export async function getUpcomingEventsPage({
   const safeLimit = Number.isFinite(limit) ? Math.max(1, Math.min(24, Math.floor(limit))) : 9;
   const safeVenueName = venueName.trim();
   const safeDateStart = toDateStartIso(date);
+  const safeSearch = normalizeText(search);
   const safeSearchPattern = toSearchPattern(search);
 
   try {
+    if (safeSearch) {
+      const events = await sanityClient
+        .withConfig({ useCdn: false, perspective: "published" })
+        .fetch<CalendarEvent[]>(upcomingEventsPaginatedQuery, {
+          offset: 0,
+          limit: 500,
+          venueName: safeVenueName,
+          dateStart: safeDateStart,
+          searchPattern: "",
+        });
+
+      const filtered = sanitizeEvents(events).filter((event) =>
+        normalizeText(
+          [
+            event.title,
+            event.venue?.name,
+            event.venue?.city,
+            ...(event.contributors ?? []),
+            ...(event.categories ?? []),
+          ]
+            .filter(Boolean)
+            .join(" "),
+        ).includes(safeSearch),
+      );
+
+      return filtered.slice(safeOffset, safeOffset + safeLimit);
+    }
+
     const events = await sanityClient
       .withConfig({ useCdn: false, perspective: "published" })
       .fetch<CalendarEvent[]>(upcomingEventsPaginatedQuery, {
@@ -108,7 +137,17 @@ function toDateStartIso(date: string): string {
 function toSearchPattern(search: string): string {
   const value = search.trim();
   if (!value) return "";
-  const sanitized = value.replace(/[*?]/g, "");
+  const sanitized = value
+    .replace(/[*?]/g, "")
+    .replace(/\s+/g, "*");
   if (!sanitized) return "";
   return `*${sanitized}*`;
+}
+
+function normalizeText(value: string): string {
+  return value
+    .normalize("NFKD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .trim();
 }

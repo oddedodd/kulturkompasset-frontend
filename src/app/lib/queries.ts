@@ -97,6 +97,7 @@ export const upcomingEventsPaginatedQuery = groq`
       $searchPattern == "" ||
       title match $searchPattern ||
       venue->name match $searchPattern ||
+      venue->city match $searchPattern ||
       count(contributors[]->name[@ match $searchPattern]) > 0 ||
       count(categories[]->title[@ match $searchPattern]) > 0
     )
