@@ -3,7 +3,16 @@ import Image from "next/image";
 export function Welcome() {
   return (
     <section className="mx-auto mt-6 flex h-[260px] max-h-[260px] max-w-5xl flex-col items-center justify-center px-6 py-6 text-center">
-      <h1 className="text-5xl font-light tracking-wide">Kulturkompasset.</h1>
+      <h1 className="w-full">
+        <Image
+          src="/logo01.svg"
+          alt="KulturKompasset"
+          width={1106}
+          height={145}
+          className="mx-auto h-auto w-full max-w-[760px]"
+          priority
+        />
+      </h1>
       <p className="mt-5 max-w-md text-sm text-black/60">
         Din veileder i kultur og fritid i Namdalen
       </p>

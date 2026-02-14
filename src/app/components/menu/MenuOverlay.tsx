@@ -2,6 +2,7 @@
 
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef } from "react";
@@ -68,14 +69,16 @@ export function MenuOverlay({ isOpen, onClose, navItems }: MenuOverlayProps) {
       {/* Ytre container matcher headerens bredde/padding så X-knappen havner samme sted */}
       <div className="relative mx-auto flex h-full max-w-7xl flex-col px-4 text-center">
         {/* Lukk-knapp øverst til høyre (samme layout som i headeren) */}
-        <div className="flex items-center justify-between py-4">
-          <Link
-            href="/"
-            onClick={onClose}
-            className="text-xl font-medium tracking-wide"
-            aria-label="Gå til forsiden"
-          >
-            KulturKompasset
+        <div className="flex h-16 items-center justify-between">
+          <Link href="/" onClick={onClose} className="flex items-center" aria-label="Gå til forsiden">
+            <Image
+              src="/logo01.svg"
+              alt="KulturKompasset"
+              width={1106}
+              height={145}
+              className="h-7 w-auto"
+              priority
+            />
           </Link>
           <MenuButton isOpen={isOpen} onToggle={onClose} />
         </div>
