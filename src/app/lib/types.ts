@@ -46,3 +46,25 @@ export type CalendarEvent = {
   contributors?: string[];
   categories?: string[];
 };
+
+export type BackstageArticleCard = {
+  _id: string;
+  title: string;
+  slug: string;
+  excerpt?: string;
+  publishedAt?: string;
+  heroImageUrl?: string;
+  heroImageAlt?: string;
+};
+
+export type BackstageArticleDetail = {
+  _id: string;
+  title: string;
+  slug: string;
+  subtitle?: string;
+  excerpt?: string;
+  publishedAt?: string;
+  heroImageUrl?: string;
+  heroImageAlt?: string;
+  body?: PortableTextBlock[];
+};

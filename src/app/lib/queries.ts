@@ -129,3 +129,37 @@ export const upcomingEventVenuesQuery = groq`
     )
   )
 `;
+
+export const latestBackstageArticlesQuery = groq`
+  *[
+    _type == "article" &&
+    contentType == "backstage" &&
+    defined(slug.current)
+  ] | order(coalesce(publishedAt, _createdAt) desc)[0...6]{
+    _id,
+    title,
+    "slug": slug.current,
+    excerpt,
+    publishedAt,
+    "heroImageUrl": heroImage.asset->url,
+    "heroImageAlt": heroImage.alt
+  }
+`;
+
+export const backstageArticleBySlugQuery = groq`
+  *[
+    _type == "article" &&
+    contentType == "backstage" &&
+    slug.current == $slug
+  ][0]{
+    _id,
+    title,
+    subtitle,
+    "slug": slug.current,
+    excerpt,
+    publishedAt,
+    "heroImageUrl": heroImage.asset->url,
+    "heroImageAlt": heroImage.alt,
+    body
+  }
+`;
