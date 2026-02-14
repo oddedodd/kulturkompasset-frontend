@@ -93,7 +93,6 @@ export const upcomingEventsPaginatedQuery = groq`
     startsAt >= now() &&
     ($venueName == "" || venue->name == $venueName) &&
     ($dateStart == "" || startsAt >= $dateStart) &&
-    ($dateEnd == "" || startsAt < $dateEnd) &&
     (
       $searchPattern == "" ||
       title match $searchPattern ||
@@ -101,7 +100,7 @@ export const upcomingEventsPaginatedQuery = groq`
       count(contributors[]->name[@ match $searchPattern]) > 0 ||
       count(categories[]->title[@ match $searchPattern]) > 0
     )
-  ] | order(startsAt asc)[$offset...$end]{
+  ] | order(startsAt asc, _id asc)[$offset...($offset + $limit)]{
     _id,
     title,
     startsAt,

@@ -52,27 +52,22 @@ export async function getUpcomingEventsPage({
 }: GetUpcomingEventsPageInput = {}): Promise<CalendarEvent[]> {
   const safeOffset = Number.isFinite(offset) ? Math.max(0, Math.floor(offset)) : 0;
   const safeLimit = Number.isFinite(limit) ? Math.max(1, Math.min(24, Math.floor(limit))) : 9;
+  const safeVenueName = venueName.trim();
+  const safeDateStart = toDateStartIso(date);
+  const safeSearchPattern = toSearchPattern(search);
 
   try {
     const events = await sanityClient
       .withConfig({ useCdn: false, perspective: "published" })
       .fetch<CalendarEvent[]>(upcomingEventsPaginatedQuery, {
-        offset: 0,
-        end: 500,
-        venueName: "",
-        dateStart: "",
-        dateEnd: "",
-        searchPattern: "",
+        offset: safeOffset,
+        limit: safeLimit,
+        venueName: safeVenueName,
+        dateStart: safeDateStart,
+        searchPattern: safeSearchPattern,
       });
 
-    const sanitized = sanitizeEvents(events);
-    const filtered = filterEvents(sanitized, {
-      venueName,
-      date,
-      search,
-    });
-
-    return filtered.slice(safeOffset, safeOffset + safeLimit);
+    return sanitizeEvents(events);
   } catch {
     return [];
   }
@@ -104,77 +99,16 @@ function sanitizeEvents(events: CalendarEvent[] = []): CalendarEvent[] {
   );
 }
 
-function filterEvents(
-  events: CalendarEvent[],
-  input: { venueName?: string; date?: string; search?: string },
-): CalendarEvent[] {
-  const venueFilter = input.venueName?.trim() ?? "";
-  const searchFilter = normalizeText(input.search ?? "");
-  const dateRange = toDayRange(input.date ?? "");
-
-  const filtered = events.filter((event) => {
-    if (venueFilter && (event.venue?.name ?? "") !== venueFilter) {
-      return false;
-    }
-
-    if (searchFilter) {
-      const haystack = normalizeText(
-        [
-          event.title,
-          event.venue?.name,
-          event.venue?.city,
-          ...(event.contributors ?? []),
-          ...(event.categories ?? []),
-        ]
-          .filter(Boolean)
-          .join(" "),
-      );
-
-      if (!haystack.includes(searchFilter)) {
-        return false;
-      }
-    }
-
-    return true;
-  });
-
-  if (!dateRange) {
-    return filtered;
-  }
-
-  const sameDay: CalendarEvent[] = [];
-  const afterDay: CalendarEvent[] = [];
-
-  for (const event of filtered) {
-    const startsAt = new Date(event.startsAt);
-    if (Number.isNaN(startsAt.getTime())) {
-      continue;
-    }
-    if (startsAt >= dateRange.start && startsAt < dateRange.end) {
-      sameDay.push(event);
-      continue;
-    }
-    if (startsAt >= dateRange.end) {
-      afterDay.push(event);
-    }
-  }
-
-  return [...sameDay, ...afterDay];
-}
-
-function toDayRange(date: string): { start: Date; end: Date } | null {
-  if (!date) return null;
+function toDateStartIso(date: string): string {
+  if (!date) return "";
   const start = new Date(`${date}T00:00:00`);
-  if (Number.isNaN(start.getTime())) return null;
-  const end = new Date(start);
-  end.setDate(end.getDate() + 1);
-  return { start, end };
+  return Number.isNaN(start.getTime()) ? "" : start.toISOString();
 }
 
-function normalizeText(value: string): string {
-  return value
-    .normalize("NFKD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .toLowerCase()
-    .trim();
+function toSearchPattern(search: string): string {
+  const value = search.trim();
+  if (!value) return "";
+  const sanitized = value.replace(/[*?]/g, "");
+  if (!sanitized) return "";
+  return `*${sanitized}*`;
 }
