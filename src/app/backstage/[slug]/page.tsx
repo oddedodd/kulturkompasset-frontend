@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { PageBuilderRenderer } from "../../components/article/PageBuilderRenderer";
+import { articlePortableTextComponents } from "../../components/article/portableTextComponents";
 import { getBackstageArticleBySlug } from "../../lib/articles";
 
 type BackstageArticlePageProps = {
@@ -40,6 +41,8 @@ export default async function BackstageArticlePage({ params }: BackstageArticleP
     notFound();
   }
 
+  const startsWithHeroBlock = article.pageBuilder?.[0]?._type === "heroBlock";
+
   return (
     <main className="min-h-screen bg-white px-6 py-16 sm:py-24">
       <article className="mx-auto max-w-4xl">
@@ -53,13 +56,18 @@ export default async function BackstageArticlePage({ params }: BackstageArticleP
           </p>
         ) : null}
 
-        <h1 className="mt-2 text-4xl font-semibold tracking-tight sm:text-5xl">{article.title}</h1>
-
-        {article.subtitle ? (
-          <p className="mt-3 text-xl leading-relaxed text-black/75">{article.subtitle}</p>
+        {!startsWithHeroBlock ? (
+          <>
+            <h1 className="mt-2 text-4xl font-semibold tracking-tight sm:text-5xl">
+              {article.title}
+            </h1>
+            {article.subtitle ? (
+              <p className="mt-3 text-xl leading-relaxed text-black/75">{article.subtitle}</p>
+            ) : null}
+          </>
         ) : null}
 
-        {article.heroImageUrl ? (
+        {!startsWithHeroBlock && article.heroImageUrl ? (
           <Image
             src={article.heroImageUrl}
             alt={article.heroImageAlt || article.title}
@@ -69,15 +77,11 @@ export default async function BackstageArticlePage({ params }: BackstageArticleP
           />
         ) : null}
 
-        {article.excerpt ? (
-          <p className="mt-8 text-lg leading-relaxed text-black/85">{article.excerpt}</p>
-        ) : null}
-
         {article.pageBuilder && article.pageBuilder.length > 0 ? (
           <PageBuilderRenderer blocks={article.pageBuilder} />
         ) : article.body && article.body.length > 0 ? (
           <section className="prose prose-neutral mt-10 max-w-none">
-            <PortableText value={article.body} />
+            <PortableText value={article.body} components={articlePortableTextComponents} />
           </section>
         ) : (
           <p className="mt-10 text-black/65">Artikkelinnhold kommer snart.</p>

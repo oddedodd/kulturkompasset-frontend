@@ -2,6 +2,7 @@ import { PortableText } from "@portabletext/react";
 import Image from "next/image";
 import type { ArticlePageBuilderBlock } from "@/app/lib/types";
 import { ArticleImageGallery } from "./ArticleImageGallery";
+import { articlePortableTextComponents } from "./portableTextComponents";
 
 type PageBuilderRendererProps = {
   blocks: ArticlePageBuilderBlock[];
@@ -64,7 +65,7 @@ export function PageBuilderRenderer({ blocks }: PageBuilderRendererProps) {
           case "textBlock":
             return block.content && block.content.length > 0 ? (
               <section key={key} className="prose prose-neutral max-w-none">
-                <PortableText value={block.content} />
+                <PortableText value={block.content} components={articlePortableTextComponents} />
               </section>
             ) : null;
 
@@ -116,7 +117,7 @@ export function PageBuilderRenderer({ blocks }: PageBuilderRendererProps) {
                 >
                   {block.content && block.content.length > 0 ? (
                     <div className="prose prose-neutral max-w-none">
-                      <PortableText value={block.content} />
+                      <PortableText value={block.content} components={articlePortableTextComponents} />
                     </div>
                   ) : null}
                 </div>
