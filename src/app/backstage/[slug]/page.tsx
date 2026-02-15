@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { PageBuilderRenderer } from "../../components/article/PageBuilderRenderer";
 import { getBackstageArticleBySlug } from "../../lib/articles";
 
 type BackstageArticlePageProps = {
@@ -72,7 +73,9 @@ export default async function BackstageArticlePage({ params }: BackstageArticleP
           <p className="mt-8 text-lg leading-relaxed text-black/85">{article.excerpt}</p>
         ) : null}
 
-        {article.body && article.body.length > 0 ? (
+        {article.pageBuilder && article.pageBuilder.length > 0 ? (
+          <PageBuilderRenderer blocks={article.pageBuilder} />
+        ) : article.body && article.body.length > 0 ? (
           <section className="prose prose-neutral mt-10 max-w-none">
             <PortableText value={article.body} />
           </section>

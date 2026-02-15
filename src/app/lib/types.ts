@@ -66,5 +66,74 @@ export type BackstageArticleDetail = {
   publishedAt?: string;
   heroImageUrl?: string;
   heroImageAlt?: string;
+  pageBuilder?: ArticlePageBuilderBlock[];
   body?: PortableTextBlock[];
 };
+
+type PageBuilderBlockBase = {
+  _key?: string;
+  _type: string;
+};
+
+export type ArticlePageBuilderBlock =
+  | (PageBuilderBlockBase & {
+      _type: "heroBlock";
+      heading?: string;
+      subheading?: string;
+      backgroundImageUrl?: string;
+      backgroundImageAlt?: string;
+      cta?: { label?: string; link?: string };
+    })
+  | (PageBuilderBlockBase & {
+      _type: "leadBlock";
+      lead?: string;
+    })
+  | (PageBuilderBlockBase & {
+      _type: "textBlock";
+      content?: PortableTextBlock[];
+    })
+  | (PageBuilderBlockBase & {
+      _type: "imageBlock";
+      imageUrl?: string;
+      imageAlt?: string;
+      caption?: string;
+    })
+  | (PageBuilderBlockBase & {
+      _type: "imageGalleryBlock";
+      title?: string;
+      images?: Array<{ _key?: string; url?: string; alt?: string; caption?: string }>;
+    })
+  | (PageBuilderBlockBase & {
+      _type: "imageTextLeftBlock" | "imageTextRightBlock";
+      imageUrl?: string;
+      imageAlt?: string;
+      content?: PortableTextBlock[];
+    })
+  | (PageBuilderBlockBase & {
+      _type: "videoBlock";
+      url?: string;
+      title?: string;
+      caption?: string;
+    })
+  | (PageBuilderBlockBase & {
+      _type: "embedBlock";
+      url?: string;
+      title?: string;
+      caption?: string;
+    })
+  | (PageBuilderBlockBase & {
+      _type: "blockquoteBlock";
+      quote?: string;
+      attribution?: string;
+      textColor?: "auto" | "light" | "dark" | "brand";
+      backgroundImageUrl?: string;
+      backgroundImageAlt?: string;
+    })
+  | (PageBuilderBlockBase & {
+      _type: "dividerBlock";
+    })
+  | (PageBuilderBlockBase & {
+      _type: "cta";
+      label?: string;
+      link?: string;
+    });

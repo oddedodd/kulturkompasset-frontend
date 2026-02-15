@@ -160,6 +160,43 @@ export const backstageArticleBySlugQuery = groq`
     publishedAt,
     "heroImageUrl": heroImage.asset->url,
     "heroImageAlt": heroImage.alt,
+    "pageBuilder": pageBuilder[]{
+      ...,
+      _type == "heroBlock" => {
+        ...,
+        "backgroundImageUrl": backgroundImage.asset->url,
+        "backgroundImageAlt": backgroundImage.alt
+      },
+      _type == "imageBlock" => {
+        ...,
+        "imageUrl": image.asset->url,
+        "imageAlt": image.alt
+      },
+      _type == "imageGalleryBlock" => {
+        ...,
+        "images": images[]{
+          ...,
+          "url": asset->url,
+          alt,
+          caption
+        }
+      },
+      _type == "imageTextLeftBlock" => {
+        ...,
+        "imageUrl": image.asset->url,
+        "imageAlt": image.alt
+      },
+      _type == "imageTextRightBlock" => {
+        ...,
+        "imageUrl": image.asset->url,
+        "imageAlt": image.alt
+      },
+      _type == "blockquoteBlock" => {
+        ...,
+        "backgroundImageUrl": backgroundImage.asset->url,
+        "backgroundImageAlt": backgroundImage.alt
+      }
+    },
     body
   }
 `;
