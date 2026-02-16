@@ -158,6 +158,12 @@ export const backstageArticleBySlugQuery = groq`
     "slug": slug.current,
     excerpt,
     publishedAt,
+    "authors": authors[]->{
+      _id,
+      name,
+      "imageUrl": image.asset->url,
+      "imageAlt": image.alt
+    },
     "heroImageUrl": heroImage.asset->url,
     "heroImageAlt": heroImage.alt,
     "pageBuilder": pageBuilder[]{

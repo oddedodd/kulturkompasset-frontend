@@ -69,7 +69,7 @@ export function ArticleImageGallery({ title, images = [] }: ArticleImageGalleryP
               alt={image.alt || "Galleriillustrasjon"}
               width={1200}
               height={900}
-              className="h-auto w-full cursor-pointer rounded-xl object-cover transition-transform duration-300 group-hover:scale-[1.01]"
+              className="h-auto w-full cursor-pointer object-cover transition-transform duration-300 group-hover:scale-[1.01]"
             />
           </button>
         ))}
@@ -130,7 +130,7 @@ export function ArticleImageGallery({ title, images = [] }: ArticleImageGalleryP
                 alt={activeImage.alt || "Galleriillustrasjon"}
                 width={1800}
                 height={1200}
-                className="mx-auto h-auto max-h-[75vh] w-auto rounded-xl object-contain"
+                className="mx-auto h-auto max-h-[75vh] w-auto object-contain"
                 priority
               />
               {activeImage.caption ? (

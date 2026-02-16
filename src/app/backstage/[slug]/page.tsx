@@ -42,6 +42,35 @@ export default async function BackstageArticlePage({ params }: BackstageArticleP
   }
 
   const startsWithHeroBlock = article.pageBuilder?.[0]?._type === "heroBlock";
+  const firstAuthor = article.authors?.find((author) => typeof author?.name === "string");
+  const remainingBlocks = startsWithHeroBlock ? (article.pageBuilder?.slice(1) ?? []) : (article.pageBuilder ?? []);
+
+  const ArticleMeta = (
+    <section className="mx-auto mt-8 flex max-w-3xl flex-col items-center text-center">
+      {article.publishedAt ? (
+        <p className="text-sm font-medium uppercase tracking-wide text-black/55">
+          {dateFormatter.format(new Date(article.publishedAt))}
+        </p>
+      ) : null}
+
+      {firstAuthor ? (
+        <div className="mt-4 flex items-center gap-3">
+          {firstAuthor.imageUrl ? (
+            <Image
+              src={firstAuthor.imageUrl}
+              alt={firstAuthor.imageAlt || firstAuthor.name || "Forfatter"}
+              width={48}
+              height={48}
+              className="h-12 w-12 rounded-full object-cover"
+            />
+          ) : (
+            <div className="h-12 w-12 rounded-full bg-black/10" aria-hidden />
+          )}
+          <p className="text-base font-medium text-black/75">{firstAuthor.name}</p>
+        </div>
+      ) : null}
+    </section>
+  );
 
   return (
     <main className="min-h-screen bg-white px-6 py-16 sm:py-24">
@@ -50,15 +79,9 @@ export default async function BackstageArticlePage({ params }: BackstageArticleP
           Tilbake til Backstage
         </Link>
 
-        {article.publishedAt ? (
-          <p className="mt-6 text-sm font-medium uppercase tracking-wide text-black/55">
-            {dateFormatter.format(new Date(article.publishedAt))}
-          </p>
-        ) : null}
-
         {!startsWithHeroBlock ? (
           <>
-            <h1 className="mt-2 text-4xl font-semibold tracking-tight sm:text-5xl">
+            <h1 className="mt-6 text-4xl font-semibold tracking-tight sm:text-5xl">
               {article.title}
             </h1>
             {article.subtitle ? (
@@ -77,8 +100,14 @@ export default async function BackstageArticlePage({ params }: BackstageArticleP
           />
         ) : null}
 
-        {article.pageBuilder && article.pageBuilder.length > 0 ? (
-          <PageBuilderRenderer blocks={article.pageBuilder} useHeroAsPageTitle={startsWithHeroBlock} />
+        {startsWithHeroBlock && article.pageBuilder && article.pageBuilder.length > 0 ? (
+          <PageBuilderRenderer blocks={article.pageBuilder.slice(0, 1)} useHeroAsPageTitle />
+        ) : null}
+
+        {ArticleMeta}
+
+        {remainingBlocks.length > 0 ? (
+          <PageBuilderRenderer blocks={remainingBlocks} />
         ) : article.body && article.body.length > 0 ? (
           <section className="prose prose-neutral mt-10 max-w-none">
             <PortableText value={article.body} components={articlePortableTextComponents} />

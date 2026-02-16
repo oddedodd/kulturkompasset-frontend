@@ -64,6 +64,12 @@ export type BackstageArticleDetail = {
   subtitle?: string;
   excerpt?: string;
   publishedAt?: string;
+  authors?: Array<{
+    _id?: string;
+    name?: string;
+    imageUrl?: string;
+    imageAlt?: string;
+  }>;
   heroImageUrl?: string;
   heroImageAlt?: string;
   pageBuilder?: ArticlePageBuilderBlock[];

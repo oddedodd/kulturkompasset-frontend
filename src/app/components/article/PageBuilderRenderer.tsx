@@ -87,7 +87,7 @@ export function PageBuilderRenderer({ blocks, useHeroAsPageTitle = false }: Page
                   alt={block.imageAlt || "Illustrasjon"}
                   width={1600}
                   height={1000}
-                  className="h-auto w-full rounded-2xl object-cover"
+                  className="h-auto w-full object-cover"
                 />
                 {block.caption ? (
                   <figcaption className="text-sm text-black/60">{block.caption}</figcaption>
@@ -116,7 +116,7 @@ export function PageBuilderRenderer({ blocks, useHeroAsPageTitle = false }: Page
                       alt={block.imageAlt || "Illustrasjon"}
                       width={1200}
                       height={900}
-                      className="h-auto w-full rounded-2xl object-cover"
+                      className="h-auto w-full object-cover"
                     />
                   ) : null}
                 </div>
@@ -139,7 +139,7 @@ export function PageBuilderRenderer({ blocks, useHeroAsPageTitle = false }: Page
               <section key={key} className="space-y-3">
                 {block.title ? <h3 className="text-xl font-semibold tracking-tight">{block.title}</h3> : null}
                 {toEmbedUrl(block.url) ? (
-                  <div className="aspect-video overflow-hidden rounded-2xl bg-black">
+                  <div className="aspect-video overflow-hidden bg-black">
                     <iframe
                       src={toEmbedUrl(block.url)!}
                       title={block.title || "Video"}
