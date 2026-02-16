@@ -73,12 +73,12 @@ export default async function BackstageArticlePage({ params }: BackstageArticleP
             alt={article.heroImageAlt || article.title}
             width={1600}
             height={900}
-            className="mt-8 h-auto w-full rounded-2xl object-cover"
+            className="mt-8 h-auto w-full object-cover"
           />
         ) : null}
 
         {article.pageBuilder && article.pageBuilder.length > 0 ? (
-          <PageBuilderRenderer blocks={article.pageBuilder} />
+          <PageBuilderRenderer blocks={article.pageBuilder} useHeroAsPageTitle={startsWithHeroBlock} />
         ) : article.body && article.body.length > 0 ? (
           <section className="prose prose-neutral mt-10 max-w-none">
             <PortableText value={article.body} components={articlePortableTextComponents} />

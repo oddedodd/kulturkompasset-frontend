@@ -6,9 +6,10 @@ import { articlePortableTextComponents } from "./portableTextComponents";
 
 type PageBuilderRendererProps = {
   blocks: ArticlePageBuilderBlock[];
+  useHeroAsPageTitle?: boolean;
 };
 
-export function PageBuilderRenderer({ blocks }: PageBuilderRendererProps) {
+export function PageBuilderRenderer({ blocks, useHeroAsPageTitle = false }: PageBuilderRendererProps) {
   return (
     <section className="mt-10 space-y-10">
       {blocks.map((block, index) => {
@@ -16,8 +17,40 @@ export function PageBuilderRenderer({ blocks }: PageBuilderRendererProps) {
 
         switch (block._type) {
           case "heroBlock":
+            const shouldUseH1 = useHeroAsPageTitle && index === 0;
             return (
-              <section key={key} className="relative overflow-hidden rounded-2xl">
+              <section key={key} className="space-y-6">
+                {(block.heading || block.subheading || (block.cta?.label && block.cta?.link)) ? (
+                  <div className="mx-auto max-w-3xl text-center">
+                    {block.heading ? (
+                      shouldUseH1 ? (
+                        <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">
+                          {block.heading}
+                        </h1>
+                      ) : (
+                        <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">
+                          {block.heading}
+                        </h2>
+                      )
+                    ) : null}
+                    {block.subheading ? (
+                      <p className="mt-3 text-sm leading-relaxed text-black/75 sm:text-base">
+                        {block.subheading}
+                      </p>
+                    ) : null}
+                    {block.cta?.label && block.cta?.link ? (
+                      <a
+                        href={block.cta.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="mt-5 inline-flex rounded-full bg-black px-5 py-2 text-sm font-medium text-white hover:bg-black/85"
+                      >
+                        {block.cta.label}
+                      </a>
+                    ) : null}
+                  </div>
+                ) : null}
+
                 {block.backgroundImageUrl ? (
                   <Image
                     src={block.backgroundImageUrl}
@@ -29,29 +62,6 @@ export function PageBuilderRenderer({ blocks }: PageBuilderRendererProps) {
                 ) : (
                   <div className="h-[260px] w-full bg-gray-200 sm:h-[320px]" />
                 )}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
-                <div className="absolute bottom-0 left-0 right-0 p-6 text-white sm:p-8">
-                  {block.heading ? (
-                    <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">
-                      {block.heading}
-                    </h2>
-                  ) : null}
-                  {block.subheading ? (
-                    <p className="mt-3 max-w-2xl text-sm leading-relaxed text-white/90 sm:text-base">
-                      {block.subheading}
-                    </p>
-                  ) : null}
-                  {block.cta?.label && block.cta?.link ? (
-                    <a
-                      href={block.cta.link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="mt-5 inline-flex rounded-full bg-white px-5 py-2 text-sm font-medium text-black hover:bg-white/90"
-                    >
-                      {block.cta.label}
-                    </a>
-                  ) : null}
-                </div>
               </section>
             );
 
@@ -157,19 +167,21 @@ export function PageBuilderRenderer({ blocks }: PageBuilderRendererProps) {
 
           case "blockquoteBlock":
             return (
-              <blockquote key={key} className="relative overflow-hidden rounded-2xl bg-black/5 p-8">
+              <blockquote key={key} className="relative overflow-hidden bg-black/5">
                 {block.backgroundImageUrl ? (
                   <Image
                     src={block.backgroundImageUrl}
                     alt={block.backgroundImageAlt || "Bakgrunn"}
-                    fill
-                    className="object-cover"
+                    width={1200}
+                    height={2000}
+                    className="block h-auto w-full"
                   />
                 ) : null}
+                {!block.backgroundImageUrl ? <div className="h-[420px] w-full bg-gray-200" /> : null}
                 {block.backgroundImageUrl ? <div className="absolute inset-0 bg-black/45" /> : null}
                 <div
                   className={[
-                    "relative",
+                    "absolute left-0 right-0 top-0 z-10 px-6 pb-8 pt-6 sm:px-7 sm:pt-7",
                     block.textColor === "light" ? "text-white" : "",
                     block.textColor === "dark" ? "text-black" : "",
                     block.textColor === "brand" ? "text-sky-700" : "",
@@ -180,14 +192,21 @@ export function PageBuilderRenderer({ blocks }: PageBuilderRendererProps) {
                       : "",
                   ].join(" ")}
                 >
-                  {block.quote ? (
-                    <p className="text-2xl font-medium leading-relaxed sm:text-3xl">"{block.quote}"</p>
-                  ) : null}
-                  {block.attribution ? (
-                    <footer className="mt-4 text-sm uppercase tracking-wide opacity-80">
-                      {block.attribution}
-                    </footer>
-                  ) : null}
+                  <div className="max-w-[340px]">
+                    {block.quote ? (
+                      <>
+                        <p className="mb-1 text-4xl font-semibold leading-none">“</p>
+                        <p className="text-[2.1rem] font-medium italic leading-tight sm:text-[2.4rem]">
+                          {block.quote}
+                        </p>
+                      </>
+                    ) : null}
+                    {block.attribution ? (
+                      <footer className="mt-3 text-base italic opacity-90">
+                        {block.attribution}
+                      </footer>
+                    ) : null}
+                  </div>
                 </div>
               </blockquote>
             );
