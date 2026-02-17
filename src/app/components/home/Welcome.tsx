@@ -2,7 +2,7 @@ import Image from "next/image";
 
 export function Welcome() {
   return (
-    <section className="mx-auto mt-6 flex h-[260px] max-h-[260px] max-w-5xl flex-col items-center justify-center px-6 py-6 text-center">
+    <section className="mx-auto mb-24 mt-24 flex h-[260px] max-h-[260px] max-w-5xl flex-col items-center justify-center px-6 py-6 text-center">
       <h1 className="w-full">
         <Image
           src="/logo01.svg"
@@ -13,7 +13,7 @@ export function Welcome() {
           priority
         />
       </h1>
-      <p className="mt-5 max-w-md text-sm text-black/60">
+      <p className="mt-11 max-w-lg text-xl text-black/60">
         Din veileder i kultur og fritid i Namdalen
       </p>
 
