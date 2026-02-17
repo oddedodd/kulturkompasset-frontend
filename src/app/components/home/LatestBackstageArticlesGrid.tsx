@@ -32,7 +32,7 @@ export function LatestBackstageArticlesGrid({ articles }: LatestBackstageArticle
         {articles.map((article) => (
           <article
             key={article._id}
-            className="relative aspect-[4/5] w-full overflow-hidden rounded-2xl md:aspect-[3/4]"
+            className="relative aspect-[4/5] w-full overflow-hidden md:aspect-[3/4]"
           >
             {article.heroImageUrl ? (
               <div

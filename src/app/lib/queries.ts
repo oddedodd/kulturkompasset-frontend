@@ -146,6 +146,28 @@ export const latestBackstageArticlesQuery = groq`
   }
 `;
 
+export const backstageArticlesPaginatedQuery = groq`
+  *[
+    _type == "article" &&
+    contentType == "backstage" &&
+    defined(slug.current) &&
+    (
+      $searchPattern == "" ||
+      title match $searchPattern ||
+      excerpt match $searchPattern ||
+      count(authors[]->name[@ match $searchPattern]) > 0
+    )
+  ] | order(coalesce(publishedAt, _createdAt) desc, _id asc)[$offset...($offset + $limit)]{
+    _id,
+    title,
+    "slug": slug.current,
+    excerpt,
+    publishedAt,
+    "heroImageUrl": heroImage.asset->url,
+    "heroImageAlt": heroImage.alt
+  }
+`;
+
 export const backstageArticleBySlugQuery = groq`
   *[
     _type == "article" &&
