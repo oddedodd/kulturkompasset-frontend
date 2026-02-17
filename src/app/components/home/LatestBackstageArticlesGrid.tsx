@@ -18,13 +18,15 @@ export function LatestBackstageArticlesGrid({ articles }: LatestBackstageArticle
 
   return (
     <section className="mx-auto mt-12 w-full max-w-6xl px-4 pb-16">
-      <div className="mb-6 flex items-end justify-between gap-4">
-        <h2 className="text-2xl font-semibold tracking-tight sm:text-3xl">Siste fra Backstage</h2>
+      <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+        <h2 className="whitespace-nowrap text-3xl font-semibold leading-tight tracking-tight sm:text-2xl">
+          Siste fra Backstage
+        </h2>
         <Link
           href="/backstage"
-          className="text-sm font-medium text-black/70 underline underline-offset-4 hover:text-black"
+          className="inline-flex w-fit items-center gap-2 text-base font-medium text-black underline-offset-4 hover:underline sm:text-sm"
         >
-          Se alle
+          Alle backstage <span aria-hidden>→</span>
         </Link>
       </div>
 

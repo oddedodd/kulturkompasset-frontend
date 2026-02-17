@@ -21,8 +21,8 @@ export function SiteHeader({ navItems }: SiteHeaderProps) {
 
   return (
     <>
-      <header className="relative z-40">
-        <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4">
+      <header className="relative z-40 px-4">
+        <div className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between">
           <Link href="/" className="flex items-center" aria-label="Gå til forsiden">
             <Image
               src="/logo01.svg"

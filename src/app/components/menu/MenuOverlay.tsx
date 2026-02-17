@@ -67,59 +67,61 @@ export function MenuOverlay({ isOpen, onClose, navItems }: MenuOverlayProps) {
 
       {/* Innhold */}
       {/* Ytre container matcher headerens bredde/padding så X-knappen havner samme sted */}
-      <div className="relative mx-auto flex h-full max-w-7xl flex-col px-4 text-center">
-        {/* Lukk-knapp øverst til høyre (samme layout som i headeren) */}
-        <div className="flex h-16 items-center justify-between">
-          <Link href="/" onClick={onClose} className="flex items-center" aria-label="Gå til forsiden">
-            <Image
-              src="/logo01.svg"
-              alt="KulturKompasset"
-              width={1106}
-              height={145}
-              className="h-7 w-auto"
-              priority
-            />
-          </Link>
-          <MenuButton isOpen={isOpen} onToggle={onClose} />
-        </div>
+      <div className="relative h-full px-4">
+        <div className="mx-auto flex h-full w-full max-w-6xl flex-col text-center">
+          {/* Lukk-knapp øverst til høyre (samme layout som i headeren) */}
+          <div className="flex h-16 items-center justify-between">
+            <Link href="/" onClick={onClose} className="flex items-center" aria-label="Gå til forsiden">
+              <Image
+                src="/logo01.svg"
+                alt="KulturKompasset"
+                width={1106}
+                height={145}
+                className="h-7 w-auto"
+                priority
+              />
+            </Link>
+            <MenuButton isOpen={isOpen} onToggle={onClose} />
+          </div>
 
-        {/* Selve menyen sentrert i en smalere kolonne */}
-        <div className="flex flex-1 flex-col items-center justify-center">
-          <div className="w-full max-w-md">
-            <nav aria-label="Hovedmeny" className="w-full">
-              <ul className="flex flex-col items-center gap-7">
-                {navItems.map((item, idx) => (
-                  <li key={item.href} className="w-full">
-                    {/** Aktiv side markeres med fet tekst i stedet for border/ring */}
-                    <Link
-                      href={item.href}
-                      ref={idx === 0 ? firstLinkRef : undefined}
-                      onClick={onClose}
-                      className={[
-                        "group inline-flex w-full items-center justify-center text-2xl tracking-wide outline-none",
-                        "focus-visible:underline focus-visible:underline-offset-4",
-                        isActivePath(item.href) ? "font-semibold" : "font-normal",
-                      ].join(" ")}
-                    >
-                      <span className="relative">
-                        {item.label}
-                        {/* Understrek */}
-                        <span className="absolute left-0 right-0 top-[110%] mx-auto block h-px w-[110%] bg-black/40 transition-opacity group-hover:opacity-70" />
-                      </span>
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </nav>
+          {/* Selve menyen sentrert i en smalere kolonne */}
+          <div className="flex flex-1 flex-col items-center justify-center">
+            <div className="w-full max-w-md">
+              <nav aria-label="Hovedmeny" className="w-full">
+                <ul className="flex flex-col items-center gap-7">
+                  {navItems.map((item, idx) => (
+                    <li key={item.href} className="w-full">
+                      {/** Aktiv side markeres med fet tekst i stedet for border/ring */}
+                      <Link
+                        href={item.href}
+                        ref={idx === 0 ? firstLinkRef : undefined}
+                        onClick={onClose}
+                        className={[
+                          "group inline-flex w-full items-center justify-center text-2xl tracking-wide outline-none",
+                          "focus-visible:underline focus-visible:underline-offset-4",
+                          isActivePath(item.href) ? "font-semibold" : "font-normal",
+                        ].join(" ")}
+                      >
+                        <span className="relative">
+                          {item.label}
+                          {/* Understrek */}
+                          <span className="absolute left-0 right-0 top-[110%] mx-auto block h-px w-[110%] bg-black/40 transition-opacity group-hover:opacity-70" />
+                        </span>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </nav>
 
-            {/* Lite hint nederst (valgfritt) */}
-            <button
-              type="button"
-              onClick={onClose}
-              className="mt-12 text-sm text-black/60 underline underline-offset-4 hover:text-black"
-            >
-              Lukk
-            </button>
+              {/* Lite hint nederst (valgfritt) */}
+              <button
+                type="button"
+                onClick={onClose}
+                className="mt-12 text-sm text-black/60 underline underline-offset-4 hover:text-black"
+              >
+                Lukk
+              </button>
+            </div>
           </div>
         </div>
       </div>
