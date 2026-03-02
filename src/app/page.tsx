@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import { FeaturedEventsCarousel } from "./components/home/FeaturedEventsCarousel";
 import { LatestBackstageArticlesGrid } from "./components/home/LatestBackstageArticlesGrid";
+import { UpcomingEventsCarousel } from "./components/home/UpcomingEventsCarousel";
 import { Welcome } from "./components/home/Welcome";
 import { getLatestBackstageArticles } from "./lib/articles";
+import { getUpcomingEventsPage } from "./lib/events";
 import { getHomepageFeaturedEvents } from "./lib/featured-events";
 
 export const metadata: Metadata = {
@@ -10,9 +12,10 @@ export const metadata: Metadata = {
 };
 
 export default async function Home() {
-  const [featuredEvents, backstageArticles] = await Promise.all([
+  const [featuredEvents, backstageArticles, upcomingEvents] = await Promise.all([
     getHomepageFeaturedEvents(),
     getLatestBackstageArticles(),
+    getUpcomingEventsPage({ offset: 0, limit: 12 }),
   ]);
 
   return (
@@ -20,6 +23,7 @@ export default async function Home() {
       <Welcome />
       <FeaturedEventsCarousel events={featuredEvents} />
       <LatestBackstageArticlesGrid articles={backstageArticles} />
+      <UpcomingEventsCarousel events={upcomingEvents} />
     </main>
   );
 }
