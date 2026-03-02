@@ -101,7 +101,7 @@ export const upcomingEventsPaginatedQuery = groq`
       count(contributors[]->name[@ match $searchPattern]) > 0 ||
       count(categories[]->title[@ match $searchPattern]) > 0
     )
-  ] | order(startsAt asc, _id asc)[$offset...($offset + $limit)]{
+  ] | order(startsAt asc, _id asc)[$offset...$end]{
     _id,
     title,
     startsAt,

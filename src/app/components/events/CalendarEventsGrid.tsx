@@ -16,9 +16,6 @@ export default function CalendarEventsGrid({
   pageSize = 9,
 }: CalendarEventsGridProps) {
   const [events, setEvents] = useState<CalendarEvent[]>(initialEvents);
-  const [visibleIds, setVisibleIds] = useState<Set<string>>(
-    () => new Set(initialEvents.map((event) => event._id)),
-  );
   const [searchInput, setSearchInput] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const [selectedVenue, setSelectedVenue] = useState("");
@@ -26,9 +23,9 @@ export default function CalendarEventsGrid({
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [hasMore, setHasMore] = useState(initialEvents.length >= pageSize);
+  const [nextOffset, setNextOffset] = useState(initialEvents.length);
   const [error, setError] = useState<string | null>(null);
   const hasInitializedFilters = useRef(false);
-  const requestIdRef = useRef(0);
   const sentinelRef = useRef<HTMLDivElement | null>(null);
 
   const hasActiveFilters = Boolean(debouncedSearch || selectedVenue || selectedDate);
@@ -50,8 +47,7 @@ export default function CalendarEventsGrid({
   }, [searchInput]);
 
   const fetchPage = useCallback(
-    async ({ offset, append }: { offset: number; append: boolean }) => {
-      const requestId = ++requestIdRef.current;
+    async (offset: number): Promise<CalendarEvent[]> => {
       const params = new URLSearchParams({
         offset: String(offset),
         limit: String(pageSize),
@@ -60,70 +56,62 @@ export default function CalendarEventsGrid({
       if (filterParams.venue) params.set("venue", filterParams.venue);
       if (filterParams.date) params.set("date", filterParams.date);
 
-      try {
-        const response = await fetch(`/api/events?${params.toString()}`, {
-          cache: "no-store",
-        });
-        if (!response.ok) throw new Error("Unable to fetch events");
-        const payload = (await response.json()) as { events?: CalendarEvent[] };
-        const nextEvents = Array.isArray(payload.events) ? payload.events : [];
-        if (requestId !== requestIdRef.current) return;
-
-        if (append) {
-          let appendedIds: string[] = [];
-          setEvents((current) => {
-            const currentIds = new Set(current.map((event) => event._id));
-            const uniqueEvents = nextEvents.filter((event) => !currentIds.has(event._id));
-            appendedIds = uniqueEvents.map((event) => event._id);
-            return [...current, ...uniqueEvents];
-          });
-          if (appendedIds.length > 0) {
-            requestAnimationFrame(() => {
-              setVisibleIds((current) => {
-                const updated = new Set(current);
-                appendedIds.forEach((id) => updated.add(id));
-                return updated;
-              });
-            });
-          }
-        } else {
-          const nextIds = nextEvents.map((event) => event._id);
-          setEvents(nextEvents);
-          setVisibleIds(new Set());
-          requestAnimationFrame(() => {
-            setVisibleIds(new Set(nextIds));
-          });
-        }
-
-        setHasMore(nextEvents.length >= pageSize);
-      } catch {
-        if (requestId === requestIdRef.current) {
-          setError("Kunne ikke hente arrangement akkurat nå.");
-        }
+      const response = await fetch(`/api/events?${params.toString()}`, {
+        cache: "no-store",
+      });
+      if (!response.ok) {
+        throw new Error("Unable to fetch events");
       }
+      const payload = (await response.json()) as { events?: CalendarEvent[] };
+      return Array.isArray(payload.events) ? payload.events : [];
     },
     [filterParams, pageSize],
   );
 
   const loadMore = useCallback(async () => {
     if (!hasMore || isLoadingMore || isRefreshing) return;
+
     setIsLoadingMore(true);
     setError(null);
-    await fetchPage({ offset: events.length, append: true });
-    setIsLoadingMore(false);
-  }, [events.length, fetchPage, hasMore, isLoadingMore, isRefreshing]);
+    try {
+      const [nextEvents] = await Promise.all([
+        fetchPage(nextOffset),
+        wait(800),
+      ]);
+      setEvents((current) => [...current, ...nextEvents]);
+      setNextOffset((current) => current + nextEvents.length);
+      setHasMore(nextEvents.length >= pageSize);
+    } catch {
+      setError("Kunne ikke hente arrangement akkurat nå.");
+    } finally {
+      setIsLoadingMore(false);
+    }
+  }, [fetchPage, hasMore, isLoadingMore, isRefreshing, nextOffset, pageSize]);
 
   useEffect(() => {
     if (!hasInitializedFilters.current) {
       hasInitializedFilters.current = true;
       return;
     }
+
     setIsRefreshing(true);
     setError(null);
-    void fetchPage({ offset: 0, append: false }).finally(() => {
-      setIsRefreshing(false);
-    });
-  }, [fetchPage]);
+    void fetchPage(0)
+      .then((nextEvents) => {
+        setEvents(nextEvents);
+        setNextOffset(nextEvents.length);
+        setHasMore(nextEvents.length >= pageSize);
+      })
+      .catch(() => {
+        setError("Kunne ikke hente arrangement akkurat nå.");
+        setEvents([]);
+        setNextOffset(0);
+        setHasMore(false);
+      })
+      .finally(() => {
+        setIsRefreshing(false);
+      });
+  }, [fetchPage, pageSize]);
 
   useEffect(() => {
     const target = sentinelRef.current;
@@ -131,7 +119,7 @@ export default function CalendarEventsGrid({
 
     const observer = new IntersectionObserver(
       (entries) => {
-        if (entries[0]?.isIntersecting) {
+        if (entries.some((entry) => entry.isIntersecting)) {
           void loadMore();
         }
       },
@@ -195,9 +183,7 @@ export default function CalendarEventsGrid({
       </section>
 
       {isRefreshing ? (
-        <p className="mx-auto mt-4 w-full max-w-6xl text-sm text-black/60">
-          Oppdaterer arrangement...
-        </p>
+        <p className="mx-auto mt-4 w-full max-w-6xl text-sm text-black/60">Oppdaterer arrangement...</p>
       ) : null}
 
       {events.length === 0 && !isRefreshing ? (
@@ -218,16 +204,26 @@ export default function CalendarEventsGrid({
         <>
           <section className="mx-auto mt-8 grid w-full max-w-6xl grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
             {events.map((event) => (
-              <div
-                key={event._id}
-                className={`transition-all duration-1000 ${
-                  visibleIds.has(event._id) ? "translate-y-0 opacity-100" : "translate-y-3 opacity-0"
-                }`}
-              >
+              <div key={event._id} className="transition-all duration-700 translate-y-0 opacity-100">
                 <EventCard event={event} />
               </div>
             ))}
           </section>
+
+          {hasMore && !isRefreshing ? (
+            <div className="mx-auto mt-6 flex w-full max-w-6xl justify-center">
+              <button
+                type="button"
+                onClick={() => {
+                  void loadMore();
+                }}
+                disabled={isLoadingMore}
+                className="rounded-full border border-black/20 px-5 py-2 text-sm font-medium text-black transition hover:border-black disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                {isLoadingMore ? "Laster flere arrangement..." : "Last inn flere arrangementer"}
+              </button>
+            </div>
+          ) : null}
 
           <div ref={sentinelRef} className="mx-auto h-8 w-full max-w-6xl" aria-hidden />
         </>
@@ -244,4 +240,10 @@ export default function CalendarEventsGrid({
       ) : null}
     </>
   );
+}
+
+function wait(ms: number): Promise<void> {
+  return new Promise((resolve) => {
+    window.setTimeout(resolve, ms);
+  });
 }

@@ -55,7 +55,6 @@ export async function getUpcomingEventsPage({
   const safeVenueName = venueName.trim();
   const safeDateStart = toDateStartIso(date);
   const safeSearch = normalizeText(search);
-  const safeSearchPattern = toSearchPattern(search);
 
   try {
     if (safeSearch) {
@@ -63,7 +62,7 @@ export async function getUpcomingEventsPage({
         .withConfig({ useCdn: false, perspective: "published" })
         .fetch<CalendarEvent[]>(upcomingEventsPaginatedQuery, {
           offset: 0,
-          limit: 500,
+          end: 500,
           venueName: safeVenueName,
           dateStart: safeDateStart,
           searchPattern: "",
@@ -90,10 +89,10 @@ export async function getUpcomingEventsPage({
       .withConfig({ useCdn: false, perspective: "published" })
       .fetch<CalendarEvent[]>(upcomingEventsPaginatedQuery, {
         offset: safeOffset,
-        limit: safeLimit,
+        end: safeOffset + safeLimit,
         venueName: safeVenueName,
         dateStart: safeDateStart,
-        searchPattern: safeSearchPattern,
+        searchPattern: "",
       });
 
     return sanitizeEvents(events);
@@ -132,16 +131,6 @@ function toDateStartIso(date: string): string {
   if (!date) return "";
   const start = new Date(`${date}T00:00:00`);
   return Number.isNaN(start.getTime()) ? "" : start.toISOString();
-}
-
-function toSearchPattern(search: string): string {
-  const value = search.trim();
-  if (!value) return "";
-  const sanitized = value
-    .replace(/[*?]/g, "")
-    .replace(/\s+/g, "*");
-  if (!sanitized) return "";
-  return `*${sanitized}*`;
 }
 
 function normalizeText(value: string): string {
