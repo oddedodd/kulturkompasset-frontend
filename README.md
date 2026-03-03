@@ -1,36 +1,98 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Kulturkompasset Frontend
 
-## Getting Started
+Frontend for Kulturkompasset, bygget med Next.js og koblet mot Sanity som innholdsplattform.
 
-First, run the development server:
+Løsningen henter innhold for navigasjon, arrangementer og artikler fra Sanity, og presenterer dette i et redaksjonelt nettsted med fokus på:
+
+- forside med velkomstseksjon og kuraterte karuseller
+- kalender med filtrering, søk og innlasting av flere arrangementer
+- Backstage-seksjon med artikkellister og artikkelsider
+- dynamisk rendering av fleksibelt innhold fra Sanity Page Builder
+
+## Teknologi
+
+- Next.js (App Router)
+- TypeScript
+- Tailwind CSS
+- Sanity / next-sanity
+- Swiper.js
+
+## Innhold som hentes fra Sanity
+
+Applikasjonen bruker Sanity som kilde for blant annet:
+
+- hovednavigasjon
+- utvalgte arrangement på forsiden
+- kommende arrangement i kalender og forsidekaruseller
+- Backstage-artikler
+- artikkelinnhold bygget med `pageBuilder`
+
+## Viktige funksjoner
+
+### Forside
+
+- logo-basert header og meny
+- velkomstseksjon med profilert merkevareuttrykk
+- karusell for fremhevede arrangement
+- karusell for kommende arrangement
+- seksjon for siste fra Backstage
+
+### Kalender
+
+- viser kommende arrangement kronologisk
+- søk i kommende arrangement
+- filtrering på sted
+- filtrering på dato
+- "last inn flere"-flyt og progressiv innlasting
+
+### Artikler
+
+- Backstage-liste med søk og progressiv innlasting
+- artikkeldetaljer med støtte for Sanity `pageBuilder`
+- støtte for blant annet:
+  - hero-blokk
+  - ingressblokk
+  - tekstblokker (Portable Text)
+  - enkeltbilder
+  - bildegalleri med lightbox
+  - bilde + tekst-oppsett
+  - video (YouTube/Vimeo)
+  - embed-blokker
+  - sitatblokker
+  - CTA-er
+
+## Lokal utvikling
+
+Start utviklingsserver:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Åpne deretter `http://localhost:3000`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Miljøvariabler
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Prosjektet forventer Sanity-konfigurasjon via miljøvariabler, typisk i `.env.local`:
 
-## Learn More
+```bash
+NEXT_PUBLIC_SANITY_PROJECT_ID=...
+NEXT_PUBLIC_SANITY_DATASET=...
+SANITY_API_VERSION=...
+SANITY_API_READ_TOKEN=...
+```
 
-To learn more about Next.js, take a look at the following resources:
+`SANITY_API_READ_TOKEN` er nødvendig dersom datasettet eller enkelte dokumenttyper ikke er anonymt lesbare.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Struktur
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Noen sentrale mapper:
 
-## Deploy on Vercel
+- `src/app/` – sider, layout og API-ruter
+- `src/app/components/` – UI-komponenter
+- `src/app/lib/` – datainnhenting, queries og typer
+- `public/` – statiske filer som logoer, symboler og ikoner
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Status
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+README-en beskriver nåværende hovedstruktur og funksjonalitet slik frontend-koden er satt opp per i dag. Ved større endringer i innholdsmodell eller navigasjonsflyt bør denne oppdateres tilsvarende.

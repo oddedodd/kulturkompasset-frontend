@@ -1,5 +1,10 @@
 import type { Metadata } from "next";
 import { FeaturedEventsCarousel } from "./components/home/FeaturedEventsCarousel";
+import { LatestBackstageArticlesGrid } from "./components/home/LatestBackstageArticlesGrid";
+import { UpcomingEventsCarousel } from "./components/home/UpcomingEventsCarousel";
+import { Welcome } from "./components/home/Welcome";
+import { getLatestBackstageArticles } from "./lib/articles";
+import { getUpcomingEventsPage } from "./lib/events";
 import { getHomepageFeaturedEvents } from "./lib/featured-events";
 
 export const metadata: Metadata = {
@@ -7,21 +12,18 @@ export const metadata: Metadata = {
 };
 
 export default async function Home() {
-  const featuredEvents = await getHomepageFeaturedEvents();
+  const [featuredEvents, backstageArticles, upcomingEvents] = await Promise.all([
+    getHomepageFeaturedEvents(),
+    getLatestBackstageArticles(),
+    getUpcomingEventsPage({ offset: 0, limit: 12 }),
+  ]);
 
   return (
     <main className="min-h-screen bg-white">
+      <Welcome />
       <FeaturedEventsCarousel events={featuredEvents} />
-
-      {/* Midlertidig hero-område så du ser det funker */}
-      <section className="mx-auto flex min-h-[60vh] max-w-5xl flex-col items-center justify-center px-6 py-20 text-center">
-        <h1 className="text-5xl font-light tracking-wide">Kulturkompasset.</h1>
-        <p className="mt-5 max-w-md text-sm text-black/60">
-          Din veileder i kultur og fritid i Namdalen
-        </p>
-
-        <div className="mt-10 h-px w-64 bg-black/20" />
-      </section>
+      <LatestBackstageArticlesGrid articles={backstageArticles} />
+      <UpcomingEventsCarousel events={upcomingEvents} />
     </main>
   );
 }

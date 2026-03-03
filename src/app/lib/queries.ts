@@ -43,3 +43,188 @@ export const featuredEventsQuery = groq`
     }
   }
 `;
+
+export const eventBySlugQuery = groq`
+  *[
+    _type == "event" &&
+    slug.current == $slug
+  ][0]{
+    _id,
+    title,
+    startsAt,
+    endsAt,
+    "slug": slug.current,
+    "heroImageUrl": heroImage.asset->url,
+    "heroImageAlt": heroImage.alt,
+    "contributors": contributors[]->name,
+    location,
+    ticketUrl,
+    ingress,
+    description,
+    body
+  }
+`;
+
+export const upcomingEventsQuery = groq`
+  *[
+    _type == "event" &&
+    status == "upcoming" &&
+    startsAt >= now()
+  ] | order(startsAt asc){
+    _id,
+    title,
+    startsAt,
+    "slug": slug.current,
+    "heroImageUrl": heroImage.asset->url,
+    "heroImageAlt": heroImage.alt,
+    "venue": venue->{
+      name,
+      city
+    },
+    "contributors": contributors[]->name,
+    "categories": categories[]->title
+  }
+`;
+
+export const upcomingEventsPaginatedQuery = groq`
+  *[
+    _type == "event" &&
+    status == "upcoming" &&
+    startsAt >= now() &&
+    ($venueName == "" || venue->name == $venueName) &&
+    ($dateStart == "" || startsAt >= $dateStart) &&
+    (
+      $searchPattern == "" ||
+      title match $searchPattern ||
+      venue->name match $searchPattern ||
+      venue->city match $searchPattern ||
+      count(contributors[]->name[@ match $searchPattern]) > 0 ||
+      count(categories[]->title[@ match $searchPattern]) > 0
+    )
+  ] | order(startsAt asc, _id asc)[$offset...$end]{
+    _id,
+    title,
+    startsAt,
+    "slug": slug.current,
+    "heroImageUrl": heroImage.asset->url,
+    "heroImageAlt": heroImage.alt,
+    "venue": venue->{
+      name,
+      city
+    },
+    "contributors": contributors[]->name,
+    "categories": categories[]->title
+  }
+`;
+
+export const upcomingEventVenuesQuery = groq`
+  array::compact(
+    array::unique(
+      *[
+        _type == "event" &&
+        status == "upcoming" &&
+        startsAt >= now() &&
+        defined(venue->name)
+      ].venue->name
+    )
+  )
+`;
+
+export const latestBackstageArticlesQuery = groq`
+  *[
+    _type == "article" &&
+    contentType == "backstage" &&
+    defined(slug.current)
+  ] | order(coalesce(publishedAt, _createdAt) desc)[0...6]{
+    _id,
+    title,
+    "slug": slug.current,
+    excerpt,
+    publishedAt,
+    "heroImageUrl": heroImage.asset->url,
+    "heroImageAlt": heroImage.alt
+  }
+`;
+
+export const backstageArticlesPaginatedQuery = groq`
+  *[
+    _type == "article" &&
+    contentType == "backstage" &&
+    defined(slug.current) &&
+    (
+      $searchPattern == "" ||
+      title match $searchPattern ||
+      excerpt match $searchPattern ||
+      count(authors[]->name[@ match $searchPattern]) > 0
+    )
+  ] | order(coalesce(publishedAt, _createdAt) desc, _id asc)[$offset...($offset + $limit)]{
+    _id,
+    title,
+    "slug": slug.current,
+    excerpt,
+    publishedAt,
+    "heroImageUrl": heroImage.asset->url,
+    "heroImageAlt": heroImage.alt
+  }
+`;
+
+export const backstageArticleBySlugQuery = groq`
+  *[
+    _type == "article" &&
+    contentType == "backstage" &&
+    slug.current == $slug
+  ][0]{
+    _id,
+    title,
+    subtitle,
+    "slug": slug.current,
+    excerpt,
+    publishedAt,
+    "authors": authors[]->{
+      _id,
+      name,
+      "imageUrl": image.asset->url,
+      "imageAlt": image.alt
+    },
+    "heroImageUrl": heroImage.asset->url,
+    "heroImageAlt": heroImage.alt,
+    "pageBuilder": pageBuilder[]{
+      ...,
+      _type == "heroBlock" => {
+        ...,
+        "backgroundImageUrl": backgroundImage.asset->url,
+        "backgroundImageAlt": backgroundImage.alt
+      },
+      _type == "imageBlock" => {
+        ...,
+        "imageUrl": image.asset->url,
+        "imageAlt": image.alt
+      },
+      _type == "imageGalleryBlock" => {
+        ...,
+        "images": images[]{
+          ...,
+          "url": asset->url,
+          alt,
+          caption
+        }
+      },
+      _type == "imageTextLeftBlock" => {
+        ...,
+        "imageUrl": image.asset->url,
+        "imageAlt": image.alt
+      },
+      _type == "imageTextRightBlock" => {
+        ...,
+        "imageUrl": image.asset->url,
+        "imageAlt": image.alt
+      },
+      _type == "blockquoteBlock" => {
+        ...,
+        "backgroundImageUrl": backgroundImage.asset->url,
+        "backgroundImageAlt": backgroundImage.alt
+      }
+    },
+    body
+  }
+`;

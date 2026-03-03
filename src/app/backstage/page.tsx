@@ -1,18 +1,24 @@
 import type { Metadata } from "next";
+import BackstageArticlesGrid from "../components/backstage/BackstageArticlesGrid";
+import { getBackstageArticlesPage } from "../lib/articles";
 
 export const metadata: Metadata = {
   title: "Backstage",
 };
 
-export default function BackstagePage() {
+export default async function BackstagePage() {
+  const articles = await getBackstageArticlesPage({ offset: 0, limit: 9 });
+
   return (
-    <main className="min-h-screen bg-white px-6 py-24">
-      <div className="mx-auto max-w-4xl">
+    <main className="min-h-screen bg-white px-4 py-20">
+      <section className="mx-auto w-full max-w-6xl">
         <h1 className="text-4xl font-semibold tracking-tight">Backstage</h1>
-        <p className="mt-4 text-base text-black/70">
-          Her kommer backstage-innhold og redaksjonelle saker fra Sanity.
+        <p className="mt-3 text-black/70">
+          Redaksjonelle saker, intervjuer og innsikt fra backstage.
         </p>
-      </div>
+      </section>
+
+      <BackstageArticlesGrid initialArticles={articles} pageSize={9} />
     </main>
   );
 }
