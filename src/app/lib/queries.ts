@@ -57,8 +57,26 @@ export const eventBySlugQuery = groq`
     "heroImageUrl": heroImage.asset->url,
     "heroImageAlt": heroImage.alt,
     "contributors": contributors[]->name,
+    "venue": venue->{
+      name,
+      city,
+      address,
+      website
+    },
+    "categories": categories[]->title,
     location,
+    priceFrom,
+    "partners": partners[]->{
+      name,
+      website
+    },
+    "relatedArticles": relatedArticles[]->{
+      _id,
+      title,
+      "slug": slug.current
+    },
     ticketUrl,
+    summary,
     ingress,
     description,
     body
