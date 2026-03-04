@@ -26,7 +26,25 @@ export type EventDetail = {
   heroImageAlt?: string;
   contributors?: string[];
   location?: string;
+  venue?: {
+    name?: string;
+    city?: string;
+    address?: string;
+    website?: string;
+  };
+  categories?: string[];
+  priceFrom?: number;
+  partners?: Array<{
+    name?: string;
+    website?: string;
+  }>;
+  relatedArticles?: Array<{
+    _id: string;
+    title: string;
+    slug?: string;
+  }>;
   ticketUrl?: string;
+  summary?: string;
   ingress?: string;
   description?: string;
   body?: PortableTextBlock[];
