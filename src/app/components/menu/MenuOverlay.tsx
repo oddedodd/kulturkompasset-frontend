@@ -70,8 +70,13 @@ export function MenuOverlay({ isOpen, onClose, navItems }: MenuOverlayProps) {
       <div className="relative h-full px-4">
         <div className="mx-auto flex h-full w-full max-w-6xl flex-col text-center">
           {/* Lukk-knapp øverst til høyre (samme layout som i headeren) */}
-          <div className="flex h-16 items-center justify-between">
-            <Link href="/" onClick={onClose} className="flex items-center" aria-label="Gå til forsiden">
+          <div className="flex h-24 items-center justify-between">
+            <Link
+              href="/"
+              onClick={onClose}
+              className="flex items-center"
+              aria-label="Gå til forsiden"
+            >
               <Image
                 src="/logo01.svg"
                 alt="KulturKompasset"
@@ -99,7 +104,9 @@ export function MenuOverlay({ isOpen, onClose, navItems }: MenuOverlayProps) {
                         className={[
                           "group inline-flex w-full items-center justify-center text-2xl tracking-wide outline-none",
                           "focus-visible:underline focus-visible:underline-offset-4",
-                          isActivePath(item.href) ? "font-semibold" : "font-normal",
+                          isActivePath(item.href)
+                            ? "font-semibold"
+                            : "font-normal",
                         ].join(" ")}
                       >
                         <span className="relative">

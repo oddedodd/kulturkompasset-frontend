@@ -11,7 +11,9 @@ const dateFormatter = new Intl.DateTimeFormat("nb-NO", {
   year: "numeric",
 });
 
-export function LatestBackstageArticlesGrid({ articles }: LatestBackstageArticlesGridProps) {
+export function LatestBackstageArticlesGrid({
+  articles,
+}: LatestBackstageArticlesGridProps) {
   if (articles.length === 0) {
     return null;
   }
@@ -34,7 +36,7 @@ export function LatestBackstageArticlesGrid({ articles }: LatestBackstageArticle
         {articles.map((article) => (
           <article
             key={article._id}
-            className="relative aspect-[4/5] w-full overflow-hidden md:aspect-[3/4]"
+            className="relative aspect-[4/5] w-full overflow-hidden rounded-2xl md:aspect-[3/4]"
           >
             {article.heroImageUrl ? (
               <div
@@ -60,7 +62,9 @@ export function LatestBackstageArticlesGrid({ articles }: LatestBackstageArticle
                   {dateFormatter.format(new Date(article.publishedAt))}
                 </p>
               ) : null}
-              <h3 className="mt-2 text-2xl font-semibold leading-tight">{article.title}</h3>
+              <h3 className="mt-2 text-2xl font-semibold leading-tight">
+                {article.title}
+              </h3>
               <p className="mt-3 line-clamp-4 text-sm leading-relaxed text-white/90">
                 {article.excerpt?.trim() || "Les saken i Backstage."}
               </p>

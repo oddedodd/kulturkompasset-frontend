@@ -21,7 +21,9 @@ const dateFormatter = new Intl.DateTimeFormat("nb-NO", {
   month: "long",
 });
 
-export function UpcomingEventsCarousel({ events }: UpcomingEventsCarouselProps) {
+export function UpcomingEventsCarousel({
+  events,
+}: UpcomingEventsCarouselProps) {
   const swiperRef = useRef<SwiperType | null>(null);
 
   if (events.length === 0) {
@@ -29,14 +31,7 @@ export function UpcomingEventsCarousel({ events }: UpcomingEventsCarouselProps) 
   }
 
   return (
-    <section
-      className="mt-16 py-16"
-      style={{
-        backgroundColor: "#d7cec2",
-        backgroundImage:
-          "radial-gradient(circle at 12% 18%, rgba(255,255,255,0.4), transparent 24%), radial-gradient(circle at 88% 28%, rgba(255,255,255,0.22), transparent 26%), linear-gradient(135deg, rgba(191,167,140,0.22), rgba(90,79,66,0.08))",
-      }}
-    >
+    <section className="w-full bg-[#f7f4ee] py-16">
       <div className="mx-auto w-full max-w-6xl px-4">
         <div className="mb-6 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
           <h2 className="whitespace-nowrap text-3xl font-semibold leading-tight tracking-tight sm:text-2xl">
@@ -57,7 +52,11 @@ export function UpcomingEventsCarousel({ events }: UpcomingEventsCarouselProps) 
             className="absolute left-2 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-black/22 text-black backdrop-blur-sm"
             aria-label="Forrige arrangement"
           >
-            <ChevronLeft className="h-5 w-5" aria-hidden="true" strokeWidth={2.25} />
+            <ChevronLeft
+              className="h-5 w-5"
+              aria-hidden="true"
+              strokeWidth={2.25}
+            />
           </button>
 
           <button
@@ -66,7 +65,11 @@ export function UpcomingEventsCarousel({ events }: UpcomingEventsCarouselProps) 
             className="absolute right-2 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-black/22 text-black backdrop-blur-sm"
             aria-label="Neste arrangement"
           >
-            <ChevronRight className="h-5 w-5" aria-hidden="true" strokeWidth={2.25} />
+            <ChevronRight
+              className="h-5 w-5"
+              aria-hidden="true"
+              strokeWidth={2.25}
+            />
           </button>
 
           <Swiper
@@ -105,7 +108,7 @@ export function UpcomingEventsCarousel({ events }: UpcomingEventsCarouselProps) 
               <SwiperSlide key={event._id} className="h-auto">
                 <Link
                   href={event.slug ? `/event/${event.slug}` : "/kalender"}
-                  className="flex h-full min-h-[34rem] flex-col overflow-hidden rounded-[1.5rem] bg-[#f3efe8]"
+                  className="flex h-full min-h-[34rem] flex-col overflow-hidden rounded-[1.5rem] bg-[#E9E5E0]"
                 >
                   {event.heroImageUrl ? (
                     <div
@@ -114,7 +117,10 @@ export function UpcomingEventsCarousel({ events }: UpcomingEventsCarouselProps) 
                       aria-hidden
                     />
                   ) : (
-                    <div className="h-56 w-full shrink-0 bg-[#c5bbae]" aria-hidden />
+                    <div
+                      className="h-56 w-full shrink-0 bg-[#c5bbae]"
+                      aria-hidden
+                    />
                   )}
 
                   <div className="flex flex-1 flex-col space-y-4 p-6 text-[#312821]">
@@ -124,14 +130,20 @@ export function UpcomingEventsCarousel({ events }: UpcomingEventsCarouselProps) 
 
                     <div className="space-y-2 text-base text-black/65">
                       <div className="flex items-center gap-3">
-                        <CalendarDays className="h-4 w-4 shrink-0 opacity-55" aria-hidden="true" />
+                        <CalendarDays
+                          className="h-4 w-4 shrink-0 opacity-55"
+                          aria-hidden="true"
+                        />
                         <span className="capitalize">
                           {dateFormatter.format(new Date(event.startsAt))}
                         </span>
                       </div>
 
                       <div className="flex items-center gap-3">
-                        <MapPin className="h-4 w-4 shrink-0 opacity-55" aria-hidden="true" />
+                        <MapPin
+                          className="h-4 w-4 shrink-0 opacity-55"
+                          aria-hidden="true"
+                        />
                         <span>
                           {event.venue?.name
                             ? event.venue.city
