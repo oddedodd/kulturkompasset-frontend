@@ -12,14 +12,16 @@ export const metadata: Metadata = {
 };
 
 export default async function Home() {
-  const [featuredEvents, backstageArticles, upcomingEvents] = await Promise.all([
-    getHomepageFeaturedEvents(),
-    getLatestBackstageArticles(),
-    getUpcomingEventsPage({ offset: 0, limit: 12 }),
-  ]);
+  const [featuredEvents, backstageArticles, upcomingEvents] = await Promise.all(
+    [
+      getHomepageFeaturedEvents(),
+      getLatestBackstageArticles(),
+      getUpcomingEventsPage({ offset: 0, limit: 12 }),
+    ],
+  );
 
   return (
-    <main className="min-h-screen bg-white">
+    <main className="min-h-screen bg-[white]">
       <Welcome />
       <FeaturedEventsCarousel events={featuredEvents} />
       <LatestBackstageArticlesGrid articles={backstageArticles} />

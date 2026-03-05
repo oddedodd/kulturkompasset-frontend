@@ -28,7 +28,9 @@ export default function CalendarEventsGrid({
   const hasInitializedFilters = useRef(false);
   const sentinelRef = useRef<HTMLDivElement | null>(null);
 
-  const hasActiveFilters = Boolean(debouncedSearch || selectedVenue || selectedDate);
+  const hasActiveFilters = Boolean(
+    debouncedSearch || selectedVenue || selectedDate,
+  );
   const filterParams = useMemo(
     () => ({
       q: debouncedSearch,
@@ -183,7 +185,9 @@ export default function CalendarEventsGrid({
       </section>
 
       {isRefreshing ? (
-        <p className="mx-auto mt-4 w-full max-w-6xl text-sm text-black/60">Oppdaterer arrangement...</p>
+        <p className="mx-auto mt-4 w-full max-w-6xl text-sm text-black/60">
+          Oppdaterer arrangement...
+        </p>
       ) : null}
 
       {events.length === 0 && !isRefreshing ? (
@@ -196,7 +200,8 @@ export default function CalendarEventsGrid({
 
       {selectedDate && events.length > 0 && !isRefreshing ? (
         <p className="mx-auto mt-4 w-full max-w-6xl text-sm text-black/60">
-          Viser treff for valgt dato først, deretter nærmeste kommende arrangement.
+          Viser treff for valgt dato først, deretter nærmeste kommende
+          arrangement.
         </p>
       ) : null}
 
@@ -204,7 +209,10 @@ export default function CalendarEventsGrid({
         <>
           <section className="mx-auto mt-8 grid w-full max-w-6xl grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
             {events.map((event) => (
-              <div key={event._id} className="transition-all duration-700 translate-y-0 opacity-100">
+              <div
+                key={event._id}
+                className="transition-all duration-700 translate-y-0 opacity-100"
+              >
                 <EventCard event={event} />
               </div>
             ))}
@@ -220,12 +228,18 @@ export default function CalendarEventsGrid({
                 disabled={isLoadingMore}
                 className="rounded-full border border-black/20 px-5 py-2 text-sm font-medium text-black transition hover:border-black disabled:cursor-not-allowed disabled:opacity-60"
               >
-                {isLoadingMore ? "Laster flere arrangement..." : "Last inn flere arrangementer"}
+                {isLoadingMore
+                  ? "Laster flere arrangement..."
+                  : "Last inn flere arrangementer"}
               </button>
             </div>
           ) : null}
 
-          <div ref={sentinelRef} className="mx-auto h-8 w-full max-w-6xl" aria-hidden />
+          <div
+            ref={sentinelRef}
+            className="mx-auto h-8 w-full max-w-6xl"
+            aria-hidden
+          />
         </>
       ) : null}
 
@@ -236,7 +250,9 @@ export default function CalendarEventsGrid({
       ) : null}
 
       {error ? (
-        <p className="mx-auto mt-2 w-full max-w-6xl text-center text-sm text-red-700">{error}</p>
+        <p className="mx-auto mt-2 w-full max-w-6xl text-center text-sm text-red-700">
+          {error}
+        </p>
       ) : null}
     </>
   );

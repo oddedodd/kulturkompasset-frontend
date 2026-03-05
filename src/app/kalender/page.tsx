@@ -13,7 +13,7 @@ export default async function KalenderPage() {
   ]);
 
   return (
-    <main className="min-h-screen bg-white px-4 py-20">
+    <main className="min-h-screen bg-[#f7f4ee] px-4 py-20">
       <section className="mx-auto w-full max-w-6xl">
         <h1 className="text-4xl font-semibold tracking-tight">Kalender</h1>
         <p className="mt-3 text-black/70">
@@ -21,7 +21,11 @@ export default async function KalenderPage() {
         </p>
       </section>
 
-      <CalendarEventsGrid initialEvents={events} venueOptions={venueOptions} pageSize={9} />
+      <CalendarEventsGrid
+        initialEvents={events}
+        venueOptions={venueOptions}
+        pageSize={9}
+      />
     </main>
   );
 }

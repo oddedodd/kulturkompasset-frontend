@@ -1,84 +1,69 @@
 import Link from "next/link";
+import { CalendarDays, MapPin } from "lucide-react";
 import type { CalendarEvent } from "@/app/lib/types";
 
 const dateFormatter = new Intl.DateTimeFormat("nb-NO", {
-  day: "2-digit",
+  weekday: "long",
+  day: "numeric",
   month: "long",
-  year: "numeric",
-});
-
-const timeFormatter = new Intl.DateTimeFormat("nb-NO", {
-  hour: "2-digit",
-  minute: "2-digit",
 });
 
 type EventCardProps = {
   event: CalendarEvent;
-  showReadMore?: boolean;
 };
 
-export default function EventCard({ event, showReadMore = true }: EventCardProps) {
+export default function EventCard({ event }: EventCardProps) {
+  const href = event.slug ? `/event/${event.slug}` : "/kalender";
+  const venueLabel = event.venue?.name
+    ? event.venue.city
+      ? `${event.venue.name}, ${event.venue.city}`
+      : event.venue.name
+    : "Sted kommer";
+  const primaryCategory =
+    event.categories && event.categories.length > 0 ? event.categories[0] : "Kategori kommer";
+
   return (
-    <article className="relative aspect-[4/5] w-full overflow-hidden rounded-2xl md:aspect-[3/4]">
-      {event.heroImageUrl ? (
-        <div
-          className="absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: `url(${event.heroImageUrl})` }}
-          aria-hidden
-        />
-      ) : (
-        <div className="absolute inset-0 bg-gray-300" aria-hidden />
-      )}
+    <article className="h-full w-full">
+      <Link
+        href={href}
+        aria-label={`Åpne arrangement: ${event.title}`}
+        className="flex h-full min-h-[34rem] flex-col overflow-hidden rounded-[1.5rem] bg-[#E9E5E0]"
+      >
+        {event.heroImageUrl ? (
+          <div
+            className="h-56 w-full shrink-0 bg-cover bg-center"
+            style={{ backgroundImage: `url(${event.heroImageUrl})` }}
+            aria-hidden
+          />
+        ) : (
+          <div className="h-56 w-full shrink-0 bg-[#c5bbae]" aria-hidden />
+        )}
 
-      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/45 to-black/20" />
+        <div className="flex flex-1 flex-col space-y-4 p-6 text-[#312821]">
+          <h2 className="text-[2.2rem] font-semibold leading-tight tracking-tight">{event.title}</h2>
 
-      {event.slug ? (
-        <Link
-          href={`/event/${event.slug}`}
-          aria-label={`Åpne arrangement: ${event.title}`}
-          className="absolute inset-0 z-10"
-        />
-      ) : null}
+          <div className="space-y-2 text-base text-black/65">
+            <div className="flex items-center gap-3">
+              <CalendarDays className="h-4 w-4 shrink-0 opacity-55" aria-hidden="true" />
+              <span className="capitalize">{dateFormatter.format(new Date(event.startsAt))}</span>
+            </div>
 
-      <div className="pointer-events-none relative z-20 flex h-full flex-col justify-end p-5 text-white sm:p-6">
-        <p className="text-sm font-medium uppercase tracking-wide text-white/85">
-          {dateFormatter.format(new Date(event.startsAt))} •{" "}
-          {timeFormatter.format(new Date(event.startsAt))}
-        </p>
-
-        <h2 className="mt-2 text-2xl font-semibold leading-tight sm:text-3xl">{event.title}</h2>
-
-        <div className="mt-4 flex flex-wrap gap-2 text-sm">
-          <span className="rounded-full bg-white/20 px-3 py-1">
-            {event.venue?.name
-              ? event.venue.city
-                ? `${event.venue.name}, ${event.venue.city}`
-                : event.venue.name
-              : "Sted kommer"}
-          </span>
-          <span className="rounded-full bg-white/20 px-3 py-1">
-            {event.contributors && event.contributors.length > 0
-              ? event.contributors.join(", ")
-              : "Artist/medvirkende kommer"}
-          </span>
-          <span className="rounded-full bg-white/20 px-3 py-1">
-            {event.categories && event.categories.length > 0
-              ? event.categories.join(", ")
-              : "Kategori kommer"}
-          </span>
-        </div>
-
-        {showReadMore && event.slug ? (
-          <div className="mt-5">
-            <Link
-              href={`/event/${event.slug}`}
-              className="pointer-events-auto inline-flex items-center gap-2 text-sm font-medium underline underline-offset-4 hover:text-white/85"
-            >
-              Les mer <span aria-hidden>→</span>
-            </Link>
+            <div className="flex items-center gap-3">
+              <MapPin className="h-4 w-4 shrink-0 opacity-55" aria-hidden="true" />
+              <span>{venueLabel}</span>
+            </div>
           </div>
-        ) : null}
-      </div>
+
+          <div className="mt-auto flex flex-wrap gap-2 pt-2 text-sm">
+            <span className="rounded-full bg-black/8 px-3 py-1 text-black/70">{primaryCategory}</span>
+            {event.contributors && event.contributors.length > 0 ? (
+              <span className="rounded-full bg-black/8 px-3 py-1 text-black/70">
+                {event.contributors[0]}
+              </span>
+            ) : null}
+          </div>
+        </div>
+      </Link>
     </article>
   );
 }
