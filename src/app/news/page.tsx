@@ -31,7 +31,7 @@ export default async function News() {
         {news.map((post) => (
           <div
             key={post._id}
-            className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden flex flex-col"
+            className="bg-white rounded-lg shadow-md overflow-hidden flex flex-col"
           >
             {post.featuredImage?.asset?.url && (
               <img
@@ -49,7 +49,7 @@ export default async function News() {
                   day: "numeric",
                 })}
               </p>
-              <p className="text-gray-700 dark:text-gray-200 mb-6 line-clamp-3">{post.body}</p>
+              <p className="text-gray-700 mb-6 line-clamp-3">{post.body}</p>
               <div className="mt-auto">
                 <Link
                   href={`/news/${post.slug}`}
