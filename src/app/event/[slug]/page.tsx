@@ -115,8 +115,11 @@ export default async function EventPage({ params }: EventPageProps) {
         )}
 
         <article className="relative mx-auto max-w-6xl">
-          <Link href="/kalender" className="text-sm text-white/70 transition hover:text-white">
-            Tilbake til kalender
+          <Link
+            href="/kalender"
+            className="inline-flex items-center gap-2 text-sm text-white/70 transition hover:text-white"
+          >
+            <span aria-hidden>←</span> Tilbake til kalender
           </Link>
 
           <div className="mt-8 grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(320px,34rem)] lg:items-end">
@@ -161,13 +164,13 @@ export default async function EventPage({ params }: EventPageProps) {
             </div>
 
             {event.heroImageUrl ? (
-              <div>
+              <div className="flex justify-center lg:justify-end">
                 <Image
                   src={event.heroImageUrl}
                   alt={event.heroImageAlt || event.title}
                   width={1600}
                   height={1066}
-                  className="aspect-[4/3] w-full rounded-[2rem] object-cover shadow-[0_24px_80px_rgba(0,0,0,0.22)]"
+                  className="h-auto max-h-[28rem] w-auto max-w-full rounded-[2rem] shadow-[0_24px_80px_rgba(0,0,0,0.22)]"
                 />
               </div>
             ) : null}
