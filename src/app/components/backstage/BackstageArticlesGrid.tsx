@@ -177,7 +177,7 @@ export default function BackstageArticlesGrid({
             {articles.map((article) => (
               <article
                 key={article._id}
-                className={`relative aspect-[4/5] w-full overflow-hidden transition-all duration-1000 md:aspect-[3/4] ${
+                className={`relative aspect-[4/5] w-full overflow-hidden rounded-2xl transition-all duration-1000 md:aspect-[3/4] ${
                   visibleIds.has(article._id) ? "translate-y-0 opacity-100" : "translate-y-3 opacity-0"
                 }`}
               >

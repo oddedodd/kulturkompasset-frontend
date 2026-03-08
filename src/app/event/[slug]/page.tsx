@@ -170,7 +170,7 @@ export default async function EventPage({ params }: EventPageProps) {
                   alt={event.heroImageAlt || event.title}
                   width={1600}
                   height={1066}
-                  className="h-auto max-h-[28rem] w-auto max-w-full rounded-[2rem] shadow-[0_24px_80px_rgba(0,0,0,0.22)]"
+                  className="h-auto max-h-112 w-auto max-w-full rounded-4xl shadow-[0_24px_80px_rgba(0,0,0,0.22)]"
                 />
               </div>
             ) : null}
@@ -182,7 +182,7 @@ export default async function EventPage({ params }: EventPageProps) {
         <div className="grid gap-8 lg:grid-cols-[minmax(0,1.4fr)_minmax(18rem,0.8fr)] lg:items-start">
           <div className="space-y-8">
             {(summary || (event.body && event.body.length > 0)) ? (
-              <section className="rounded-[2rem] bg-white px-6 py-7 sm:px-8 sm:py-9">
+              <section className="rounded-4xl bg-white px-6 py-7 sm:px-8 sm:py-9">
                 {summary ? (
                   <>
                     <h2 className="text-3xl font-semibold tracking-tight text-[#2a211a] sm:text-[2rem]">
@@ -206,7 +206,7 @@ export default async function EventPage({ params }: EventPageProps) {
           </div>
 
           <aside className="space-y-6">
-            <section className="rounded-[2rem] bg-[#efe6d8] px-6 py-7 sm:px-8 sm:py-8">
+            <section className="rounded-4xl bg-[#efe6d8] px-6 py-7 sm:px-8 sm:py-8">
               <h2 className="text-3xl font-semibold tracking-tight text-[#2a211a] sm:text-[2rem]">
                 Praktisk info
               </h2>
@@ -292,7 +292,7 @@ export default async function EventPage({ params }: EventPageProps) {
             </section>
 
             {hasVenueDetails ? (
-              <section className="rounded-[2rem] bg-white px-6 py-7 sm:px-8 sm:py-8">
+              <section className="rounded-4xl bg-white px-6 py-7 sm:px-8 sm:py-8">
                 <h2 className="text-2xl font-semibold tracking-tight text-[#2a211a]">Sted</h2>
                 <div className="mt-5 space-y-2 text-base text-black/72">
                   {event.venue?.name ? <p className="font-medium text-black/80">{event.venue.name}</p> : null}
@@ -315,7 +315,7 @@ export default async function EventPage({ params }: EventPageProps) {
             ) : null}
 
             {event.contributors && event.contributors.length > 0 ? (
-              <section className="rounded-[2rem] bg-white px-6 py-7 sm:px-8 sm:py-8">
+              <section className="rounded-4xl bg-white px-6 py-7 sm:px-8 sm:py-8">
                 <h2 className="text-2xl font-semibold tracking-tight text-[#2a211a]">
                   På scenen
                 </h2>
@@ -333,7 +333,7 @@ export default async function EventPage({ params }: EventPageProps) {
             ) : null}
 
             {event.partners && event.partners.length > 0 ? (
-              <section className="rounded-[2rem] bg-white px-6 py-7 sm:px-8 sm:py-8">
+              <section className="rounded-4xl bg-white px-6 py-7 sm:px-8 sm:py-8">
                 <h2 className="text-2xl font-semibold tracking-tight text-[#2a211a]">Partnere</h2>
                 <div className="mt-5 space-y-3">
                   {event.partners.map((partner, index) =>
@@ -358,7 +358,7 @@ export default async function EventPage({ params }: EventPageProps) {
             ) : null}
 
             {event.relatedArticles && event.relatedArticles.length > 0 ? (
-              <section className="rounded-[2rem] bg-white px-6 py-7 sm:px-8 sm:py-8">
+              <section className="rounded-4xl bg-white px-6 py-7 sm:px-8 sm:py-8">
                 <h2 className="text-2xl font-semibold tracking-tight text-[#2a211a]">
                   Les mer
                 </h2>
