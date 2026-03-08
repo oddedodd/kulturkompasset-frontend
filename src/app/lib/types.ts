@@ -65,6 +65,24 @@ export type CalendarEvent = {
   categories?: string[];
 };
 
+type VenueGeoPoint = {
+  lat?: number;
+  lng?: number;
+};
+
+export type VenueListItem = {
+  _id: string;
+  name: string;
+  slug?: string;
+  city?: string;
+  address?: string;
+  logoUrl?: string;
+  website?: string;
+  geo?: VenueGeoPoint;
+};
+
+export type VenueDetail = VenueListItem;
+
 export type BackstageArticleCard = {
   _id: string;
   title: string;
