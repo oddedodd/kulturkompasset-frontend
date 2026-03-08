@@ -11,11 +11,6 @@ export default function VenueCard({ venue }: VenueCardProps) {
       <h2 className="text-3xl font-semibold tracking-tight">{venue.name}</h2>
       <p className="mt-2 text-base text-black/70">{venue.city || "Ukjent by"}</p>
       {venue.address ? <p className="mt-2 text-sm text-black/65">{venue.address}</p> : null}
-      {venue.website ? (
-        <p className="mt-4 text-sm font-medium text-black/70 underline underline-offset-4">
-          Besok nettsted
-        </p>
-      ) : null}
     </article>
   );
 

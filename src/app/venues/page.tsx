@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import VenueCard from "../components/venues/VenueCard";
+import VenuesGrid from "../components/venues/VenuesGrid";
 import { getVenues } from "../lib/venues";
 
 export const metadata: Metadata = {
@@ -16,17 +16,7 @@ export default async function VenuesPage() {
         <p className="mt-3 text-black/70">Utforsk scener og kulturarenaer i regionen.</p>
       </section>
 
-      {venues.length === 0 ? (
-        <section className="mx-auto mt-8 w-full max-w-6xl rounded-2xl bg-gray-100 px-6 py-16 text-center text-black/70">
-          Ingen steder funnet akkurat nå.
-        </section>
-      ) : (
-        <section className="mx-auto mt-8 grid w-full max-w-6xl grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
-          {venues.map((venue) => (
-            <VenueCard key={venue._id} venue={venue} />
-          ))}
-        </section>
-      )}
+      <VenuesGrid venues={venues} />
     </main>
   );
 }
