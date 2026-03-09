@@ -148,6 +148,67 @@ export const upcomingEventVenuesQuery = groq`
   )
 `;
 
+export const allVenuesQuery = groq`
+  *[
+    _type == "venue" &&
+    defined(slug.current)
+  ] | order(name asc){
+    _id,
+    name,
+    "slug": slug.current,
+    city,
+    address,
+    "logoUrl": logo.asset->url,
+    website,
+    "geo": geo{
+      lat,
+      lng
+    }
+  }
+`;
+
+export const venueBySlugQuery = groq`
+  *[
+    _type == "venue" &&
+    slug.current == $slug
+  ][0]{
+    _id,
+    name,
+    "slug": slug.current,
+    city,
+    address,
+    "logoUrl": logo.asset->url,
+    website,
+    "geo": geo{
+      lat,
+      lng
+    }
+  }
+`;
+
+export const upcomingEventsByVenueSlugQuery = groq`
+  *[
+    _type == "event" &&
+    status == "upcoming" &&
+    startsAt >= now() &&
+    defined(slug.current) &&
+    venue->slug.current == $venueSlug
+  ] | order(startsAt asc){
+    _id,
+    title,
+    startsAt,
+    "slug": slug.current,
+    "heroImageUrl": heroImage.asset->url,
+    "heroImageAlt": heroImage.alt,
+    "venue": venue->{
+      name,
+      city
+    },
+    "contributors": contributors[]->name,
+    "categories": categories[]->title
+  }
+`;
+
 export const latestBackstageArticlesQuery = groq`
   *[
     _type == "article" &&
