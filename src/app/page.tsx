@@ -11,6 +11,8 @@ export const metadata: Metadata = {
   title: "Hjem",
 };
 
+export const revalidate = 3600;
+
 export default async function Home() {
   const [featuredEvents, backstageArticles, upcomingEvents] = await Promise.all(
     [
