@@ -4,6 +4,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Globe, MapPin } from "lucide-react";
 import VenueEventsList from "@/app/components/venues/VenueEventsList";
+import { getSanityImageUrl } from "@/app/lib/sanity-image";
 import { getUpcomingEventsForVenueSlug, getVenueBySlug } from "@/app/lib/venues";
 
 type VenuePageProps = {
@@ -38,6 +39,11 @@ export default async function VenuePage({ params }: VenuePageProps) {
   }
 
   const locationLabel = [venue.address, venue.city].filter(Boolean).join(", ");
+  const venueLogoUrl =
+    getSanityImageUrl(venue.logo, {
+      width: 800,
+      height: 800,
+    }) || venue.logoUrl;
 
   return (
     <main className="min-h-screen bg-[#f7f4ee] pb-20">
@@ -80,10 +86,10 @@ export default async function VenuePage({ params }: VenuePageProps) {
               </div>
             </div>
 
-            {venue.logoUrl ? (
+            {venueLogoUrl ? (
               <div className="flex justify-start lg:justify-end">
                 <Image
-                  src={venue.logoUrl}
+                  src={venueLogoUrl}
                   alt={`Logo for ${venue.name}`}
                   width={800}
                   height={800}

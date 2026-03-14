@@ -2,9 +2,12 @@
 
 import Image from "next/image";
 import { useEffect, useMemo, useState } from "react";
+import { getSanityImageUrl } from "@/app/lib/sanity-image";
+import type { SanityImageSource } from "@/app/lib/types";
 
 type GalleryImage = {
   _key?: string;
+  image?: SanityImageSource;
   url?: string;
   alt?: string;
   caption?: string;
@@ -17,7 +20,20 @@ type ArticleImageGalleryProps = {
 
 export function ArticleImageGallery({ title, images = [] }: ArticleImageGalleryProps) {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
-  const safeImages = useMemo(() => images.filter((image) => Boolean(image.url)), [images]);
+  const safeImages = useMemo(
+    () =>
+      images
+        .map((image) => ({
+          ...image,
+          resolvedUrl:
+            getSanityImageUrl(image.image, {
+              width: 1600,
+              height: 1000,
+            }) || image.url,
+        }))
+        .filter((image) => Boolean(image.resolvedUrl)),
+    [images],
+  );
   const activeImage = activeIndex !== null ? safeImages[activeIndex] : null;
 
   useEffect(() => {
@@ -65,8 +81,8 @@ export function ArticleImageGallery({ title, images = [] }: ArticleImageGalleryP
             aria-label={`Åpne bilde ${imageIndex + 1} i lysboks`}
           >
             <Image
-              src={image.url!}
-              alt={image.alt || "Galleriillustrasjon"}
+              src={image.resolvedUrl!}
+              alt={image.alt || image.image?.alt || "Galleriillustrasjon"}
               width={1200}
               height={900}
               className="h-auto w-full cursor-pointer object-cover transition-transform duration-300 group-hover:scale-[1.01]"
@@ -75,7 +91,7 @@ export function ArticleImageGallery({ title, images = [] }: ArticleImageGalleryP
         ))}
       </div>
 
-      {activeImage?.url ? (
+      {activeImage?.resolvedUrl ? (
         <div
           role="dialog"
           aria-modal="true"
@@ -126,8 +142,8 @@ export function ArticleImageGallery({ title, images = [] }: ArticleImageGalleryP
 
             <div className="w-full px-8 sm:px-16" onClick={(event) => event.stopPropagation()}>
               <Image
-                src={activeImage.url}
-                alt={activeImage.alt || "Galleriillustrasjon"}
+                src={activeImage.resolvedUrl}
+                alt={activeImage.alt || activeImage.image?.alt || "Galleriillustrasjon"}
                 width={1800}
                 height={1200}
                 className="mx-auto h-auto max-h-[75vh] w-auto object-contain"

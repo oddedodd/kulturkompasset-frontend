@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import { PortableText } from "@portabletext/react";
 import { CalendarDays, Clock3, Globe, MapPin, Tag, Ticket, Users } from "lucide-react";
 import { getEventBySlug } from "../../lib/events";
+import { getSanityImageUrl } from "../../lib/sanity-image";
 
 type EventPageProps = {
   params: Promise<{ slug: string }>;
@@ -93,15 +94,25 @@ export default async function EventPage({ params }: EventPageProps) {
     event.location ||
     [event.venue?.name, event.venue?.city].filter(Boolean).join(", ") ||
     undefined;
+  const heroBackdropUrl =
+    getSanityImageUrl(event.heroImage, {
+      width: 2200,
+      height: 1200,
+    }) || event.heroImageUrl;
+  const heroForegroundUrl =
+    getSanityImageUrl(event.heroImage, {
+      width: 1600,
+      height: 1066,
+    }) || event.heroImageUrl;
 
   return (
     <main className="min-h-screen bg-[#f7f4ee] pb-20">
       <section className="relative overflow-hidden bg-[#1f1711] px-4 pb-12 pt-14 sm:pb-20 sm:pt-16">
-        {event.heroImageUrl ? (
+        {heroBackdropUrl ? (
           <>
             <div className="absolute inset-0 opacity-30">
               <Image
-                src={event.heroImageUrl}
+                src={heroBackdropUrl}
                 alt=""
                 fill
                 className="object-cover blur-2xl scale-110"
@@ -163,10 +174,10 @@ export default async function EventPage({ params }: EventPageProps) {
               </div>
             </div>
 
-            {event.heroImageUrl ? (
+            {heroForegroundUrl ? (
               <div className="flex justify-center lg:justify-end">
                 <Image
-                  src={event.heroImageUrl}
+                  src={heroForegroundUrl}
                   alt={event.heroImageAlt || event.title}
                   width={1600}
                   height={1066}

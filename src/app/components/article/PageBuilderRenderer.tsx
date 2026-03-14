@@ -1,5 +1,6 @@
 import { PortableText } from "@portabletext/react";
 import Image from "next/image";
+import { getSanityImageUrl } from "@/app/lib/sanity-image";
 import type { ArticlePageBuilderBlock } from "@/app/lib/types";
 import { ArticleImageGallery } from "./ArticleImageGallery";
 import { articlePortableTextComponents } from "./portableTextComponents";
@@ -18,6 +19,11 @@ export function PageBuilderRenderer({ blocks, useHeroAsPageTitle = false }: Page
         switch (block._type) {
           case "heroBlock":
             const shouldUseH1 = useHeroAsPageTitle && index === 0;
+            const backgroundImageUrl =
+              getSanityImageUrl(block.backgroundImage, {
+                width: 1600,
+                height: 900,
+              }) || block.backgroundImageUrl;
             return (
               <section key={key} className="space-y-6">
                 {(block.heading || block.subheading || (block.cta?.label && block.cta?.link)) ? (
@@ -51,9 +57,9 @@ export function PageBuilderRenderer({ blocks, useHeroAsPageTitle = false }: Page
                   </div>
                 ) : null}
 
-                {block.backgroundImageUrl ? (
+                {backgroundImageUrl ? (
                   <Image
-                    src={block.backgroundImageUrl}
+                    src={backgroundImageUrl}
                     alt={block.backgroundImageAlt || block.heading || "Hero"}
                     width={1600}
                     height={900}
@@ -80,26 +86,35 @@ export function PageBuilderRenderer({ blocks, useHeroAsPageTitle = false }: Page
             ) : null;
 
           case "imageBlock":
-            return block.imageUrl ? (
-              <figure key={key} className="space-y-2">
-                <Image
-                  src={block.imageUrl}
-                  alt={block.imageAlt || "Illustrasjon"}
-                  width={1600}
-                  height={1000}
-                  className="h-auto w-full object-cover"
-                />
-                {block.caption ? (
-                  <figcaption className="text-sm text-black/60">{block.caption}</figcaption>
-                ) : null}
-              </figure>
-            ) : null;
+            const imageBlockUrl =
+              getSanityImageUrl(block.image, {
+                width: 1600,
+              }) || block.imageUrl;
+            return imageBlockUrl ? (
+                <figure key={key} className="space-y-2">
+                  <Image
+                    src={imageBlockUrl}
+                    alt={block.imageAlt || block.image?.alt || "Illustrasjon"}
+                    width={1600}
+                    height={1000}
+                    className="h-auto w-full object-cover"
+                  />
+                  {block.caption ? (
+                    <figcaption className="text-sm text-black/60">{block.caption}</figcaption>
+                  ) : null}
+                </figure>
+              ) : null;
 
           case "imageGalleryBlock":
             return <ArticleImageGallery key={key} title={block.title} images={block.images} />;
 
           case "imageTextLeftBlock":
           case "imageTextRightBlock":
+            const imageTextBlockUrl =
+              getSanityImageUrl(block.image, {
+                width: 1200,
+                height: 900,
+              }) || block.imageUrl;
             return (
               <section
                 key={key}
@@ -110,10 +125,10 @@ export function PageBuilderRenderer({ blocks, useHeroAsPageTitle = false }: Page
                     block._type === "imageTextRightBlock" ? "order-1 md:order-2" : "order-1"
                   }
                 >
-                  {block.imageUrl ? (
+                  {imageTextBlockUrl ? (
                     <Image
-                      src={block.imageUrl}
-                      alt={block.imageAlt || "Illustrasjon"}
+                      src={imageTextBlockUrl}
+                      alt={block.imageAlt || block.image?.alt || "Illustrasjon"}
                       width={1200}
                       height={900}
                       className="h-auto w-full object-cover"
@@ -166,19 +181,24 @@ export function PageBuilderRenderer({ blocks, useHeroAsPageTitle = false }: Page
             return <EmbedBlock key={key} url={block.url} title={block.title} caption={block.caption} />;
 
           case "blockquoteBlock":
+            const blockquoteBackgroundImageUrl =
+              getSanityImageUrl(block.backgroundImage, {
+                width: 1200,
+                height: 2000,
+              }) || block.backgroundImageUrl;
             return (
               <blockquote key={key} className="relative overflow-hidden bg-black/5">
-                {block.backgroundImageUrl ? (
+                {blockquoteBackgroundImageUrl ? (
                   <Image
-                    src={block.backgroundImageUrl}
-                    alt={block.backgroundImageAlt || "Bakgrunn"}
+                    src={blockquoteBackgroundImageUrl}
+                    alt={block.backgroundImageAlt || block.backgroundImage?.alt || "Bakgrunn"}
                     width={1200}
                     height={2000}
                     className="block h-auto w-full"
                   />
                 ) : null}
-                {!block.backgroundImageUrl ? <div className="h-[420px] w-full bg-gray-200" /> : null}
-                {block.backgroundImageUrl ? <div className="absolute inset-0 bg-black/45" /> : null}
+                {!blockquoteBackgroundImageUrl ? <div className="h-[420px] w-full bg-gray-200" /> : null}
+                {blockquoteBackgroundImageUrl ? <div className="absolute inset-0 bg-black/45" /> : null}
                 <div
                   className={[
                     "absolute left-0 right-0 top-0 z-10 px-6 pb-8 pt-6 sm:px-7 sm:pt-7",
@@ -186,7 +206,7 @@ export function PageBuilderRenderer({ blocks, useHeroAsPageTitle = false }: Page
                     block.textColor === "dark" ? "text-black" : "",
                     block.textColor === "brand" ? "text-sky-700" : "",
                     !block.textColor || block.textColor === "auto"
-                      ? block.backgroundImageUrl
+                      ? blockquoteBackgroundImageUrl
                         ? "text-white"
                         : "text-black/85"
                       : "",

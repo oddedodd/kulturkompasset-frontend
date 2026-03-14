@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { getSanityImageUrl } from "@/app/lib/sanity-image";
 import type { BackstageArticleCard } from "../../lib/types";
 
 type LatestBackstageArticlesGridProps = {
@@ -33,15 +34,22 @@ export function LatestBackstageArticlesGrid({
       </div>
 
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
-        {articles.map((article) => (
+        {articles.map((article) => {
+          const heroImageUrl =
+            getSanityImageUrl(article.heroImage, {
+              width: 900,
+              height: 1200,
+            }) || article.heroImageUrl;
+
+          return (
           <article
             key={article._id}
             className="relative aspect-[4/5] w-full overflow-hidden rounded-2xl md:aspect-[3/4]"
           >
-            {article.heroImageUrl ? (
+            {heroImageUrl ? (
               <div
                 className="absolute inset-0 bg-cover bg-center transition-transform duration-300"
-                style={{ backgroundImage: `url(${article.heroImageUrl})` }}
+                style={{ backgroundImage: `url(${heroImageUrl})` }}
                 aria-hidden
               />
             ) : (
@@ -70,7 +78,8 @@ export function LatestBackstageArticlesGrid({
               </p>
             </div>
           </article>
-        ))}
+          );
+        })}
       </div>
     </section>
   );

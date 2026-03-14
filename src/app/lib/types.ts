@@ -11,6 +11,7 @@ export type FeaturedEvent = {
   title: string;
   startsAt?: string;
   slug?: string;
+  heroImage?: SanityImageSource;
   heroImageUrl?: string;
   heroImageAlt?: string;
   contributors?: string[];
@@ -22,6 +23,7 @@ export type EventDetail = {
   startsAt?: string;
   endsAt?: string;
   slug?: string;
+  heroImage?: SanityImageSource;
   heroImageUrl?: string;
   heroImageAlt?: string;
   contributors?: string[];
@@ -55,6 +57,7 @@ export type CalendarEvent = {
   title: string;
   startsAt: string;
   slug?: string;
+  heroImage?: SanityImageSource;
   heroImageUrl?: string;
   heroImageAlt?: string;
   venue?: {
@@ -76,6 +79,7 @@ export type VenueListItem = {
   slug?: string;
   city?: string;
   address?: string;
+  logo?: SanityImageSource;
   logoUrl?: string;
   website?: string;
   geo?: VenueGeoPoint;
@@ -89,6 +93,7 @@ export type BackstageArticleCard = {
   slug: string;
   excerpt?: string;
   publishedAt?: string;
+  heroImage?: SanityImageSource;
   heroImageUrl?: string;
   heroImageAlt?: string;
 };
@@ -103,9 +108,11 @@ export type BackstageArticleDetail = {
   authors?: Array<{
     _id?: string;
     name?: string;
+    image?: SanityImageSource;
     imageUrl?: string;
     imageAlt?: string;
   }>;
+  heroImage?: SanityImageSource;
   heroImageUrl?: string;
   heroImageAlt?: string;
   pageBuilder?: ArticlePageBuilderBlock[];
@@ -122,6 +129,7 @@ export type ArticlePageBuilderBlock =
       _type: "heroBlock";
       heading?: string;
       subheading?: string;
+      backgroundImage?: SanityImageSource;
       backgroundImageUrl?: string;
       backgroundImageAlt?: string;
       cta?: { label?: string; link?: string };
@@ -136,6 +144,7 @@ export type ArticlePageBuilderBlock =
     })
   | (PageBuilderBlockBase & {
       _type: "imageBlock";
+      image?: SanityImageSource;
       imageUrl?: string;
       imageAlt?: string;
       caption?: string;
@@ -143,10 +152,17 @@ export type ArticlePageBuilderBlock =
   | (PageBuilderBlockBase & {
       _type: "imageGalleryBlock";
       title?: string;
-      images?: Array<{ _key?: string; url?: string; alt?: string; caption?: string }>;
+      images?: Array<{
+        _key?: string;
+        image?: SanityImageSource;
+        url?: string;
+        alt?: string;
+        caption?: string;
+      }>;
     })
   | (PageBuilderBlockBase & {
       _type: "imageTextLeftBlock" | "imageTextRightBlock";
+      image?: SanityImageSource;
       imageUrl?: string;
       imageAlt?: string;
       content?: PortableTextBlock[];
@@ -168,6 +184,7 @@ export type ArticlePageBuilderBlock =
       quote?: string;
       attribution?: string;
       textColor?: "auto" | "light" | "dark" | "brand";
+      backgroundImage?: SanityImageSource;
       backgroundImageUrl?: string;
       backgroundImageAlt?: string;
     })
@@ -179,3 +196,24 @@ export type ArticlePageBuilderBlock =
       label?: string;
       link?: string;
     });
+
+export type SanityImageSource = {
+  asset?: {
+    _ref?: string;
+    _type?: string;
+    url?: string;
+  };
+  crop?: {
+    top?: number;
+    bottom?: number;
+    left?: number;
+    right?: number;
+  };
+  hotspot?: {
+    x?: number;
+    y?: number;
+    height?: number;
+    width?: number;
+  };
+  alt?: string;
+};

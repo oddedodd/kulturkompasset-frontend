@@ -6,6 +6,7 @@ import { notFound } from "next/navigation";
 import { PageBuilderRenderer } from "../../components/article/PageBuilderRenderer";
 import { articlePortableTextComponents } from "../../components/article/portableTextComponents";
 import { getBackstageArticleBySlug } from "../../lib/articles";
+import { getSanityImageUrl } from "../../lib/sanity-image";
 
 type BackstageArticlePageProps = {
   params: Promise<{ slug: string }>;
@@ -43,6 +44,16 @@ export default async function BackstageArticlePage({ params }: BackstageArticleP
 
   const startsWithHeroBlock = article.pageBuilder?.[0]?._type === "heroBlock";
   const firstAuthor = article.authors?.find((author) => typeof author?.name === "string");
+  const firstAuthorImageUrl =
+    getSanityImageUrl(firstAuthor?.image, {
+      width: 160,
+      height: 160,
+    }) || firstAuthor?.imageUrl;
+  const articleHeroImageUrl =
+    getSanityImageUrl(article.heroImage, {
+      width: 1600,
+      height: 900,
+    }) || article.heroImageUrl;
   const remainingBlocks = startsWithHeroBlock ? (article.pageBuilder?.slice(1) ?? []) : (article.pageBuilder ?? []);
 
   const ArticleMeta = (
@@ -55,9 +66,9 @@ export default async function BackstageArticlePage({ params }: BackstageArticleP
 
       {firstAuthor ? (
         <div className="mt-4 flex items-center gap-3">
-          {firstAuthor.imageUrl ? (
+          {firstAuthorImageUrl ? (
             <Image
-              src={firstAuthor.imageUrl}
+              src={firstAuthorImageUrl}
               alt={firstAuthor.imageAlt || firstAuthor.name || "Forfatter"}
               width={48}
               height={48}
@@ -90,9 +101,9 @@ export default async function BackstageArticlePage({ params }: BackstageArticleP
           </>
         ) : null}
 
-        {!startsWithHeroBlock && article.heroImageUrl ? (
+        {!startsWithHeroBlock && articleHeroImageUrl ? (
           <Image
-            src={article.heroImageUrl}
+            src={articleHeroImageUrl}
             alt={article.heroImageAlt || article.title}
             width={1600}
             height={900}

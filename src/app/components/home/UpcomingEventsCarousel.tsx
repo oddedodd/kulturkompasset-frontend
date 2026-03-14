@@ -9,6 +9,7 @@ import { A11y, Autoplay, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/pagination";
+import { getSanityImageUrl } from "@/app/lib/sanity-image";
 import type { CalendarEvent } from "../../lib/types";
 
 type UpcomingEventsCarouselProps = {
@@ -104,16 +105,23 @@ export function UpcomingEventsCarousel({
               },
             }}
           >
-            {events.map((event) => (
+            {events.map((event) => {
+              const heroImageUrl =
+                getSanityImageUrl(event.heroImage, {
+                  width: 900,
+                  height: 560,
+                }) || event.heroImageUrl;
+
+              return (
               <SwiperSlide key={event._id} className="h-auto">
                 <Link
                   href={event.slug ? `/event/${event.slug}` : "/kalender"}
                   className="flex h-full min-h-[34rem] flex-col overflow-hidden rounded-[1.5rem] bg-[#E9E5E0]"
                 >
-                  {event.heroImageUrl ? (
+                  {heroImageUrl ? (
                     <div
                       className="h-56 w-full shrink-0 bg-cover bg-center"
-                      style={{ backgroundImage: `url(${event.heroImageUrl})` }}
+                      style={{ backgroundImage: `url(${heroImageUrl})` }}
                       aria-hidden
                     />
                   ) : (
@@ -169,7 +177,8 @@ export function UpcomingEventsCarousel({
                   </div>
                 </Link>
               </SwiperSlide>
-            ))}
+              );
+            })}
           </Swiper>
         </div>
       </div>

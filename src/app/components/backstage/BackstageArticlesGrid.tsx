@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { getSanityImageUrl } from "@/app/lib/sanity-image";
 import type { BackstageArticleCard } from "@/app/lib/types";
 
 type BackstageArticlesGridProps = {
@@ -174,17 +175,24 @@ export default function BackstageArticlesGrid({
       {articles.length > 0 ? (
         <>
           <section className="mx-auto mt-8 grid w-full max-w-6xl grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
-            {articles.map((article) => (
+            {articles.map((article) => {
+              const heroImageUrl =
+                getSanityImageUrl(article.heroImage, {
+                  width: 900,
+                  height: 1200,
+                }) || article.heroImageUrl;
+
+              return (
               <article
                 key={article._id}
                 className={`relative aspect-[4/5] w-full overflow-hidden rounded-2xl transition-all duration-1000 md:aspect-[3/4] ${
                   visibleIds.has(article._id) ? "translate-y-0 opacity-100" : "translate-y-3 opacity-0"
                 }`}
               >
-                {article.heroImageUrl ? (
+                {heroImageUrl ? (
                   <div
                     className="absolute inset-0 bg-cover bg-center"
-                    style={{ backgroundImage: `url(${article.heroImageUrl})` }}
+                    style={{ backgroundImage: `url(${heroImageUrl})` }}
                     aria-hidden
                   />
                 ) : (
@@ -211,7 +219,8 @@ export default function BackstageArticlesGrid({
                   </p>
                 </div>
               </article>
-            ))}
+              );
+            })}
           </section>
 
           <div ref={sentinelRef} className="mx-auto h-8 w-full max-w-6xl" aria-hidden />
