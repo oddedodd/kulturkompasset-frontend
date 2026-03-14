@@ -85,7 +85,7 @@ export function ArticleImageGallery({ title, images = [] }: ArticleImageGalleryP
               alt={image.alt || image.image?.alt || "Galleriillustrasjon"}
               width={1200}
               height={900}
-              className="h-auto w-full rounded-2xl cursor-pointer object-cover transition-transform duration-300 group-hover:scale-[1.01] sm:rounded-3xl"
+              className="h-auto w-full rounded-xl cursor-pointer object-cover transition-transform duration-300 group-hover:scale-[1.01] sm:rounded-2xl"
             />
           </button>
         ))}
@@ -146,7 +146,7 @@ export function ArticleImageGallery({ title, images = [] }: ArticleImageGalleryP
                 alt={activeImage.alt || activeImage.image?.alt || "Galleriillustrasjon"}
                 width={1800}
                 height={1200}
-                className="mx-auto h-auto max-h-[75vh] w-auto rounded-xl object-contain sm:rounded-2xl"
+                className="mx-auto h-auto max-h-[75vh] w-auto rounded-lg object-contain sm:rounded-xl"
                 priority
               />
               {activeImage.caption ? (

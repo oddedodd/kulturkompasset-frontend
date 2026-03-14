@@ -77,7 +77,7 @@ export default async function BackstageArticlePage({ params }: BackstageArticleP
             alt={article.heroImageAlt || article.title}
             width={1600}
             height={900}
-            className="mt-8 h-auto w-full rounded-2xl object-cover sm:rounded-3xl"
+            className="mt-8 h-auto w-full rounded-xl object-cover sm:rounded-2xl"
           />
         ) : null}
 
