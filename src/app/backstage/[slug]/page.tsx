@@ -6,6 +6,7 @@ import { notFound } from "next/navigation";
 import { PageBuilderRenderer } from "../../components/article/PageBuilderRenderer";
 import { articlePortableTextComponents } from "../../components/article/portableTextComponents";
 import { getBackstageArticleBySlug } from "../../lib/articles";
+import { getSanityImageUrl } from "../../lib/sanity-image";
 
 type BackstageArticlePageProps = {
   params: Promise<{ slug: string }>;
@@ -42,41 +43,21 @@ export default async function BackstageArticlePage({ params }: BackstageArticleP
   }
 
   const startsWithHeroBlock = article.pageBuilder?.[0]?._type === "heroBlock";
-  const firstAuthor = article.authors?.find((author) => typeof author?.name === "string");
+  const articleHeroImageUrl =
+    getSanityImageUrl(article.heroImage, {
+      width: 1600,
+      height: 900,
+    }) || article.heroImageUrl;
   const remainingBlocks = startsWithHeroBlock ? (article.pageBuilder?.slice(1) ?? []) : (article.pageBuilder ?? []);
-
-  const ArticleMeta = (
-    <section className="mx-auto mt-8 flex max-w-3xl flex-col items-center text-center">
-      {article.publishedAt ? (
-        <p className="text-sm font-medium uppercase tracking-wide text-black/55">
-          {dateFormatter.format(new Date(article.publishedAt))}
-        </p>
-      ) : null}
-
-      {firstAuthor ? (
-        <div className="mt-4 flex items-center gap-3">
-          {firstAuthor.imageUrl ? (
-            <Image
-              src={firstAuthor.imageUrl}
-              alt={firstAuthor.imageAlt || firstAuthor.name || "Forfatter"}
-              width={48}
-              height={48}
-              className="h-12 w-12 rounded-full object-cover"
-            />
-          ) : (
-            <div className="h-12 w-12 rounded-full bg-black/10" aria-hidden />
-          )}
-          <p className="text-base font-medium text-black/75">{firstAuthor.name}</p>
-        </div>
-      ) : null}
-    </section>
-  );
 
   return (
     <main className="min-h-screen bg-white px-6 py-16 sm:py-24">
       <article className="mx-auto max-w-4xl">
-        <Link href="/backstage" className="text-sm text-black/60 hover:text-black">
-          Tilbake til Backstage
+        <Link
+          href="/backstage"
+          className="inline-flex items-center gap-2 text-sm text-black/60 hover:text-black"
+        >
+          <span aria-hidden>←</span> Tilbake til Historier
         </Link>
 
         {!startsWithHeroBlock ? (
@@ -90,13 +71,13 @@ export default async function BackstageArticlePage({ params }: BackstageArticleP
           </>
         ) : null}
 
-        {!startsWithHeroBlock && article.heroImageUrl ? (
+        {!startsWithHeroBlock && articleHeroImageUrl ? (
           <Image
-            src={article.heroImageUrl}
+            src={articleHeroImageUrl}
             alt={article.heroImageAlt || article.title}
             width={1600}
             height={900}
-            className="mt-8 h-auto w-full object-cover"
+            className="mt-8 h-auto w-full rounded-xl object-cover sm:rounded-2xl"
           />
         ) : null}
 
@@ -104,7 +85,13 @@ export default async function BackstageArticlePage({ params }: BackstageArticleP
           <PageBuilderRenderer blocks={article.pageBuilder.slice(0, 1)} useHeroAsPageTitle />
         ) : null}
 
-        {ArticleMeta}
+        {article.publishedAt ? (
+          <section className="mx-auto mt-8 flex max-w-3xl flex-col items-center text-center">
+            <p className="text-sm font-medium uppercase tracking-wide text-black/55">
+              {dateFormatter.format(new Date(article.publishedAt))}
+            </p>
+          </section>
+        ) : null}
 
         {remainingBlocks.length > 0 ? (
           <PageBuilderRenderer blocks={remainingBlocks} />

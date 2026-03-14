@@ -5,6 +5,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { A11y, Autoplay, Pagination } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/pagination";
+import { getSanityImageUrl } from "@/app/lib/sanity-image";
 import type { FeaturedEvent } from "../../lib/types";
 
 type FeaturedEventsCarouselProps = {
@@ -65,7 +66,14 @@ export function FeaturedEventsCarousel({ events }: FeaturedEventsCarouselProps) 
         }}
         className="overflow-hidden rounded-2xl"
       >
-        {safeEvents.map((event) => (
+        {safeEvents.map((event) => {
+          const heroImageUrl =
+            getSanityImageUrl(event.heroImage, {
+              width: 1600,
+              height: 840,
+            }) || event.heroImageUrl;
+
+          return (
           <SwiperSlide key={event._id}>
             {event.slug ? (
               <Link
@@ -74,10 +82,10 @@ export function FeaturedEventsCarousel({ events }: FeaturedEventsCarouselProps) 
                 aria-label={`Gå til arrangement: ${event.title}`}
               >
                 <article className="relative h-[420px] w-full overflow-hidden rounded-2xl">
-                  {event.heroImageUrl ? (
+                  {heroImageUrl ? (
                     <div
                       className="absolute inset-0 bg-cover bg-center transition-transform duration-300 group-hover:scale-105"
-                      style={{ backgroundImage: `url(${event.heroImageUrl})` }}
+                      style={{ backgroundImage: `url(${heroImageUrl})` }}
                       aria-hidden
                     />
                   ) : (
@@ -105,10 +113,10 @@ export function FeaturedEventsCarousel({ events }: FeaturedEventsCarouselProps) 
               </Link>
             ) : (
               <article className="relative h-[420px] w-full overflow-hidden rounded-2xl">
-                {event.heroImageUrl ? (
+                {heroImageUrl ? (
                   <div
                     className="absolute inset-0 bg-cover bg-center"
-                    style={{ backgroundImage: `url(${event.heroImageUrl})` }}
+                    style={{ backgroundImage: `url(${heroImageUrl})` }}
                     aria-hidden
                   />
                 ) : (
@@ -135,7 +143,8 @@ export function FeaturedEventsCarousel({ events }: FeaturedEventsCarouselProps) 
               </article>
             )}
           </SwiperSlide>
-        ))}
+          );
+        })}
       </Swiper>
     </section>
   );

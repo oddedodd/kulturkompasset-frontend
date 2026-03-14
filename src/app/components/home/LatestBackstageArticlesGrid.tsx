@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { getSanityImageUrl } from "@/app/lib/sanity-image";
 import type { BackstageArticleCard } from "../../lib/types";
 
 type LatestBackstageArticlesGridProps = {
@@ -22,26 +23,33 @@ export function LatestBackstageArticlesGrid({
     <section className="mx-auto mt-12 w-full max-w-6xl px-4 pb-16">
       <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <h2 className="whitespace-nowrap text-3xl font-semibold leading-tight tracking-tight sm:text-2xl">
-          Siste fra Backstage
+          Siste historier
         </h2>
         <Link
           href="/backstage"
           className="inline-flex w-fit items-center gap-2 text-base font-medium text-black underline-offset-4 hover:underline sm:text-sm"
         >
-          Alle backstage <span aria-hidden>→</span>
+          Alle historier <span aria-hidden>→</span>
         </Link>
       </div>
 
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
-        {articles.map((article) => (
+        {articles.map((article) => {
+          const heroImageUrl =
+            getSanityImageUrl(article.heroImage, {
+              width: 900,
+              height: 1200,
+            }) || article.heroImageUrl;
+
+          return (
           <article
             key={article._id}
             className="relative aspect-[4/5] w-full overflow-hidden rounded-2xl md:aspect-[3/4]"
           >
-            {article.heroImageUrl ? (
+            {heroImageUrl ? (
               <div
                 className="absolute inset-0 bg-cover bg-center transition-transform duration-300"
-                style={{ backgroundImage: `url(${article.heroImageUrl})` }}
+                style={{ backgroundImage: `url(${heroImageUrl})` }}
                 aria-hidden
               />
             ) : (
@@ -70,7 +78,8 @@ export function LatestBackstageArticlesGrid({
               </p>
             </div>
           </article>
-        ))}
+          );
+        })}
       </div>
     </section>
   );

@@ -37,6 +37,7 @@ export const featuredEventsQuery = groq`
       title,
       startsAt,
       "slug": slug.current,
+      heroImage,
       "heroImageUrl": heroImage.asset->url,
       "heroImageAlt": heroImage.alt,
       "contributors": contributors[]->name
@@ -54,6 +55,7 @@ export const eventBySlugQuery = groq`
     startsAt,
     endsAt,
     "slug": slug.current,
+    heroImage,
     "heroImageUrl": heroImage.asset->url,
     "heroImageAlt": heroImage.alt,
     "contributors": contributors[]->name,
@@ -93,6 +95,7 @@ export const upcomingEventsQuery = groq`
     title,
     startsAt,
     "slug": slug.current,
+    heroImage,
     "heroImageUrl": heroImage.asset->url,
     "heroImageAlt": heroImage.alt,
     "venue": venue->{
@@ -124,6 +127,7 @@ export const upcomingEventsPaginatedQuery = groq`
     title,
     startsAt,
     "slug": slug.current,
+    heroImage,
     "heroImageUrl": heroImage.asset->url,
     "heroImageAlt": heroImage.alt,
     "venue": venue->{
@@ -158,6 +162,7 @@ export const allVenuesQuery = groq`
     "slug": slug.current,
     city,
     address,
+    logo,
     "logoUrl": logo.asset->url,
     website,
     "geo": geo{
@@ -177,6 +182,7 @@ export const venueBySlugQuery = groq`
     "slug": slug.current,
     city,
     address,
+    logo,
     "logoUrl": logo.asset->url,
     website,
     "geo": geo{
@@ -198,6 +204,7 @@ export const upcomingEventsByVenueSlugQuery = groq`
     title,
     startsAt,
     "slug": slug.current,
+    heroImage,
     "heroImageUrl": heroImage.asset->url,
     "heroImageAlt": heroImage.alt,
     "venue": venue->{
@@ -220,6 +227,7 @@ export const latestBackstageArticlesQuery = groq`
     "slug": slug.current,
     excerpt,
     publishedAt,
+    heroImage,
     "heroImageUrl": heroImage.asset->url,
     "heroImageAlt": heroImage.alt
   }
@@ -242,6 +250,7 @@ export const backstageArticlesPaginatedQuery = groq`
     "slug": slug.current,
     excerpt,
     publishedAt,
+    heroImage,
     "heroImageUrl": heroImage.asset->url,
     "heroImageAlt": heroImage.alt
   }
@@ -262,20 +271,24 @@ export const backstageArticleBySlugQuery = groq`
     "authors": authors[]->{
       _id,
       name,
+      image,
       "imageUrl": image.asset->url,
       "imageAlt": image.alt
     },
+    heroImage,
     "heroImageUrl": heroImage.asset->url,
     "heroImageAlt": heroImage.alt,
     "pageBuilder": pageBuilder[]{
       ...,
       _type == "heroBlock" => {
         ...,
+        backgroundImage,
         "backgroundImageUrl": backgroundImage.asset->url,
         "backgroundImageAlt": backgroundImage.alt
       },
       _type == "imageBlock" => {
         ...,
+        image,
         "imageUrl": image.asset->url,
         "imageAlt": image.alt
       },
@@ -283,6 +296,12 @@ export const backstageArticleBySlugQuery = groq`
         ...,
         "images": images[]{
           ...,
+          "image": {
+            "asset": asset,
+            "crop": crop,
+            "hotspot": hotspot,
+            "alt": alt
+          },
           "url": asset->url,
           alt,
           caption
@@ -290,16 +309,19 @@ export const backstageArticleBySlugQuery = groq`
       },
       _type == "imageTextLeftBlock" => {
         ...,
+        image,
         "imageUrl": image.asset->url,
         "imageAlt": image.alt
       },
       _type == "imageTextRightBlock" => {
         ...,
+        image,
         "imageUrl": image.asset->url,
         "imageAlt": image.alt
       },
       _type == "blockquoteBlock" => {
         ...,
+        backgroundImage,
         "backgroundImageUrl": backgroundImage.asset->url,
         "backgroundImageAlt": backgroundImage.alt
       }

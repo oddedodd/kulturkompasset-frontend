@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { CalendarDays, MapPin } from "lucide-react";
+import { getSanityImageUrl } from "@/app/lib/sanity-image";
 import type { CalendarEvent } from "@/app/lib/types";
 
 const dateFormatter = new Intl.DateTimeFormat("nb-NO", {
@@ -14,6 +15,11 @@ type EventCardProps = {
 
 export default function EventCard({ event }: EventCardProps) {
   const href = event.slug ? `/event/${event.slug}` : "/kalender";
+  const heroImageUrl =
+    getSanityImageUrl(event.heroImage, {
+      width: 900,
+      height: 560,
+    }) || event.heroImageUrl;
   const venueLabel = event.venue?.name
     ? event.venue.city
       ? `${event.venue.name}, ${event.venue.city}`
@@ -29,10 +35,10 @@ export default function EventCard({ event }: EventCardProps) {
         aria-label={`Åpne arrangement: ${event.title}`}
         className="flex h-full min-h-[34rem] flex-col overflow-hidden rounded-[1.5rem] bg-[#E9E5E0]"
       >
-        {event.heroImageUrl ? (
+        {heroImageUrl ? (
           <div
             className="h-56 w-full shrink-0 bg-cover bg-center"
-            style={{ backgroundImage: `url(${event.heroImageUrl})` }}
+            style={{ backgroundImage: `url(${heroImageUrl})` }}
             aria-hidden
           />
         ) : (
