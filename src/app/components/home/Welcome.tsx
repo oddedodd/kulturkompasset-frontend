@@ -19,9 +19,11 @@ export function Welcome({ navItems }: WelcomeProps) {
   return (
     <>
       <section className="w-full bg-[#f7f4ee]">
-        <div className="mx-auto w-full max-w-6xl px-4">
-          <div className="flex h-24 items-center justify-end">
-            <MenuButton isOpen={isMenuOpen} onToggle={toggle} />
+        <div className="px-4">
+          <div className="mx-auto w-full max-w-6xl">
+            <div className="flex h-24 items-center justify-end">
+              <MenuButton isOpen={isMenuOpen} onToggle={toggle} />
+            </div>
           </div>
         </div>
 
