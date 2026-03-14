@@ -6,6 +6,7 @@ import { Welcome } from "./components/home/Welcome";
 import { getLatestBackstageArticles } from "./lib/articles";
 import { getUpcomingEventsPage } from "./lib/events";
 import { getHomepageFeaturedEvents } from "./lib/featured-events";
+import { getMainNavigation } from "./lib/navigation";
 
 export const metadata: Metadata = {
   title: "Hjem",
@@ -14,17 +15,17 @@ export const metadata: Metadata = {
 export const revalidate = 3600;
 
 export default async function Home() {
-  const [featuredEvents, backstageArticles, upcomingEvents] = await Promise.all(
-    [
+  const [featuredEvents, backstageArticles, upcomingEvents, navItems] =
+    await Promise.all([
       getHomepageFeaturedEvents(),
       getLatestBackstageArticles(),
       getUpcomingEventsPage({ offset: 0, limit: 12 }),
-    ],
-  );
+      getMainNavigation(),
+    ]);
 
   return (
     <main className="min-h-screen bg-[white]">
-      <Welcome />
+      <Welcome navItems={navItems} />
       <FeaturedEventsCarousel events={featuredEvents} />
       <LatestBackstageArticlesGrid articles={backstageArticles} />
       <UpcomingEventsCarousel events={upcomingEvents} />

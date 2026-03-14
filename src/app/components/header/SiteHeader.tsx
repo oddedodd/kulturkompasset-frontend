@@ -4,6 +4,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useState } from "react";
 import type { NavItem } from "../../lib/types";
 import { MenuButton } from "../menu/MenuButton";
@@ -15,9 +16,14 @@ type SiteHeaderProps = {
 
 export function SiteHeader({ navItems }: SiteHeaderProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const pathname = usePathname();
 
   const toggle = () => setIsMenuOpen((v) => !v);
   const close = () => setIsMenuOpen(false);
+
+  if (pathname === "/") {
+    return null;
+  }
 
   return (
     <>

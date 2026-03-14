@@ -1,37 +1,62 @@
+"use client";
+
 import Image from "next/image";
+import { useState } from "react";
+import type { NavItem } from "../../lib/types";
+import { MenuButton } from "../menu/MenuButton";
+import { MenuOverlay } from "../menu/MenuOverlay";
 
-export function Welcome() {
+type WelcomeProps = {
+  navItems: NavItem[];
+};
+
+export function Welcome({ navItems }: WelcomeProps) {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const toggle = () => setIsMenuOpen((prev) => !prev);
+  const close = () => setIsMenuOpen(false);
+
   return (
-    <section className="w-full bg-[#f7f4ee]">
-      <div className="mx-auto flex min-h-[50vh] w-full max-w-5xl flex-col items-center justify-center px-6 py-6 text-center">
-        <h1 className="w-full">
-          <Image
-            src="/logo01.svg"
-            alt="KulturKompasset"
-            width={1106}
-            height={145}
-            className="mx-auto h-auto w-full max-w-[760px]"
-            priority
-          />
-        </h1>
-        <p className="mt-11 max-w-lg text-xl text-black/60">
-          Din veileder i kultur og fritid i Namdalen
-        </p>
-
-        <div className="relative mt-9 w-full max-w-3xl">
-          <div className="absolute left-0 right-0 top-1/2 h-px -translate-y-1/2 bg-black" />
-          <div className="relative mx-auto flex h-16 w-16 items-center justify-center bg-[#f7f4ee]">
-            <Image
-              src="/kk-symbol.svg"
-              alt="Kulturkompasset symbol"
-              width={46}
-              height={46}
-              className="h-[46px] w-[46px]"
-              priority
-            />
+    <>
+      <section className="w-full bg-[#f7f4ee]">
+        <div className="mx-auto w-full max-w-6xl px-4">
+          <div className="flex h-24 items-center justify-end">
+            <MenuButton isOpen={isMenuOpen} onToggle={toggle} />
           </div>
         </div>
-      </div>
-    </section>
+
+        <div className="mx-auto flex min-h-[calc(50vh-6rem)] w-full max-w-5xl flex-col items-center justify-center px-6 py-6 text-center">
+          <h1 className="w-full">
+            <Image
+              src="/logo01.svg"
+              alt="KulturKompasset"
+              width={1106}
+              height={145}
+              className="mx-auto h-auto w-full max-w-[760px]"
+              priority
+            />
+          </h1>
+          <p className="mt-11 max-w-lg text-xl text-black/60">
+            Din veileder i kultur og fritid i Namdalen
+          </p>
+
+          <div className="relative mt-9 w-full max-w-3xl">
+            <div className="absolute left-0 right-0 top-1/2 h-px -translate-y-1/2 bg-black" />
+            <div className="relative mx-auto flex h-16 w-16 items-center justify-center bg-[#f7f4ee]">
+              <Image
+                src="/kk-symbol.svg"
+                alt="Kulturkompasset symbol"
+                width={46}
+                height={46}
+                className="h-[46px] w-[46px]"
+                priority
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <MenuOverlay isOpen={isMenuOpen} onClose={close} navItems={navItems} />
+    </>
   );
 }
