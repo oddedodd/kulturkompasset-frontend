@@ -3,7 +3,7 @@ import BackstageArticlesGrid from "../components/backstage/BackstageArticlesGrid
 import { getBackstageArticlesPage } from "../lib/articles";
 
 export const metadata: Metadata = {
-  title: "Backstage",
+  title: "Historier",
 };
 
 export default async function BackstagePage() {
@@ -12,7 +12,7 @@ export default async function BackstagePage() {
   return (
     <main className="min-h-screen bg-[#f7f4ee] px-4 py-20">
       <section className="mx-auto w-full max-w-6xl">
-        <h1 className="text-4xl font-semibold tracking-tight">Backstage</h1>
+        <h1 className="text-4xl font-semibold tracking-tight">Historier</h1>
         <p className="mt-3 text-black/70">
           Redaksjonelle saker, intervjuer og innsikt fra backstage.
         </p>
