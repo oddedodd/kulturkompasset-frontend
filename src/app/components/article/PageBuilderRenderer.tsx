@@ -63,10 +63,10 @@ export function PageBuilderRenderer({ blocks, useHeroAsPageTitle = false }: Page
                     alt={block.backgroundImageAlt || block.heading || "Hero"}
                     width={1600}
                     height={900}
-                    className="h-[360px] w-full object-cover sm:h-[420px]"
+                    className="h-[360px] w-full rounded-2xl object-cover sm:h-[420px] sm:rounded-3xl"
                   />
                 ) : (
-                  <div className="h-[260px] w-full bg-gray-200 sm:h-[320px]" />
+                  <div className="h-[260px] w-full rounded-2xl bg-gray-200 sm:h-[320px] sm:rounded-3xl" />
                 )}
               </section>
             );
@@ -97,7 +97,7 @@ export function PageBuilderRenderer({ blocks, useHeroAsPageTitle = false }: Page
                     alt={block.imageAlt || block.image?.alt || "Illustrasjon"}
                     width={1600}
                     height={1000}
-                    className="h-auto w-full object-cover"
+                    className="h-auto w-full rounded-2xl object-cover sm:rounded-3xl"
                   />
                   {block.caption ? (
                     <figcaption className="text-sm text-black/60">{block.caption}</figcaption>
@@ -131,7 +131,7 @@ export function PageBuilderRenderer({ blocks, useHeroAsPageTitle = false }: Page
                       alt={block.imageAlt || block.image?.alt || "Illustrasjon"}
                       width={1200}
                       height={900}
-                      className="h-auto w-full object-cover"
+                      className="h-auto w-full rounded-2xl object-cover sm:rounded-3xl"
                     />
                   ) : null}
                 </div>
@@ -187,7 +187,7 @@ export function PageBuilderRenderer({ blocks, useHeroAsPageTitle = false }: Page
                 height: 2000,
               }) || block.backgroundImageUrl;
             return (
-              <blockquote key={key} className="relative overflow-hidden bg-black/5">
+              <blockquote key={key} className="relative overflow-hidden rounded-2xl bg-black/5 sm:rounded-3xl">
                 {blockquoteBackgroundImageUrl ? (
                   <Image
                     src={blockquoteBackgroundImageUrl}

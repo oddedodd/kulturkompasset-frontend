@@ -23,13 +23,13 @@ export function LatestBackstageArticlesGrid({
     <section className="mx-auto mt-12 w-full max-w-6xl px-4 pb-16">
       <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <h2 className="whitespace-nowrap text-3xl font-semibold leading-tight tracking-tight sm:text-2xl">
-          Siste fra Backstage
+          Siste historier
         </h2>
         <Link
           href="/backstage"
           className="inline-flex w-fit items-center gap-2 text-base font-medium text-black underline-offset-4 hover:underline sm:text-sm"
         >
-          Alle backstage <span aria-hidden>→</span>
+          Alle historier <span aria-hidden>→</span>
         </Link>
       </div>
 
