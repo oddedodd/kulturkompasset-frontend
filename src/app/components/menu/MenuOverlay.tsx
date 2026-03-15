@@ -52,15 +52,14 @@ export function MenuOverlay({ isOpen, onClose, navItems }: MenuOverlayProps) {
     };
   }, [isOpen]);
 
+  if (!isOpen) {
+    return null;
+  }
+
   return (
     <div
-      className={[
-        "fixed inset-0 z-50 transition",
-        isOpen
-          ? "pointer-events-auto opacity-100"
-          : "pointer-events-none opacity-0",
-      ].join(" ")}
-      aria-hidden={!isOpen}
+      className="fixed inset-0 z-50 transition pointer-events-auto opacity-100"
+      aria-hidden={false}
     >
       {/* Bakgrunn */}
       <div className="absolute inset-0 bg-white" onClick={onClose} />
