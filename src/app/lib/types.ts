@@ -68,6 +68,23 @@ export type CalendarEvent = {
   categories?: string[];
 };
 
+export type BulletinItem = {
+  _id: string;
+  title: string;
+  startsAt: string;
+  slug?: string;
+  heroImage?: SanityImageSource;
+  heroImageUrl?: string;
+  heroImageAlt?: string;
+  organizer?: string;
+  description?: string;
+  price?: string;
+};
+
+export type BulletinDetail = BulletinItem & {
+  contact?: string;
+};
+
 type VenueGeoPoint = {
   lat?: number;
   lng?: number;
