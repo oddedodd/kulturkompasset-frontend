@@ -152,6 +152,48 @@ export const upcomingEventVenuesQuery = groq`
   )
 `;
 
+export const bulletinsPaginatedQuery = groq`
+  *[
+    _type == "bulletin" &&
+    (
+      $searchPattern == "" ||
+      coalesce(title, name, "") match $searchPattern ||
+      coalesce(organizer, "") match $searchPattern ||
+      coalesce(description, "") match $searchPattern
+    )
+  ] | order(coalesce(startsAt, date) asc, _createdAt desc)[$offset...$end]{
+    _id,
+    "title": coalesce(title, name),
+    "startsAt": coalesce(startsAt, date),
+    "slug": slug.current,
+    "heroImage": coalesce(heroImage, image),
+    "heroImageUrl": coalesce(heroImage.asset->url, image.asset->url),
+    "heroImageAlt": coalesce(heroImage.alt, image.alt),
+    organizer,
+    description,
+    price
+  }
+`;
+
+export const bulletinBySlugQuery = groq`
+  *[
+    _type == "bulletin" &&
+    slug.current == $slug
+  ][0]{
+    _id,
+    "title": coalesce(title, name),
+    "startsAt": coalesce(startsAt, date),
+    "slug": slug.current,
+    "heroImage": coalesce(heroImage, image),
+    "heroImageUrl": coalesce(heroImage.asset->url, image.asset->url),
+    "heroImageAlt": coalesce(heroImage.alt, image.alt),
+    organizer,
+    contact,
+    description,
+    price
+  }
+`;
+
 export const allVenuesQuery = groq`
   *[
     _type == "venue" &&
