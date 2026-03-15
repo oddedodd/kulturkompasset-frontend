@@ -1,7 +1,13 @@
 import { revalidatePath } from "next/cache";
 import { NextResponse } from "next/server";
 
-const REVALIDATE_PATHS = ["/", "/kalender", "/backstage", "/venues"] as const;
+const REVALIDATE_PATHS = [
+  "/",
+  "/kalender",
+  "/backstage",
+  "/venues",
+  "/bulletin",
+] as const;
 
 function hasValidSecret(secret: string | null): boolean {
   return Boolean(
