@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import BulletinsGrid from "../components/bulletin/BulletinsGrid";
-import { getBulletinsPage } from "../lib/bulletins";
+import BulletinsGrid from "@/app/components/bulletin/BulletinsGrid";
+import { getBulletinsPage } from "@/app/lib/bulletins";
 
 export const metadata: Metadata = {
   title: "Oppslagstavla",

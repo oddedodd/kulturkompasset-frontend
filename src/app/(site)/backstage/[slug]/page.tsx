@@ -3,10 +3,10 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { PageBuilderRenderer } from "../../components/article/PageBuilderRenderer";
-import { articlePortableTextComponents } from "../../components/article/portableTextComponents";
-import { getBackstageArticleBySlug } from "../../lib/articles";
-import { getSanityImageUrl } from "../../lib/sanity-image";
+import { PageBuilderRenderer } from "@/app/components/article/PageBuilderRenderer";
+import { articlePortableTextComponents } from "@/app/components/article/portableTextComponents";
+import { getBackstageArticleBySlug } from "@/app/lib/articles";
+import { getSanityImageUrl } from "@/app/lib/sanity-image";
 
 type BackstageArticlePageProps = {
   params: Promise<{ slug: string }>;

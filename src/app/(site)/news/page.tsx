@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
-import { sanityClient } from '../lib/sanity.client';
-import { latestNewsQuery } from '../lib/queries';
+import { sanityClient } from '@/app/lib/sanity.client';
+import { latestNewsQuery } from '@/app/lib/queries';
 import Link from 'next/link';
 
 export const metadata: Metadata = {

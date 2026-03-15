@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import { SiteHeader } from "./components/header/SiteHeader";
 import "./globals.css";
-import { getMainNavigation } from "./lib/navigation";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -32,14 +30,11 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const navItems = await getMainNavigation();
-
   return (
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <SiteHeader navItems={navItems} />
         {children}
       </body>
     </html>

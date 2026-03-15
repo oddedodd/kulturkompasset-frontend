@@ -4,8 +4,8 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import { PortableText } from "@portabletext/react";
 import { CalendarDays, Clock3, Globe, MapPin, Tag, Ticket, Users } from "lucide-react";
-import { getEventBySlug } from "../../lib/events";
-import { getSanityImageUrl } from "../../lib/sanity-image";
+import { getEventBySlug } from "@/app/lib/events";
+import { getSanityImageUrl } from "@/app/lib/sanity-image";
 
 type EventPageProps = {
   params: Promise<{ slug: string }>;
