@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import VenuesGrid from "../components/venues/VenuesGrid";
-import { getVenues } from "../lib/venues";
+import VenuesGrid from "@/app/components/venues/VenuesGrid";
+import { getVenues } from "@/app/lib/venues";
 
 export const metadata: Metadata = {
   title: "Spillesteder",

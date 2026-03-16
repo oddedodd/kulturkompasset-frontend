@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import CalendarEventsGrid from "../components/events/CalendarEventsGrid";
-import { getUpcomingEventsPage, getUpcomingEventVenues } from "../lib/events";
+import CalendarEventsGrid from "@/app/components/events/CalendarEventsGrid";
+import { getUpcomingEventsPage, getUpcomingEventVenues } from "@/app/lib/events";
 
 export const metadata: Metadata = {
   title: "Kalender",

@@ -3,8 +3,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { CalendarDays, Clock3, Mail, Ticket, UserRound } from "lucide-react";
-import { getBulletinBySlug } from "../../lib/bulletins";
-import { getSanityImageUrl } from "../../lib/sanity-image";
+import { getBulletinBySlug } from "@/app/lib/bulletins";
+import { getSanityImageUrl } from "@/app/lib/sanity-image";
 
 type BulletinPageProps = {
   params: Promise<{ slug: string }>;

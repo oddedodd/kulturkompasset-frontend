@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import BackstageArticlesGrid from "../components/backstage/BackstageArticlesGrid";
-import { getBackstageArticlesPage } from "../lib/articles";
+import BackstageArticlesGrid from "@/app/components/backstage/BackstageArticlesGrid";
+import { getBackstageArticlesPage } from "@/app/lib/articles";
 
 export const metadata: Metadata = {
   title: "Historier",
