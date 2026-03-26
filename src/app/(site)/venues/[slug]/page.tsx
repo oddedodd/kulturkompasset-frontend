@@ -5,13 +5,18 @@ import { notFound } from "next/navigation";
 import { Globe, MapPin } from "lucide-react";
 import VenueEventsList from "@/app/components/venues/VenueEventsList";
 import { getSanityImageUrl } from "@/app/lib/sanity-image";
-import { getUpcomingEventsForVenueSlug, getVenueBySlug } from "@/app/lib/venues";
+import {
+  getUpcomingEventsForVenueSlug,
+  getVenueBySlug,
+} from "@/app/lib/venues";
 
 type VenuePageProps = {
   params: Promise<{ slug: string }>;
 };
 
-export async function generateMetadata({ params }: VenuePageProps): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: VenuePageProps): Promise<Metadata> {
   const { slug } = await params;
   const venue = await getVenueBySlug(slug);
 
@@ -23,7 +28,8 @@ export async function generateMetadata({ params }: VenuePageProps): Promise<Meta
 
   return {
     title: venue.name,
-    description: [venue.city, venue.address].filter(Boolean).join(", ") || undefined,
+    description:
+      [venue.city, venue.address].filter(Boolean).join(", ") || undefined,
   };
 }
 
@@ -78,9 +84,10 @@ export default async function VenuePage({ params }: VenuePageProps) {
                       target="_blank"
                       rel="noopener noreferrer"
                       className="underline underline-offset-4 hover:text-white"
-                    >
-                      Besok nettsted
-                    </a>
+                      dangerouslySetInnerHTML={{
+                        __html: "Bes&oslash;k nettsted",
+                      }}
+                    />
                   </div>
                 ) : null}
               </div>
