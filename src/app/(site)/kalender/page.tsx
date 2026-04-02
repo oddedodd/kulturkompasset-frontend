@@ -17,7 +17,7 @@ export default async function KalenderPage() {
       <section className="mx-auto w-full max-w-6xl">
         <h1 className="text-4xl font-semibold tracking-tight">Kalender</h1>
         <p className="mt-3 text-black/70">
-          Kommende arrangementer i kronologisk rekkefølge.
+        Her er et utvalg av det som skjer på scener rundt om i Namdalen.
         </p>
       </section>
 

@@ -14,7 +14,7 @@ export default async function BackstagePage() {
       <section className="mx-auto w-full max-w-6xl">
         <h1 className="text-4xl font-semibold tracking-tight">Historier</h1>
         <p className="mt-3 text-black/70">
-          Redaksjonelle saker, intervjuer og innsikt fra backstage.
+        Møt noen av menneskene som på en eller annen måte har satt Namdalen på det kulturelle kartet.
         </p>
       </section>
 
