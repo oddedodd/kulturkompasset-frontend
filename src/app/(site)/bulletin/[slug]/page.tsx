@@ -111,7 +111,14 @@ export default async function BulletinDetailPage({ params }: BulletinPageProps) 
             <span aria-hidden>←</span> Tilbake til oppslagstavla
           </Link>
 
-          <div className="mt-8 grid gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(320px,34rem)] lg:items-end">
+          <div
+            className={[
+              "mt-8 grid gap-10 lg:items-end",
+              heroForegroundUrl
+                ? "lg:grid-cols-[minmax(0,1fr)_minmax(320px,34rem)]"
+                : "lg:grid-cols-1",
+            ].join(" ")}
+          >
             <div className="max-w-2xl">
               <h1 className="text-4xl font-semibold tracking-tight text-white sm:text-5xl">
                 {bulletin.title}
