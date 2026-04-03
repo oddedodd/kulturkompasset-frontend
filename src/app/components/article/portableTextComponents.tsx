@@ -3,19 +3,19 @@ import type { PortableTextComponents } from "@portabletext/react";
 
 export const articlePortableTextComponents: PortableTextComponents = {
   block: {
-    normal: ({ children }) => <p className="mb-5 leading-relaxed text-black/90">{children}</p>,
+    normal: ({ children }) => <p className="mb-3 leading-relaxed text-black/90">{children}</p>,
     h1: ({ children }) => (
-      <h1 className="mb-5 mt-10 text-4xl font-semibold tracking-tight text-black">{children}</h1>
+      <h1 className="mb-4 mt-8 text-4xl font-semibold tracking-tight text-black">{children}</h1>
     ),
     h2: ({ children }) => (
-      <h2 className="mb-4 mt-9 text-3xl font-semibold tracking-tight text-black">{children}</h2>
+      <h2 className="mb-3 mt-7 text-3xl font-semibold tracking-tight text-black">{children}</h2>
     ),
     h3: ({ children }) => (
-      <h3 className="mb-4 mt-8 text-2xl font-semibold tracking-tight text-black">{children}</h3>
+      <h3 className="mb-3 mt-6 text-2xl font-semibold tracking-tight text-black">{children}</h3>
     ),
-    h4: ({ children }) => <h4 className="mb-3 mt-7 text-xl font-semibold text-black">{children}</h4>,
+    h4: ({ children }) => <h4 className="mb-2 mt-5 text-xl font-semibold text-black">{children}</h4>,
     blockquote: ({ children }) => (
-      <blockquote className="my-8 border-l-4 border-black/25 pl-5 text-lg italic text-black/80">
+      <blockquote className="my-6 border-l-4 border-black/25 pl-5 text-lg italic text-black/80">
         {children}
       </blockquote>
     ),
@@ -51,8 +51,8 @@ export const articlePortableTextComponents: PortableTextComponents = {
     },
   },
   list: {
-    bullet: ({ children }) => <ul className="mb-5 ml-6 list-disc space-y-2">{children}</ul>,
-    number: ({ children }) => <ol className="mb-5 ml-6 list-decimal space-y-2">{children}</ol>,
+    bullet: ({ children }) => <ul className="mb-3 ml-6 list-disc space-y-1.5">{children}</ul>,
+    number: ({ children }) => <ol className="mb-3 ml-6 list-decimal space-y-1.5">{children}</ol>,
   },
   listItem: {
     bullet: ({ children }) => <li className="leading-relaxed text-black/90">{children}</li>,

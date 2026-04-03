@@ -12,9 +12,10 @@ type PageBuilderRendererProps = {
 
 export function PageBuilderRenderer({ blocks, useHeroAsPageTitle = false }: PageBuilderRendererProps) {
   return (
-    <section className="mt-10 space-y-10">
+    <section className="mt-8 space-y-6 sm:space-y-8">
       {blocks.map((block, index) => {
         const key = block._key || `${block._type}-${index}`;
+        const previousBlockType = index > 0 ? blocks[index - 1]?._type : undefined;
 
         switch (block._type) {
           case "heroBlock":
@@ -80,7 +81,13 @@ export function PageBuilderRenderer({ blocks, useHeroAsPageTitle = false }: Page
 
           case "textBlock":
             return block.content && block.content.length > 0 ? (
-              <section key={key} className="prose prose-neutral max-w-none">
+              <section
+                key={key}
+                className={[
+                  "prose prose-neutral max-w-none",
+                  previousBlockType === "textBlock" ? "-mt-6 sm:-mt-7" : "",
+                ].join(" ")}
+              >
                 <PortableText value={block.content} components={articlePortableTextComponents} />
               </section>
             ) : null;

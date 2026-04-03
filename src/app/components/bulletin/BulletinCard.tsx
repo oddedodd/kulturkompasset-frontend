@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { CalendarDays, UserRound } from "lucide-react";
-import { getSanityImageUrl } from "@/app/lib/sanity-image";
 import type { BulletinItem } from "@/app/lib/types";
 
 const dateFormatter = new Intl.DateTimeFormat("nb-NO", {
@@ -16,11 +15,6 @@ type BulletinCardProps = {
 };
 
 export default function BulletinCard({ bulletin }: BulletinCardProps) {
-  const heroImageUrl =
-    getSanityImageUrl(bulletin.heroImage, {
-      width: 900,
-      height: 560,
-    }) || bulletin.heroImageUrl;
   const organizerLabel = bulletin.organizer || "Arrangør kommer";
   const href = bulletin.slug ? `/bulletin/${bulletin.slug}` : "/bulletin";
 
@@ -29,20 +23,10 @@ export default function BulletinCard({ bulletin }: BulletinCardProps) {
       <Link
         href={href}
         aria-label={`Åpne bulletin: ${bulletin.title}`}
-        className="flex h-full min-h-136 flex-col overflow-hidden rounded-3xl bg-[#E9E5E0]"
+        className="flex h-full flex-col overflow-hidden rounded-3xl bg-[#E9E5E0]"
       >
-        {heroImageUrl ? (
-          <div
-            className="h-56 w-full shrink-0 bg-cover bg-center"
-            style={{ backgroundImage: `url(${heroImageUrl})` }}
-            aria-hidden
-          />
-        ) : (
-          <div className="h-56 w-full shrink-0 bg-[#c5bbae]" aria-hidden />
-        )}
-
-        <div className="flex flex-1 flex-col space-y-4 p-6 text-[#312821]">
-          <h2 className="text-[2.2rem] font-semibold leading-tight tracking-tight">
+        <div className="flex flex-1 flex-col space-y-3 p-5 text-[#312821]">
+          <h2 className="text-3xl font-semibold leading-tight tracking-tight sm:text-[2rem]">
             {bulletin.title}
           </h2>
 
@@ -59,12 +43,6 @@ export default function BulletinCard({ bulletin }: BulletinCardProps) {
               <span>{organizerLabel}</span>
             </div>
           </div>
-
-          {bulletin.description ? (
-            <p className="mt-auto line-clamp-4 text-sm text-black/70">{bulletin.description}</p>
-          ) : (
-            <div className="mt-auto" />
-          )}
 
           {bulletin.price ? (
             <div className="pt-2 text-sm">

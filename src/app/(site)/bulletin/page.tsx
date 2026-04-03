@@ -18,7 +18,7 @@ export default async function BulletinPage() {
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
             <h1 className="text-4xl font-semibold tracking-tight">Oppslagstavla</h1>
-            <p className="mt-3 text-black/70">Arrangementer sendt inn av brukere.</p>
+            <p className="mt-3 text-black/70">Her kan du selv legge inn små og mellomstore arrangement på vegne av ditt lag eller forening</p>
           </div>
           <Link
             href="/bulletin/submit"
