@@ -7,6 +7,7 @@ import { PageBuilderRenderer } from "@/app/components/article/PageBuilderRendere
 import { articlePortableTextComponents } from "@/app/components/article/portableTextComponents";
 import { getBackstageArticleBySlug } from "@/app/lib/articles";
 import { getSanityImageUrl } from "@/app/lib/sanity-image";
+import { buildSeoMetadata, sanitizeSeoDescription } from "@/app/lib/seo";
 
 type BackstageArticlePageProps = {
   params: Promise<{ slug: string }>;
@@ -28,10 +29,19 @@ export async function generateMetadata({
     return { title: "Artikkel ikke funnet" };
   }
 
-  return {
+  const description = sanitizeSeoDescription(article.excerpt);
+  const heroImageUrl =
+    getSanityImageUrl(article.heroImage, {
+      width: 1200,
+      height: 630,
+    }) || article.heroImageUrl;
+
+  return buildSeoMetadata({
     title: article.title,
-    description: article.excerpt || article.subtitle || undefined,
-  };
+    description,
+    path: `/backstage/${slug}`,
+    imageUrl: heroImageUrl,
+  });
 }
 
 export default async function BackstageArticlePage({ params }: BackstageArticlePageProps) {
