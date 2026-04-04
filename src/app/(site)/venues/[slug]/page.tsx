@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import { Globe, MapPin } from "lucide-react";
 import VenueEventsList from "@/app/components/venues/VenueEventsList";
 import { getSanityImageUrl } from "@/app/lib/sanity-image";
+import { buildSeoMetadata, sanitizeSeoDescription } from "@/app/lib/seo";
 import {
   getUpcomingEventsForVenueSlug,
   getVenueBySlug,
@@ -26,11 +27,21 @@ export async function generateMetadata({
     };
   }
 
-  return {
+  const description = sanitizeSeoDescription(
+    [venue.city, venue.address].filter(Boolean).join(", "),
+  );
+  const imageUrl =
+    getSanityImageUrl(venue.logo, {
+      width: 1200,
+      height: 630,
+    }) || venue.logoUrl;
+
+  return buildSeoMetadata({
     title: venue.name,
-    description:
-      [venue.city, venue.address].filter(Boolean).join(", ") || undefined,
-  };
+    description,
+    path: `/venues/${slug}`,
+    imageUrl,
+  });
 }
 
 export default async function VenuePage({ params }: VenuePageProps) {

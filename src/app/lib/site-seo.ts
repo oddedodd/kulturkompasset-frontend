@@ -3,7 +3,7 @@ import { siteSettingsSeoQuery } from "./queries";
 import { sanityClient } from "./sanity.client";
 import type { SanityImageSource, SeoFields } from "./types";
 
-type SiteSeoPage = "home" | "events" | "bulletin" | "backstage";
+type SiteSeoPage = "home" | "events" | "bulletin" | "backstage" | "venues";
 
 type UnknownRecord = Record<string, unknown>;
 
@@ -39,6 +39,14 @@ const seoKeyCandidates: Record<SiteSeoPage, string[]> = {
     "storiesSeo",
     "historierSeo",
     "seoHistorier",
+  ],
+  venues: [
+    "venuesSeo",
+    "seoVenues",
+    "venueSeo",
+    "seoVenue",
+    "spillestederSeo",
+    "seoSpillesteder",
   ],
 };
 
