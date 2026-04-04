@@ -5,6 +5,7 @@ type SeoMetadataInput = {
   description?: string;
   path: string;
   imageUrl?: string;
+  noIndex?: boolean;
 };
 
 const DEFAULT_MAX_DESCRIPTION_LENGTH = 160;
@@ -63,6 +64,7 @@ export function buildSeoMetadata({
   description,
   path,
   imageUrl,
+  noIndex,
 }: SeoMetadataInput): Metadata {
   const canonicalUrl = toAbsoluteUrl(path);
   const absoluteImageUrl = imageUrl ? toAbsoluteUrl(imageUrl) : undefined;
@@ -94,5 +96,17 @@ export function buildSeoMetadata({
       description,
       ...(absoluteImageUrl ? { images: [absoluteImageUrl] } : {}),
     },
+    ...(noIndex
+      ? {
+          robots: {
+            index: false,
+            follow: false,
+            googleBot: {
+              index: false,
+              follow: false,
+            },
+          },
+        }
+      : {}),
   };
 }

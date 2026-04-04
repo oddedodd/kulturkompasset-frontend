@@ -29,18 +29,28 @@ export async function generateMetadata({
     return { title: "Artikkel ikke funnet" };
   }
 
-  const description = sanitizeSeoDescription(article.excerpt);
-  const heroImageUrl =
+  const seoDescription = sanitizeSeoDescription(article.seo?.metaDescription);
+  const defaultDescription = sanitizeSeoDescription(article.excerpt);
+  const description = seoDescription || defaultDescription;
+  const seoOgImageUrl =
+    getSanityImageUrl(article.seo?.ogImage, {
+      width: 1200,
+      height: 630,
+    }) || article.seo?.ogImageUrl;
+  const defaultOgImageUrl =
     getSanityImageUrl(article.heroImage, {
       width: 1200,
       height: 630,
     }) || article.heroImageUrl;
+  const imageUrl = seoOgImageUrl || defaultOgImageUrl;
+  const title = article.seo?.metaTitle?.trim() || article.title;
 
   return buildSeoMetadata({
-    title: article.title,
+    title,
     description,
     path: `/backstage/${slug}`,
-    imageUrl: heroImageUrl,
+    imageUrl,
+    noIndex: article.seo?.noIndex,
   });
 }
 

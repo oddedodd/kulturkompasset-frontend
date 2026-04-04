@@ -81,6 +81,13 @@ export const eventBySlugQuery = groq`
     summary,
     ingress,
     description,
+    "seo": seo{
+      metaTitle,
+      metaDescription,
+      noIndex,
+      ogImage,
+      "ogImageUrl": ogImage.asset->url
+    },
     body
   }
 `;
@@ -320,6 +327,13 @@ export const backstageArticleBySlugQuery = groq`
     heroImage,
     "heroImageUrl": heroImage.asset->url,
     "heroImageAlt": heroImage.alt,
+    "seo": seo{
+      metaTitle,
+      metaDescription,
+      noIndex,
+      ogImage,
+      "ogImageUrl": ogImage.asset->url
+    },
     "pageBuilder": pageBuilder[]{
       ...,
       _type == "heroBlock" => {

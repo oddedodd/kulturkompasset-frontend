@@ -68,18 +68,28 @@ export async function generateMetadata({ params }: EventPageProps): Promise<Meta
     };
   }
 
-  const description = sanitizeSeoDescription(event.summary || event.ingress);
-  const heroImageUrl =
+  const seoDescription = sanitizeSeoDescription(event.seo?.metaDescription);
+  const defaultDescription = sanitizeSeoDescription(event.summary || event.ingress);
+  const description = seoDescription || defaultDescription;
+  const seoOgImageUrl =
+    getSanityImageUrl(event.seo?.ogImage, {
+      width: 1200,
+      height: 630,
+    }) || event.seo?.ogImageUrl;
+  const defaultOgImageUrl =
     getSanityImageUrl(event.heroImage, {
       width: 1200,
       height: 630,
     }) || event.heroImageUrl;
+  const imageUrl = seoOgImageUrl || defaultOgImageUrl;
+  const title = event.seo?.metaTitle?.trim() || event.title;
 
   return buildSeoMetadata({
-    title: event.title,
+    title,
     description,
     path: `/event/${slug}`,
-    imageUrl: heroImageUrl,
+    imageUrl,
+    noIndex: event.seo?.noIndex,
   });
 }
 

@@ -49,6 +49,7 @@ export type EventDetail = {
   summary?: string;
   ingress?: string;
   description?: string;
+  seo?: SeoFields;
   body?: PortableTextBlock[];
 };
 
@@ -132,8 +133,17 @@ export type BackstageArticleDetail = {
   heroImage?: SanityImageSource;
   heroImageUrl?: string;
   heroImageAlt?: string;
+  seo?: SeoFields;
   pageBuilder?: ArticlePageBuilderBlock[];
   body?: PortableTextBlock[];
+};
+
+export type SeoFields = {
+  metaTitle?: string;
+  metaDescription?: string;
+  noIndex?: boolean;
+  ogImage?: SanityImageSource;
+  ogImageUrl?: string;
 };
 
 type PageBuilderBlockBase = {
