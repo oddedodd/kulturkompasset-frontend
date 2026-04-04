@@ -2,10 +2,30 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import BulletinsGrid from "@/app/components/bulletin/BulletinsGrid";
 import { getBulletinsPage } from "@/app/lib/bulletins";
+import { getSanityImageUrl } from "@/app/lib/sanity-image";
+import { buildSeoMetadata, sanitizeSeoDescription } from "@/app/lib/seo";
+import { getSitePageSeo } from "@/app/lib/site-seo";
 
-export const metadata: Metadata = {
-  title: "Oppslagstavla",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const seo = await getSitePageSeo("bulletin");
+  const title = seo?.metaTitle || "Oppslagstavla";
+  const description =
+    sanitizeSeoDescription(seo?.metaDescription) ||
+    "Her kan du selv legge inn små og mellomstore arrangement på vegne av ditt lag eller forening";
+  const imageUrl =
+    getSanityImageUrl(seo?.ogImage, {
+      width: 1200,
+      height: 630,
+    }) || seo?.ogImageUrl;
+
+  return buildSeoMetadata({
+    title,
+    description,
+    path: "/bulletin",
+    imageUrl,
+    noIndex: seo?.noIndex,
+  });
+}
 
 export const revalidate = 3600;
 
