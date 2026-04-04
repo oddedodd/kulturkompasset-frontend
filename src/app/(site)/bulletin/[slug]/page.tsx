@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import { CalendarDays, Clock3, Mail, Ticket, UserRound } from "lucide-react";
 import { getBulletinBySlug } from "@/app/lib/bulletins";
 import { getSanityImageUrl } from "@/app/lib/sanity-image";
+import { buildSeoMetadata, sanitizeSeoDescription } from "@/app/lib/seo";
 
 type BulletinPageProps = {
   params: Promise<{ slug: string }>;
@@ -55,10 +56,19 @@ export async function generateMetadata({ params }: BulletinPageProps): Promise<M
     return { title: "Oppslag ikke funnet" };
   }
 
-  return {
+  const description = sanitizeSeoDescription(bulletin.description);
+  const heroImageUrl =
+    getSanityImageUrl(bulletin.heroImage, {
+      width: 1200,
+      height: 630,
+    }) || bulletin.heroImageUrl;
+
+  return buildSeoMetadata({
     title: bulletin.title,
-    description: bulletin.description || undefined,
-  };
+    description,
+    path: `/bulletin/${slug}`,
+    imageUrl: heroImageUrl,
+  });
 }
 
 export default async function BulletinDetailPage({ params }: BulletinPageProps) {

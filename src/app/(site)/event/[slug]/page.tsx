@@ -6,6 +6,7 @@ import { PortableText } from "@portabletext/react";
 import { CalendarDays, Clock3, Globe, MapPin, Tag, Ticket, Users } from "lucide-react";
 import { getEventBySlug } from "@/app/lib/events";
 import { getSanityImageUrl } from "@/app/lib/sanity-image";
+import { buildSeoMetadata, sanitizeSeoDescription } from "@/app/lib/seo";
 
 type EventPageProps = {
   params: Promise<{ slug: string }>;
@@ -67,10 +68,19 @@ export async function generateMetadata({ params }: EventPageProps): Promise<Meta
     };
   }
 
-  return {
+  const description = sanitizeSeoDescription(event.summary || event.ingress);
+  const heroImageUrl =
+    getSanityImageUrl(event.heroImage, {
+      width: 1200,
+      height: 630,
+    }) || event.heroImageUrl;
+
+  return buildSeoMetadata({
     title: event.title,
-    description: event.ingress || event.description || undefined,
-  };
+    description,
+    path: `/event/${slug}`,
+    imageUrl: heroImageUrl,
+  });
 }
 
 export default async function EventPage({ params }: EventPageProps) {
