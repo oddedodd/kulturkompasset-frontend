@@ -27,6 +27,15 @@ export const mainNavigationQuery = groq`
   }
 `;
 
+export const siteSettingsSeoQuery = groq`
+  *[
+    _type == "siteSettings" &&
+    (_id == "site-settings" || _id == "drafts.site-settings")
+  ][0]{
+    ...
+  }
+`;
+
 export const featuredEventsQuery = groq`
   *[
     _type == "siteSettings" &&

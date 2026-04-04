@@ -1,10 +1,30 @@
 import type { Metadata } from "next";
 import CalendarEventsGrid from "@/app/components/events/CalendarEventsGrid";
 import { getUpcomingEventsPage, getUpcomingEventVenues } from "@/app/lib/events";
+import { getSanityImageUrl } from "@/app/lib/sanity-image";
+import { buildSeoMetadata, sanitizeSeoDescription } from "@/app/lib/seo";
+import { getSitePageSeo } from "@/app/lib/site-seo";
 
-export const metadata: Metadata = {
-  title: "Kalender",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const seo = await getSitePageSeo("events");
+  const title = seo?.metaTitle || "Kalender";
+  const description =
+    sanitizeSeoDescription(seo?.metaDescription) ||
+    "Her er et utvalg av det som skjer på scener rundt om i Namdalen.";
+  const imageUrl =
+    getSanityImageUrl(seo?.ogImage, {
+      width: 1200,
+      height: 630,
+    }) || seo?.ogImageUrl;
+
+  return buildSeoMetadata({
+    title,
+    description,
+    path: "/kalender",
+    imageUrl,
+    noIndex: seo?.noIndex,
+  });
+}
 
 export default async function KalenderPage() {
   const [events, venueOptions] = await Promise.all([
