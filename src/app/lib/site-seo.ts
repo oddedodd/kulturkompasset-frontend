@@ -1,4 +1,5 @@
-import { cache } from "react";
+import { unstable_cache } from "next/cache";
+import { CACHE_TAGS } from "./cache-tags";
 import { siteSettingsSeoQuery } from "./queries";
 import { sanityClient } from "./sanity.client";
 import type { SanityImageSource, SeoFields } from "./types";
@@ -81,11 +82,23 @@ function parseSeoObject(value: unknown): SeoFields | undefined {
   };
 }
 
-export const getSitePageSeo = cache(async (page: SiteSeoPage): Promise<SeoFields | undefined> => {
+const getSiteSettingsSeoCached = unstable_cache(
+  async (): Promise<UnknownRecord | null> => {
+    try {
+      return await sanityClient
+        .withConfig({ useCdn: false, perspective: "published" })
+        .fetch<UnknownRecord | null>(siteSettingsSeoQuery);
+    } catch {
+      return null;
+    }
+  },
+  ["site-settings-seo"],
+  { tags: [CACHE_TAGS.siteSettings] },
+);
+
+export async function getSitePageSeo(page: SiteSeoPage): Promise<SeoFields | undefined> {
   try {
-    const settings = await sanityClient
-      .withConfig({ useCdn: false, perspective: "published" })
-      .fetch<UnknownRecord | null>(siteSettingsSeoQuery);
+    const settings = await getSiteSettingsSeoCached();
 
     if (!settings || !isRecord(settings)) return undefined;
 
@@ -109,4 +122,4 @@ export const getSitePageSeo = cache(async (page: SiteSeoPage): Promise<SeoFields
   } catch {
     return undefined;
   }
-});
+}

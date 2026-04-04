@@ -1,3 +1,5 @@
+import { unstable_cache } from "next/cache";
+import { CACHE_TAGS } from "./cache-tags";
 import { bulletinBySlugQuery, bulletinsPaginatedQuery } from "./queries";
 import { sanityClient } from "./sanity.client";
 import type { BulletinDetail, BulletinItem } from "./types";
@@ -7,6 +9,31 @@ type GetBulletinsPageInput = {
   limit?: number;
   search?: string;
 };
+
+const getBulletinBySlugCached = unstable_cache(
+  async (slug: string): Promise<BulletinDetail | null> => {
+    try {
+      const bulletin = await sanityClient
+        .withConfig({ useCdn: false, perspective: "published" })
+        .fetch<BulletinDetail | null>(bulletinBySlugQuery, { slug });
+
+      if (
+        !bulletin ||
+        typeof bulletin._id !== "string" ||
+        typeof bulletin.title !== "string" ||
+        typeof bulletin.startsAt !== "string"
+      ) {
+        return null;
+      }
+
+      return bulletin;
+    } catch {
+      return null;
+    }
+  },
+  ["bulletin-by-slug"],
+  { tags: [CACHE_TAGS.bulletins] },
+);
 
 export async function getBulletinsPage({
   offset = 0,
@@ -33,24 +60,7 @@ export async function getBulletinsPage({
 }
 
 export async function getBulletinBySlug(slug: string): Promise<BulletinDetail | null> {
-  try {
-    const bulletin = await sanityClient
-      .withConfig({ useCdn: false, perspective: "published" })
-      .fetch<BulletinDetail | null>(bulletinBySlugQuery, { slug });
-
-    if (
-      !bulletin ||
-      typeof bulletin._id !== "string" ||
-      typeof bulletin.title !== "string" ||
-      typeof bulletin.startsAt !== "string"
-    ) {
-      return null;
-    }
-
-    return bulletin;
-  } catch {
-    return null;
-  }
+  return getBulletinBySlugCached(slug);
 }
 
 function sanitizeBulletins(items: BulletinItem[] = []): BulletinItem[] {

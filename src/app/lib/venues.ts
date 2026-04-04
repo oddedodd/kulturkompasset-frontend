@@ -1,3 +1,5 @@
+import { unstable_cache } from "next/cache";
+import { CACHE_TAGS } from "./cache-tags";
 import {
   allVenuesQuery,
   upcomingEventsByVenueSlugQuery,
@@ -5,6 +7,26 @@ import {
 } from "./queries";
 import { sanityClient } from "./sanity.client";
 import type { CalendarEvent, VenueDetail, VenueListItem } from "./types";
+
+const getVenueBySlugCached = unstable_cache(
+  async (slug: string): Promise<VenueDetail | null> => {
+    try {
+      const venue = await sanityClient
+        .withConfig({ useCdn: false, perspective: "published" })
+        .fetch<VenueDetail | null>(venueBySlugQuery, { slug });
+
+      if (!venue || typeof venue._id !== "string" || typeof venue.name !== "string") {
+        return null;
+      }
+
+      return venue;
+    } catch {
+      return null;
+    }
+  },
+  ["venue-by-slug"],
+  { tags: [CACHE_TAGS.venues] },
+);
 
 export async function getVenues(): Promise<VenueListItem[]> {
   try {
@@ -19,19 +41,7 @@ export async function getVenues(): Promise<VenueListItem[]> {
 }
 
 export async function getVenueBySlug(slug: string): Promise<VenueDetail | null> {
-  try {
-    const venue = await sanityClient
-      .withConfig({ useCdn: false, perspective: "published" })
-      .fetch<VenueDetail | null>(venueBySlugQuery, { slug });
-
-    if (!venue || typeof venue._id !== "string" || typeof venue.name !== "string") {
-      return null;
-    }
-
-    return venue;
-  } catch {
-    return null;
-  }
+  return getVenueBySlugCached(slug);
 }
 
 export async function getUpcomingEventsForVenueSlug(venueSlug: string): Promise<CalendarEvent[]> {

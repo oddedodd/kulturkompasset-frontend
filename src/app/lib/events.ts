@@ -1,3 +1,5 @@
+import { unstable_cache } from "next/cache";
+import { CACHE_TAGS } from "./cache-tags";
 import {
   eventBySlugQuery,
   upcomingEventVenuesQuery,
@@ -7,20 +9,28 @@ import {
 import { sanityClient } from "./sanity.client";
 import type { CalendarEvent, EventDetail } from "./types";
 
-export async function getEventBySlug(slug: string): Promise<EventDetail | null> {
-  try {
-    const event = await sanityClient
-      .withConfig({ useCdn: false, perspective: "published" })
-      .fetch<EventDetail | null>(eventBySlugQuery, { slug });
+const getEventBySlugCached = unstable_cache(
+  async (slug: string): Promise<EventDetail | null> => {
+    try {
+      const event = await sanityClient
+        .withConfig({ useCdn: false, perspective: "published" })
+        .fetch<EventDetail | null>(eventBySlugQuery, { slug });
 
-    if (!event || typeof event._id !== "string" || typeof event.title !== "string") {
+      if (!event || typeof event._id !== "string" || typeof event.title !== "string") {
+        return null;
+      }
+
+      return event;
+    } catch {
       return null;
     }
+  },
+  ["event-by-slug"],
+  { tags: [CACHE_TAGS.events] },
+);
 
-    return event;
-  } catch {
-    return null;
-  }
+export async function getEventBySlug(slug: string): Promise<EventDetail | null> {
+  return getEventBySlugCached(slug);
 }
 
 export async function getUpcomingEvents(): Promise<CalendarEvent[]> {

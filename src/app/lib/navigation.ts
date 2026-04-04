@@ -1,4 +1,6 @@
+import { unstable_cache } from "next/cache";
 import { defaultNavItems } from "../components/menu/navItems";
+import { CACHE_TAGS } from "./cache-tags";
 import type { NavItem } from "./types";
 import { mainNavigationQuery } from "./queries";
 import { sanityClient } from "./sanity.client";
@@ -25,6 +27,18 @@ const homeNavItem: NavItem = {
   href: "/",
 };
 
+const getMainNavigationSettingsCached = unstable_cache(
+  async (): Promise<SiteSettings | null> => {
+    try {
+      return await sanityClient.fetch<SiteSettings | null>(mainNavigationQuery);
+    } catch {
+      return null;
+    }
+  },
+  ["site-settings-main-navigation"],
+  { tags: [CACHE_TAGS.siteSettings] },
+);
+
 function mapToNavItem(item: SanityMenuItem): NavItem | null {
   if (!item.label || !item.section) return null;
 
@@ -37,7 +51,7 @@ function mapToNavItem(item: SanityMenuItem): NavItem | null {
 
 export async function getMainNavigation(): Promise<NavItem[]> {
   try {
-    const settings = await sanityClient.fetch<SiteSettings | null>(mainNavigationQuery);
+    const settings = await getMainNavigationSettingsCached();
     const menuItems =
       settings?.mainNavigation
         ?.map(mapToNavItem)
