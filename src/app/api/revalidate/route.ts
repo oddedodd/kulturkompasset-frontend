@@ -1,5 +1,6 @@
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { NextResponse } from "next/server";
+import { CACHE_TAGS } from "@/app/lib/cache-tags";
 
 const REVALIDATE_PATHS = [
   "/",
@@ -8,6 +9,8 @@ const REVALIDATE_PATHS = [
   "/venues",
   "/bulletin",
 ] as const;
+
+const REVALIDATE_TAGS = Object.values(CACHE_TAGS);
 
 function hasValidSecret(secret: string | null): boolean {
   return Boolean(
@@ -24,6 +27,12 @@ function revalidateKnownPaths() {
   }
 }
 
+function revalidateKnownTags() {
+  for (const tag of REVALIDATE_TAGS) {
+    revalidateTag(tag, "max");
+  }
+}
+
 export async function POST(request: Request) {
   const { searchParams } = new URL(request.url);
   const secret = searchParams.get("secret");
@@ -33,10 +42,12 @@ export async function POST(request: Request) {
   }
 
   revalidateKnownPaths();
+  revalidateKnownTags();
 
   return NextResponse.json({
     revalidated: true,
     paths: REVALIDATE_PATHS,
+    tags: REVALIDATE_TAGS,
     at: new Date().toISOString(),
   });
 }
