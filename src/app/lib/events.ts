@@ -26,7 +26,7 @@ const getEventBySlugCached = unstable_cache(
     }
   },
   ["event-by-slug"],
-  { tags: [CACHE_TAGS.events] },
+  { tags: [CACHE_TAGS.events], revalidate: 86_400 },
 );
 
 export async function getEventBySlug(slug: string): Promise<EventDetail | null> {
@@ -34,15 +34,21 @@ export async function getEventBySlug(slug: string): Promise<EventDetail | null> 
 }
 
 export async function getUpcomingEvents(): Promise<CalendarEvent[]> {
-  try {
-    const events = await sanityClient
-      .withConfig({ useCdn: false, perspective: "published" })
-      .fetch<CalendarEvent[]>(upcomingEventsQuery);
+  return unstable_cache(
+    async (): Promise<CalendarEvent[]> => {
+      try {
+        const events = await sanityClient
+          .withConfig({ useCdn: false, perspective: "published" })
+          .fetch<CalendarEvent[]>(upcomingEventsQuery);
 
-    return sanitizeEvents(events);
-  } catch {
-    return [];
-  }
+        return sanitizeEvents(events);
+      } catch {
+        return [];
+      }
+    },
+    ["upcoming-events"],
+    { tags: [CACHE_TAGS.events, CACHE_TAGS.venues], revalidate: 86_400 },
+  )();
 }
 
 type GetUpcomingEventsPageInput = {
@@ -66,63 +72,84 @@ export async function getUpcomingEventsPage({
   const safeDateStart = toDateStartIso(date);
   const safeSearch = normalizeText(search);
 
-  try {
-    if (safeSearch) {
-      const events = await sanityClient
-        .withConfig({ useCdn: false, perspective: "published" })
-        .fetch<CalendarEvent[]>(upcomingEventsPaginatedQuery, {
-          offset: 0,
-          end: 500,
-          venueName: safeVenueName,
-          dateStart: safeDateStart,
-          searchPattern: "",
-        });
+  const cacheKey = [
+    "upcoming-events-page",
+    String(safeOffset),
+    String(safeLimit),
+    safeVenueName || "__all-venues__",
+    safeDateStart || "__all-dates__",
+    safeSearch || "__no-search__",
+  ];
 
-      const filtered = sanitizeEvents(events).filter((event) =>
-        normalizeText(
-          [
-            event.title,
-            event.venue?.name,
-            event.venue?.city,
-            ...(event.contributors ?? []),
-            ...(event.categories ?? []),
-          ]
-            .filter(Boolean)
-            .join(" "),
-        ).includes(safeSearch),
-      );
+  return unstable_cache(
+    async (): Promise<CalendarEvent[]> => {
+      try {
+        if (safeSearch) {
+          const events = await sanityClient
+            .withConfig({ useCdn: false, perspective: "published" })
+            .fetch<CalendarEvent[]>(upcomingEventsPaginatedQuery, {
+              offset: 0,
+              end: 500,
+              venueName: safeVenueName,
+              dateStart: safeDateStart,
+              searchPattern: "",
+            });
 
-      return filtered.slice(safeOffset, safeOffset + safeLimit);
-    }
+          const filtered = sanitizeEvents(events).filter((event) =>
+            normalizeText(
+              [
+                event.title,
+                event.venue?.name,
+                event.venue?.city,
+                ...(event.contributors ?? []),
+                ...(event.categories ?? []),
+              ]
+                .filter(Boolean)
+                .join(" "),
+            ).includes(safeSearch),
+          );
 
-    const events = await sanityClient
-      .withConfig({ useCdn: false, perspective: "published" })
-      .fetch<CalendarEvent[]>(upcomingEventsPaginatedQuery, {
-        offset: safeOffset,
-        end: safeOffset + safeLimit,
-        venueName: safeVenueName,
-        dateStart: safeDateStart,
-        searchPattern: "",
-      });
+          return filtered.slice(safeOffset, safeOffset + safeLimit);
+        }
 
-    return sanitizeEvents(events);
-  } catch {
-    return [];
-  }
+        const events = await sanityClient
+          .withConfig({ useCdn: false, perspective: "published" })
+          .fetch<CalendarEvent[]>(upcomingEventsPaginatedQuery, {
+            offset: safeOffset,
+            end: safeOffset + safeLimit,
+            venueName: safeVenueName,
+            dateStart: safeDateStart,
+            searchPattern: "",
+          });
+
+        return sanitizeEvents(events);
+      } catch {
+        return [];
+      }
+    },
+    cacheKey,
+    { tags: [CACHE_TAGS.events, CACHE_TAGS.venues], revalidate: 86_400 },
+  )();
 }
 
 export async function getUpcomingEventVenues(): Promise<string[]> {
-  try {
-    const venues = await sanityClient
-      .withConfig({ useCdn: false, perspective: "published" })
-      .fetch<string[]>(upcomingEventVenuesQuery);
+  return unstable_cache(
+    async (): Promise<string[]> => {
+      try {
+        const venues = await sanityClient
+          .withConfig({ useCdn: false, perspective: "published" })
+          .fetch<string[]>(upcomingEventVenuesQuery);
 
-    return (Array.isArray(venues) ? venues : [])
-      .filter((name): name is string => typeof name === "string" && name.trim().length > 0)
-      .sort((a, b) => a.localeCompare(b, "nb"));
-  } catch {
-    return [];
-  }
+        return (Array.isArray(venues) ? venues : [])
+          .filter((name): name is string => typeof name === "string" && name.trim().length > 0)
+          .sort((a, b) => a.localeCompare(b, "nb"));
+      } catch {
+        return [];
+      }
+    },
+    ["upcoming-event-venues"],
+    { tags: [CACHE_TAGS.events, CACHE_TAGS.venues], revalidate: 86_400 },
+  )();
 }
 
 function sanitizeEvents(events: CalendarEvent[] = []): CalendarEvent[] {

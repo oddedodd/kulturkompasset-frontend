@@ -19,7 +19,7 @@ const getFeaturedEventsSettingsCached = unstable_cache(
     }
   },
   ["site-settings-featured-events"],
-  { tags: [CACHE_TAGS.siteSettings, CACHE_TAGS.events] },
+  { tags: [CACHE_TAGS.siteSettings, CACHE_TAGS.events], revalidate: 86_400 },
 );
 
 export async function getHomepageFeaturedEvents(): Promise<FeaturedEvent[]> {

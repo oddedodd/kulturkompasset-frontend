@@ -32,7 +32,7 @@ const getBulletinBySlugCached = unstable_cache(
     }
   },
   ["bulletin-by-slug"],
-  { tags: [CACHE_TAGS.bulletins] },
+  { tags: [CACHE_TAGS.bulletins], revalidate: 86_400 },
 );
 
 export async function getBulletinsPage({
@@ -44,19 +44,33 @@ export async function getBulletinsPage({
   const safeLimit = Number.isFinite(limit) ? Math.max(1, Math.min(24, Math.floor(limit))) : 9;
   const safeSearch = search.trim();
 
-  try {
-    const bulletins = await sanityClient
-      .withConfig({ useCdn: false, perspective: "published" })
-      .fetch<BulletinItem[]>(bulletinsPaginatedQuery, {
-        offset: safeOffset,
-        end: safeOffset + safeLimit,
-        searchPattern: safeSearch ? `*${safeSearch}*` : "",
-      });
+  const safeSearchPattern = safeSearch ? `*${safeSearch}*` : "";
+  const cacheKey = [
+    "bulletins-page",
+    String(safeOffset),
+    String(safeLimit),
+    safeSearch || "__no-search__",
+  ];
 
-    return sanitizeBulletins(bulletins);
-  } catch {
-    return [];
-  }
+  return unstable_cache(
+    async (): Promise<BulletinItem[]> => {
+      try {
+        const bulletins = await sanityClient
+          .withConfig({ useCdn: false, perspective: "published" })
+          .fetch<BulletinItem[]>(bulletinsPaginatedQuery, {
+            offset: safeOffset,
+            end: safeOffset + safeLimit,
+            searchPattern: safeSearchPattern,
+          });
+
+        return sanitizeBulletins(bulletins);
+      } catch {
+        return [];
+      }
+    },
+    cacheKey,
+    { tags: [CACHE_TAGS.bulletins], revalidate: 86_400 },
+  )();
 }
 
 export async function getBulletinBySlug(slug: string): Promise<BulletinDetail | null> {
