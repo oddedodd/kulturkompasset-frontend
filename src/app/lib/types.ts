@@ -17,6 +17,16 @@ export type FeaturedEvent = {
   contributors?: string[];
 };
 
+export type HomePartner = {
+  _id: string;
+  name: string;
+  website?: string;
+  tier?: string;
+  active?: boolean;
+  logo?: SanityImageSource;
+  logoUrl?: string;
+};
+
 export type EventDetail = {
   _id: string;
   title: string;

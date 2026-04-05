@@ -94,6 +94,12 @@ function resolveTargetPathsAndTags(payload: RevalidatePayload): {
       paths.add("/venues");
       if (slug) paths.add(`/venues/${slug}`);
       break;
+    case "partner":
+      tags.add(CACHE_TAGS.partners);
+      tags.add(CACHE_TAGS.siteSettings);
+      tags.add(CACHE_TAGS.events);
+      paths.add("/");
+      break;
     case "siteSettings":
       tags.add(CACHE_TAGS.siteSettings);
       TOP_LEVEL_PATHS.forEach((path) => paths.add(path));

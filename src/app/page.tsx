@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
 import { FeaturedEventsCarousel } from "./components/home/FeaturedEventsCarousel";
 import { LatestBackstageArticlesGrid } from "./components/home/LatestBackstageArticlesGrid";
+import { MainPartnerHighlight } from "./components/home/MainPartnerHighlight";
 import { UpcomingEventsCarousel } from "./components/home/UpcomingEventsCarousel";
 import { Welcome } from "./components/home/Welcome";
 import { getLatestBackstageArticles } from "./lib/articles";
 import { getUpcomingEventsPage } from "./lib/events";
 import { getHomepageFeaturedEvents } from "./lib/featured-events";
+import { getHomePartners } from "./lib/home-partner";
 import { getMainNavigation } from "./lib/navigation";
 import { getSanityImageUrl } from "./lib/sanity-image";
 import { buildSeoMetadata, sanitizeSeoDescription } from "./lib/seo";
@@ -33,10 +35,11 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function Home() {
-  const [featuredEvents, backstageArticles, upcomingEvents, navItems] =
+  const [featuredEvents, backstageArticles, homePartners, upcomingEvents, navItems] =
     await Promise.all([
       getHomepageFeaturedEvents(),
       getLatestBackstageArticles(),
+      getHomePartners(),
       getUpcomingEventsPage({ offset: 0, limit: 12 }),
       getMainNavigation(),
     ]);
@@ -46,6 +49,7 @@ export default async function Home() {
       <Welcome navItems={navItems} />
       <FeaturedEventsCarousel events={featuredEvents} />
       <LatestBackstageArticlesGrid articles={backstageArticles} />
+      <MainPartnerHighlight partners={homePartners} />
       <UpcomingEventsCarousel events={upcomingEvents} />
     </main>
   );
