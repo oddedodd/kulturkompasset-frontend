@@ -60,9 +60,7 @@ export default function BackstageArticlesGrid({
       if (filterParams.q) params.set("q", filterParams.q);
 
       try {
-        const response = await fetch(`/api/backstage?${params.toString()}`, {
-          cache: "no-store",
-        });
+        const response = await fetch(`/api/backstage?${params.toString()}`);
         if (!response.ok) throw new Error("Unable to fetch backstage articles");
         const payload = (await response.json()) as { articles?: BackstageArticleCard[] };
         const nextArticles = Array.isArray(payload.articles) ? payload.articles : [];

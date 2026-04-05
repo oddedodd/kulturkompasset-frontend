@@ -25,27 +25,33 @@ const getBackstageArticleBySlugCached = unstable_cache(
     }
   },
   ["backstage-article-by-slug"],
-  { tags: [CACHE_TAGS.articles] },
+  { tags: [CACHE_TAGS.articles], revalidate: 86_400 },
 );
 
 export async function getLatestBackstageArticles(): Promise<BackstageArticleCard[]> {
-  try {
-    const articles = await sanityClient
-      .withConfig({ useCdn: false, perspective: "published" })
-      .fetch<BackstageArticleCard[]>(latestBackstageArticlesQuery);
+  return unstable_cache(
+    async (): Promise<BackstageArticleCard[]> => {
+      try {
+        const articles = await sanityClient
+          .withConfig({ useCdn: false, perspective: "published" })
+          .fetch<BackstageArticleCard[]>(latestBackstageArticlesQuery);
 
-    return (Array.isArray(articles) ? articles : []).filter(
-      (article): article is BackstageArticleCard =>
-        Boolean(
-          article &&
-            typeof article._id === "string" &&
-            typeof article.title === "string" &&
-            typeof article.slug === "string",
-        ),
-    );
-  } catch {
-    return [];
-  }
+        return (Array.isArray(articles) ? articles : []).filter(
+          (article): article is BackstageArticleCard =>
+            Boolean(
+              article &&
+                typeof article._id === "string" &&
+                typeof article.title === "string" &&
+                typeof article.slug === "string",
+            ),
+        );
+      } catch {
+        return [];
+      }
+    },
+    ["latest-backstage-articles"],
+    { tags: [CACHE_TAGS.articles], revalidate: 86_400 },
+  )();
 }
 
 export async function getBackstageArticleBySlug(slug: string): Promise<BackstageArticleDetail | null> {
@@ -68,35 +74,48 @@ export async function getBackstageArticlesPage({
   const safeSearch = normalizeText(search);
   const safeSearchPattern = toSearchPattern(search);
 
-  try {
-    if (safeSearch) {
-      const articles = await sanityClient
-        .withConfig({ useCdn: false, perspective: "published" })
-        .fetch<BackstageArticleCard[]>(backstageArticlesPaginatedQuery, {
-          offset: 0,
-          limit: 500,
-          searchPattern: "",
-        });
+  const cacheKey = [
+    "backstage-articles-page",
+    String(safeOffset),
+    String(safeLimit),
+    safeSearch || "__no-search__",
+  ];
 
-      const filtered = sanitizeCards(articles).filter((article) =>
-        normalizeText([article.title, article.excerpt].filter(Boolean).join(" ")).includes(safeSearch),
-      );
+  return unstable_cache(
+    async (): Promise<BackstageArticleCard[]> => {
+      try {
+        if (safeSearch) {
+          const articles = await sanityClient
+            .withConfig({ useCdn: false, perspective: "published" })
+            .fetch<BackstageArticleCard[]>(backstageArticlesPaginatedQuery, {
+              offset: 0,
+              limit: 500,
+              searchPattern: "",
+            });
 
-      return filtered.slice(safeOffset, safeOffset + safeLimit);
-    }
+          const filtered = sanitizeCards(articles).filter((article) =>
+            normalizeText([article.title, article.excerpt].filter(Boolean).join(" ")).includes(safeSearch),
+          );
 
-    const articles = await sanityClient
-      .withConfig({ useCdn: false, perspective: "published" })
-      .fetch<BackstageArticleCard[]>(backstageArticlesPaginatedQuery, {
-        offset: safeOffset,
-        limit: safeLimit,
-        searchPattern: safeSearchPattern,
-      });
+          return filtered.slice(safeOffset, safeOffset + safeLimit);
+        }
 
-    return sanitizeCards(articles);
-  } catch {
-    return [];
-  }
+        const articles = await sanityClient
+          .withConfig({ useCdn: false, perspective: "published" })
+          .fetch<BackstageArticleCard[]>(backstageArticlesPaginatedQuery, {
+            offset: safeOffset,
+            limit: safeLimit,
+            searchPattern: safeSearchPattern,
+          });
+
+        return sanitizeCards(articles);
+      } catch {
+        return [];
+      }
+    },
+    cacheKey,
+    { tags: [CACHE_TAGS.articles], revalidate: 86_400 },
+  )();
 }
 
 function sanitizeCards(cards: BackstageArticleCard[] = []): BackstageArticleCard[] {

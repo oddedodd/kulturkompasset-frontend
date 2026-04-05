@@ -1,19 +1,30 @@
 import { PortableText } from "@portabletext/react";
 import type { Metadata } from "next";
+import { unstable_cache } from "next/cache";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { PageBuilderRenderer } from "@/app/components/article/PageBuilderRenderer";
 import { articlePortableTextComponents } from "@/app/components/article/portableTextComponents";
+import { CACHE_TAGS } from "@/app/lib/cache-tags";
 import { articleBySlugQuery } from "@/app/lib/queries";
 import { sanityClient } from "@/app/lib/sanity.client";
 import type { BackstageArticleDetail } from "@/app/lib/types";
 
 const OM_SLUG = "om-kulturkompasset";
 
+const getOmArticleCached = unstable_cache(
+  async (): Promise<BackstageArticleDetail | null> =>
+    sanityClient
+      .withConfig({ useCdn: false, perspective: "published" })
+      .fetch<BackstageArticleDetail | null>(articleBySlugQuery, {
+        slug: OM_SLUG,
+      }),
+  ["om-article"],
+  { tags: [CACHE_TAGS.articles], revalidate: 86_400 },
+);
+
 async function getOmArticle() {
-  return sanityClient.fetch<BackstageArticleDetail | null>(articleBySlugQuery, {
-    slug: OM_SLUG,
-  });
+  return getOmArticleCached();
 }
 
 export async function generateMetadata(): Promise<Metadata> {

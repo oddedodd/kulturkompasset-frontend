@@ -40,9 +40,7 @@ export default function BulletinsGrid({
       });
       if (debouncedSearch) params.set("q", debouncedSearch);
 
-      const response = await fetch(`/api/bulletin?${params.toString()}`, {
-        cache: "no-store",
-      });
+      const response = await fetch(`/api/bulletin?${params.toString()}`);
       if (!response.ok) {
         throw new Error("Unable to fetch bulletins");
       }

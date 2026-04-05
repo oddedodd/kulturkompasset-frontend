@@ -36,7 +36,7 @@ const getMainNavigationSettingsCached = unstable_cache(
     }
   },
   ["site-settings-main-navigation"],
-  { tags: [CACHE_TAGS.siteSettings] },
+  { tags: [CACHE_TAGS.siteSettings], revalidate: 86_400 },
 );
 
 function mapToNavItem(item: SanityMenuItem): NavItem | null {

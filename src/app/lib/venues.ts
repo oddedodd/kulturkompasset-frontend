@@ -25,19 +25,25 @@ const getVenueBySlugCached = unstable_cache(
     }
   },
   ["venue-by-slug"],
-  { tags: [CACHE_TAGS.venues] },
+  { tags: [CACHE_TAGS.venues], revalidate: 86_400 },
 );
 
 export async function getVenues(): Promise<VenueListItem[]> {
-  try {
-    const venues = await sanityClient
-      .withConfig({ useCdn: false, perspective: "published" })
-      .fetch<VenueListItem[]>(allVenuesQuery);
+  return unstable_cache(
+    async (): Promise<VenueListItem[]> => {
+      try {
+        const venues = await sanityClient
+          .withConfig({ useCdn: false, perspective: "published" })
+          .fetch<VenueListItem[]>(allVenuesQuery);
 
-    return sanitizeVenues(venues);
-  } catch {
-    return [];
-  }
+        return sanitizeVenues(venues);
+      } catch {
+        return [];
+      }
+    },
+    ["venues-list"],
+    { tags: [CACHE_TAGS.venues], revalidate: 86_400 },
+  )();
 }
 
 export async function getVenueBySlug(slug: string): Promise<VenueDetail | null> {
@@ -45,15 +51,21 @@ export async function getVenueBySlug(slug: string): Promise<VenueDetail | null> 
 }
 
 export async function getUpcomingEventsForVenueSlug(venueSlug: string): Promise<CalendarEvent[]> {
-  try {
-    const events = await sanityClient
-      .withConfig({ useCdn: false, perspective: "published" })
-      .fetch<CalendarEvent[]>(upcomingEventsByVenueSlugQuery, { venueSlug });
+  return unstable_cache(
+    async (): Promise<CalendarEvent[]> => {
+      try {
+        const events = await sanityClient
+          .withConfig({ useCdn: false, perspective: "published" })
+          .fetch<CalendarEvent[]>(upcomingEventsByVenueSlugQuery, { venueSlug });
 
-    return sanitizeEvents(events);
-  } catch {
-    return [];
-  }
+        return sanitizeEvents(events);
+      } catch {
+        return [];
+      }
+    },
+    ["upcoming-events-by-venue-slug", venueSlug],
+    { tags: [CACHE_TAGS.events, CACHE_TAGS.venues], revalidate: 86_400 },
+  )();
 }
 
 function sanitizeVenues(venues: VenueListItem[] = []): VenueListItem[] {

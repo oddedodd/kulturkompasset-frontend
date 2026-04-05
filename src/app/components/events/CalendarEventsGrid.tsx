@@ -58,9 +58,7 @@ export default function CalendarEventsGrid({
       if (filterParams.venue) params.set("venue", filterParams.venue);
       if (filterParams.date) params.set("date", filterParams.date);
 
-      const response = await fetch(`/api/events?${params.toString()}`, {
-        cache: "no-store",
-      });
+      const response = await fetch(`/api/events?${params.toString()}`);
       if (!response.ok) {
         throw new Error("Unable to fetch events");
       }

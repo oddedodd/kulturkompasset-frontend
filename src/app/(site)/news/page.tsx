@@ -1,5 +1,7 @@
 import type { Metadata } from 'next';
+import { unstable_cache } from "next/cache";
 import { sanityClient } from '@/app/lib/sanity.client';
+import { CACHE_TAGS } from "@/app/lib/cache-tags";
 import { latestNewsQuery } from '@/app/lib/queries';
 import Link from 'next/link';
 
@@ -22,8 +24,17 @@ type News = {
   };
 };
 
+const getLatestNewsCached = unstable_cache(
+  async (): Promise<News[]> =>
+    sanityClient
+      .withConfig({ useCdn: false, perspective: "published" })
+      .fetch<News[]>(latestNewsQuery),
+  ["latest-news"],
+  { tags: [CACHE_TAGS.news], revalidate: 86_400 },
+);
+
 export default async function News() {
-  const news = await sanityClient.fetch<News[]>(latestNewsQuery);
+  const news = await getLatestNewsCached();
   return (
     <div className="max-w-4xl mx-auto px-4 py-12">
       <h1 className="text-4xl font-bold mb-8 text-center">Nyheter</h1>

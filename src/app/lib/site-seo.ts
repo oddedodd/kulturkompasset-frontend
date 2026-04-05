@@ -93,7 +93,7 @@ const getSiteSettingsSeoCached = unstable_cache(
     }
   },
   ["site-settings-seo"],
-  { tags: [CACHE_TAGS.siteSettings] },
+  { tags: [CACHE_TAGS.siteSettings], revalidate: 86_400 },
 );
 
 export async function getSitePageSeo(page: SiteSeoPage): Promise<SeoFields | undefined> {
