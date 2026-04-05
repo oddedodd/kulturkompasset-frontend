@@ -78,6 +78,19 @@ export const partnersByIdsQuery = groq`
   }
 `;
 
+export const allSponsorsQuery = groq`
+  *[
+    _type == "partner" &&
+    defined(logo.asset)
+  ] | order(name asc){
+    _id,
+    name,
+    website,
+    logo,
+    "logoUrl": logo.asset->url
+  }
+`;
+
 export const homePartnersQuery = groq`
   *[
     _type == "siteSettings" &&

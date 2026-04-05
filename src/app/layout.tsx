@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import GoogleAnalytics from "./components/analytics/GoogleAnalytics";
 import { SiteFooter } from "./components/footer/SiteFooter";
+import { SponsorsCarousel } from "./components/sponsors/SponsorsCarousel";
+import { getAllSponsors } from "./lib/sponsors";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -32,6 +34,8 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const sponsors = await getAllSponsors();
+
   return (
     <html lang="en">
       <body
@@ -39,6 +43,7 @@ export default async function RootLayout({
       >
         <GoogleAnalytics />
         {children}
+        <SponsorsCarousel sponsors={sponsors} />
         <SiteFooter />
       </body>
     </html>

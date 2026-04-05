@@ -2,7 +2,7 @@ export function SiteFooter() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="mt-16 bg-[#1f1d1b] px-6 py-12 text-white">
+    <footer className="mt-0 bg-[#1f1d1b] px-6 py-12 text-white">
       <div className="mx-auto w-full max-w-6xl">
         <div className="grid grid-cols-1 gap-10 md:grid-cols-3">
           <section className="text-center">
