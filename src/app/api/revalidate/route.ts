@@ -35,6 +35,12 @@ function revalidatePaths(paths: Set<string>) {
   }
 }
 
+function revalidateLayouts(paths: Set<string>) {
+  for (const path of paths) {
+    revalidatePath(path, "layout");
+  }
+}
+
 function revalidateTags(tags: Set<string>) {
   for (const tag of tags) {
     revalidateTag(tag, "max");
@@ -50,6 +56,7 @@ function extractSlug(payload: RevalidatePayload): string | undefined {
 
 function resolveTargetPathsAndTags(payload: RevalidatePayload): {
   paths: Set<string>;
+  layoutPaths: Set<string>;
   tags: Set<string>;
   fallback: boolean;
   type: string;
@@ -59,6 +66,7 @@ function resolveTargetPathsAndTags(payload: RevalidatePayload): {
   const slug = extractSlug(payload);
   const contentType = payload?.contentType?.trim() ?? "";
   const paths = new Set<string>();
+  const layoutPaths = new Set<string>();
   const tags = new Set<string>();
 
   switch (type) {
@@ -94,9 +102,17 @@ function resolveTargetPathsAndTags(payload: RevalidatePayload): {
       paths.add("/venues");
       if (slug) paths.add(`/venues/${slug}`);
       break;
+    case "partner":
+      tags.add(CACHE_TAGS.partners);
+      tags.add(CACHE_TAGS.siteSettings);
+      tags.add(CACHE_TAGS.events);
+      paths.add("/");
+      layoutPaths.add("/");
+      break;
     case "siteSettings":
       tags.add(CACHE_TAGS.siteSettings);
       TOP_LEVEL_PATHS.forEach((path) => paths.add(path));
+      layoutPaths.add("/");
       break;
     case "news":
       tags.add(CACHE_TAGS.news);
@@ -105,16 +121,18 @@ function resolveTargetPathsAndTags(payload: RevalidatePayload): {
     default:
       TOP_LEVEL_PATHS.forEach((path) => paths.add(path));
       REVALIDATE_TAGS.forEach((tag) => tags.add(tag));
-      return { paths, tags, fallback: true, type, slug };
+      layoutPaths.add("/");
+      return { paths, layoutPaths, tags, fallback: true, type, slug };
   }
 
   if (paths.size === 0 || tags.size === 0) {
     TOP_LEVEL_PATHS.forEach((path) => paths.add(path));
     REVALIDATE_TAGS.forEach((tag) => tags.add(tag));
-    return { paths, tags, fallback: true, type, slug };
+    layoutPaths.add("/");
+    return { paths, layoutPaths, tags, fallback: true, type, slug };
   }
 
-  return { paths, tags, fallback: false, type, slug };
+  return { paths, layoutPaths, tags, fallback: false, type, slug };
 }
 
 export async function POST(request: Request) {
@@ -126,18 +144,21 @@ export async function POST(request: Request) {
   }
 
   const payload = (await request.json().catch(() => null)) as RevalidatePayload;
-  const { paths, tags, fallback, type, slug } = resolveTargetPathsAndTags(payload);
+  const { paths, layoutPaths, tags, fallback, type, slug } = resolveTargetPathsAndTags(payload);
 
   revalidatePaths(paths);
+  revalidateLayouts(layoutPaths);
   revalidateTags(tags);
 
   const invalidatedPaths = [...paths];
+  const invalidatedLayoutPaths = [...layoutPaths];
   const invalidatedTags = [...tags];
   console.info("[revalidate] completed", {
     type: type || "unknown",
     slug: slug ?? null,
     fallback,
     paths: invalidatedPaths,
+    layoutPaths: invalidatedLayoutPaths,
     tags: invalidatedTags,
   });
 
@@ -147,6 +168,7 @@ export async function POST(request: Request) {
     type: type || null,
     slug: slug || null,
     paths: invalidatedPaths,
+    layoutPaths: invalidatedLayoutPaths,
     tags: invalidatedTags,
     at: new Date().toISOString(),
   });

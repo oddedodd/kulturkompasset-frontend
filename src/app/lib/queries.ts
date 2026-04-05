@@ -54,6 +54,60 @@ export const featuredEventsQuery = groq`
   }
 `;
 
+export const homePartnerRefsQuery = groq`
+  *[
+    _type == "siteSettings" &&
+    _id == "site-settings"
+  ][0]{
+    "partnerRefs": homePartners[defined(@._ref)]._ref
+  }
+`;
+
+export const partnersByIdsQuery = groq`
+  *[
+    _type == "partner" &&
+    _id in $ids
+  ]{
+    _id,
+    name,
+    website,
+    tier,
+    active,
+    logo,
+    "logoUrl": logo.asset->url
+  }
+`;
+
+export const allSponsorsQuery = groq`
+  *[
+    _type == "partner" &&
+    defined(logo.asset)
+  ] | order(name asc){
+    _id,
+    name,
+    website,
+    logo,
+    "logoUrl": logo.asset->url
+  }
+`;
+
+export const homePartnersQuery = groq`
+  *[
+    _type == "siteSettings" &&
+    _id == "site-settings"
+  ][0]{
+    homePartners[]->{
+      _id,
+      name,
+      website,
+      tier,
+      active,
+      logo,
+      "logoUrl": logo.asset->url
+    }
+  }
+`;
+
 export const eventBySlugQuery = groq`
   *[
     _type == "event" &&
