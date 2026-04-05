@@ -9,7 +9,7 @@ export function SponsorsCarousel({ sponsors }: SponsorsCarouselProps) {
   if (sponsors.length === 0) return null;
 
   return (
-    <section className="w-full bg-[#D7C9B3] py-14 sm:py-16">
+    <section className="w-full bg-[#f7f4ee] py-14 sm:py-16">
       <div className="mx-auto w-full max-w-7xl overflow-hidden px-4">
         <p className="mb-8 text-center text-xs font-semibold uppercase tracking-[0.2em] text-black/65">
           Sponsorer
