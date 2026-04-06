@@ -111,7 +111,7 @@ export default async function VenuePage({ params }: VenuePageProps) {
                   alt={`Logo for ${venue.name}`}
                   width={800}
                   height={800}
-                  className="h-auto max-h-44 w-auto max-w-full rounded-3xl bg-white/90 p-4"
+                  className="h-auto max-h-44 w-auto max-w-full rounded-3xl bg-[#f8f7f4]/90 p-4"
                 />
               </div>
             ) : null}

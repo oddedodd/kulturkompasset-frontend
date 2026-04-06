@@ -142,7 +142,7 @@ export default function CalendarEventsGrid({
             value={searchInput}
             onChange={(event) => setSearchInput(event.target.value)}
             placeholder="Søk i kommende arrangement"
-            className="h-11 rounded-lg border border-black/20 bg-white px-3 outline-none transition focus:border-black"
+            className="h-11 rounded-lg border border-black/20 bg-[#f8f7f4] px-3 outline-none transition focus:border-black"
           />
         </label>
 
@@ -151,7 +151,7 @@ export default function CalendarEventsGrid({
           <select
             value={selectedVenue}
             onChange={(event) => setSelectedVenue(event.target.value)}
-            className="h-11 rounded-lg border border-black/20 bg-white px-3 outline-none transition focus:border-black"
+            className="h-11 rounded-lg border border-black/20 bg-[#f8f7f4] px-3 outline-none transition focus:border-black"
           >
             <option value="">Alle steder</option>
             {venueOptions.map((venue) => (
@@ -168,7 +168,7 @@ export default function CalendarEventsGrid({
             type="date"
             value={selectedDate}
             onChange={(event) => setSelectedDate(event.target.value)}
-            className="h-11 rounded-lg border border-black/20 bg-white px-3 outline-none transition focus:border-black"
+            className="h-11 rounded-lg border border-black/20 bg-[#f8f7f4] px-3 outline-none transition focus:border-black"
           />
           {selectedDate ? (
             <button

@@ -61,7 +61,7 @@ export default function VenuesGrid({ venues }: VenuesGridProps) {
             value={searchInput}
             onChange={(event) => setSearchInput(event.target.value)}
             placeholder="Søk i steder"
-            className="h-11 rounded-lg border border-black/20 bg-white px-3 outline-none transition focus:border-black"
+            className="h-11 rounded-lg border border-black/20 bg-[#f8f7f4] px-3 outline-none transition focus:border-black"
           />
         </label>
 
@@ -70,7 +70,7 @@ export default function VenuesGrid({ venues }: VenuesGridProps) {
           <select
             value={selectedCity}
             onChange={(event) => setSelectedCity(event.target.value)}
-            className="h-11 rounded-lg border border-black/20 bg-white px-3 outline-none transition focus:border-black"
+            className="h-11 rounded-lg border border-black/20 bg-[#f8f7f4] px-3 outline-none transition focus:border-black"
           >
             <option value="">Alle steder</option>
             {cityOptions.map((city) => (

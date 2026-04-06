@@ -32,7 +32,7 @@ export function UpcomingEventsCarousel({
   }
 
   return (
-    <section className="w-full bg-white py-16">
+    <section className="w-full bg-[#f8f7f4] py-16">
       <div className="mx-auto w-full max-w-6xl px-4">
         <div className="mb-6 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
           <h2 className="whitespace-nowrap text-3xl font-semibold leading-tight tracking-tight sm:text-2xl">

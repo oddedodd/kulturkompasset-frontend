@@ -62,7 +62,7 @@ export function MenuOverlay({ isOpen, onClose, navItems }: MenuOverlayProps) {
       aria-hidden={false}
     >
       {/* Bakgrunn */}
-      <div className="absolute inset-0 bg-white" onClick={onClose} />
+      <div className="absolute inset-0 bg-[#f8f7f4]" onClick={onClose} />
 
       {/* Innhold */}
       {/* Ytre container matcher headerens bredde/padding så X-knappen havner samme sted */}

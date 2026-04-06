@@ -11,7 +11,7 @@ export default function Kontakt() {
         <h1 className="text-4xl font-bold text-center sm:text-left">Kontakt</h1>
         
         <div className="space-y-6 w-full">
-          <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+          <div className="bg-[#f8f7f4] p-6 rounded-lg shadow-sm border border-gray-200">
             <h2 className="text-xl font-semibold mb-4">Ta kontakt med oss</h2>
             <p className="text-gray-600 mb-4">
               Har du spørsmål eller ønsker å komme i kontakt med oss? 
@@ -42,7 +42,7 @@ export default function Kontakt() {
             </div>
           </div>
           
-          <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
+          <div className="bg-[#f8f7f4] p-6 rounded-lg shadow-sm border border-gray-200">
             <h3 className="text-lg font-semibold mb-3">Åpningstider</h3>
             <div className="space-y-2 text-gray-600">
               <div className="flex justify-between">
