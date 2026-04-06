@@ -17,7 +17,7 @@ type VenueEventsListProps = {
 export default function VenueEventsList({ events }: VenueEventsListProps) {
   if (events.length === 0) {
     return (
-      <section className="rounded-3xl bg-white px-6 py-8 sm:px-8">
+      <section className="rounded-3xl bg-[#f8f7f4] px-6 py-8 sm:px-8">
         <h2 className="text-2xl font-semibold tracking-tight text-[#2a211a]">Kommende arrangement</h2>
         <p className="mt-4 text-black/70">Ingen kommende arrangement for dette stedet akkurat nå.</p>
       </section>
@@ -25,7 +25,7 @@ export default function VenueEventsList({ events }: VenueEventsListProps) {
   }
 
   return (
-    <section className="rounded-3xl bg-white px-6 py-8 sm:px-8">
+    <section className="rounded-3xl bg-[#f8f7f4] px-6 py-8 sm:px-8">
       <h2 className="text-2xl font-semibold tracking-tight text-[#2a211a]">Kommende arrangement</h2>
       <ul className="mt-6 space-y-4">
         {events.map((event) => {

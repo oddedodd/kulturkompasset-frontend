@@ -119,7 +119,7 @@ export default function BulletinsGrid({
             value={searchInput}
             onChange={(event) => setSearchInput(event.target.value)}
             placeholder="Søk i oppslagstavla"
-            className="h-11 rounded-lg border border-black/20 bg-white px-3 outline-none transition focus:border-black"
+            className="h-11 rounded-lg border border-black/20 bg-[#f8f7f4] px-3 outline-none transition focus:border-black"
           />
         </label>
       </section>

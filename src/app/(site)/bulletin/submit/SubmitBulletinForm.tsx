@@ -86,7 +86,7 @@ export default function SubmitBulletinForm() {
 
   return (
     <main className="min-h-screen bg-[#f7f4ee] px-4 py-20">
-      <section className="mx-auto w-full max-w-3xl rounded-2xl bg-white p-8 shadow-sm">
+      <section className="mx-auto w-full max-w-3xl rounded-2xl bg-[#f8f7f4] p-8 shadow-sm">
         <h1 className="text-3xl font-semibold tracking-tight">
           Send inn arrangement
         </h1>

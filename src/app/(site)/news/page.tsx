@@ -42,7 +42,7 @@ export default async function News() {
         {news.map((post) => (
           <div
             key={post._id}
-            className="bg-white rounded-lg shadow-md overflow-hidden flex flex-col"
+            className="bg-[#f8f7f4] rounded-lg shadow-md overflow-hidden flex flex-col"
           >
             {post.featuredImage?.asset?.url && (
               <img

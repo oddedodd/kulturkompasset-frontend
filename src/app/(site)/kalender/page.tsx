@@ -33,7 +33,7 @@ export default async function KalenderPage() {
   ]);
 
   return (
-    <main className="min-h-screen bg-[#f7f4ee] px-4 py-20">
+    <main className="min-h-screen bg-[#f8f7f4] px-4 py-20">
       <section className="mx-auto w-full max-w-6xl">
         <h1 className="text-4xl font-semibold tracking-tight">Kalender</h1>
         <p className="mt-3 text-black/70">

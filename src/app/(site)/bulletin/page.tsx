@@ -31,7 +31,7 @@ export default async function BulletinPage() {
   const bulletins = await getBulletinsPage({ offset: 0, limit: 9 });
 
   return (
-    <main className="min-h-screen bg-[#f7f4ee] px-4 py-20">
+    <main className="min-h-screen bg-[#f8f7f4] px-4 py-20">
       <section className="mx-auto w-full max-w-6xl">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>

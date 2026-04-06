@@ -71,7 +71,7 @@ export default async function BackstageArticlePage({ params }: BackstageArticleP
   const remainingBlocks = startsWithHeroBlock ? (article.pageBuilder?.slice(1) ?? []) : (article.pageBuilder ?? []);
 
   return (
-    <main className="min-h-screen bg-white px-6 py-16 sm:py-24">
+    <main className="min-h-screen bg-[#f8f7f4] px-6 py-16 sm:py-24">
       <article className="mx-auto max-w-4xl">
         <Link
           href="/backstage"

@@ -177,7 +177,7 @@ export default async function BulletinDetailPage({ params }: BulletinPageProps) 
         <div className="grid gap-8 lg:grid-cols-[minmax(0,1.4fr)_minmax(18rem,0.8fr)] lg:items-start">
           <div className="space-y-8">
             {bulletin.description ? (
-              <section className="rounded-4xl bg-white px-6 py-7 sm:px-8 sm:py-9">
+              <section className="rounded-4xl bg-[#f8f7f4] px-6 py-7 sm:px-8 sm:py-9">
                 <h2 className="text-3xl font-semibold tracking-tight text-[#2a211a] sm:text-[2rem]">
                   Beskrivelse
                 </h2>

@@ -6,7 +6,7 @@ export const metadata: Metadata = {
 
 export default function BarnOgFamiliePage() {
   return (
-    <main className="min-h-screen bg-white px-6 py-24">
+    <main className="min-h-screen bg-[#f8f7f4] px-6 py-24">
       <div className="mx-auto max-w-4xl">
         <h1 className="text-4xl font-semibold tracking-tight">Barn og familie</h1>
         <p className="mt-4 text-base text-black/70">

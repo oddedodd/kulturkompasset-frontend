@@ -103,7 +103,7 @@ export function ArticleImageGallery({ title, images = [] }: ArticleImageGalleryP
             <button
               type="button"
               onClick={() => setActiveIndex(null)}
-              className="absolute right-0 top-0 z-20 rounded-full bg-white/15 px-4 py-2 text-sm font-medium text-white hover:bg-white/25"
+              className="absolute right-0 top-0 z-20 rounded-full bg-[#f8f7f4]/15 px-4 py-2 text-sm font-medium text-white hover:bg-[#f8f7f4]/25"
             >
               Lukk
             </button>
@@ -119,7 +119,7 @@ export function ArticleImageGallery({ title, images = [] }: ArticleImageGalleryP
                       return (prev - 1 + safeImages.length) % safeImages.length;
                     });
                   }}
-                  className="absolute left-0 z-20 rounded-full bg-white/15 px-4 py-2 text-sm font-medium text-white hover:bg-white/25"
+                  className="absolute left-0 z-20 rounded-full bg-[#f8f7f4]/15 px-4 py-2 text-sm font-medium text-white hover:bg-[#f8f7f4]/25"
                 >
                   Forrige
                 </button>
@@ -133,7 +133,7 @@ export function ArticleImageGallery({ title, images = [] }: ArticleImageGalleryP
                       return (prev + 1) % safeImages.length;
                     });
                   }}
-                  className="absolute right-0 z-20 rounded-full bg-white/15 px-4 py-2 text-sm font-medium text-white hover:bg-white/25"
+                  className="absolute right-0 z-20 rounded-full bg-[#f8f7f4]/15 px-4 py-2 text-sm font-medium text-white hover:bg-[#f8f7f4]/25"
                 >
                   Neste
                 </button>

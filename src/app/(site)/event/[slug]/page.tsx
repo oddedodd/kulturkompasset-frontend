@@ -213,7 +213,7 @@ export default async function EventPage({ params }: EventPageProps) {
         <div className="grid gap-8 lg:grid-cols-[minmax(0,1.4fr)_minmax(18rem,0.8fr)] lg:items-start">
           <div className="space-y-8">
             {(summary || (event.body && event.body.length > 0)) ? (
-              <section className="rounded-4xl bg-white px-6 py-7 sm:px-8 sm:py-9">
+              <section className="rounded-4xl bg-[#f8f7f4] px-6 py-7 sm:px-8 sm:py-9">
                 {summary ? (
                   <>
                     <h2 className="text-3xl font-semibold tracking-tight text-[#2a211a] sm:text-[2rem]">
@@ -298,7 +298,7 @@ export default async function EventPage({ params }: EventPageProps) {
                         {event.categories.map((category) => (
                           <span
                             key={category}
-                            className="rounded-full bg-white/60 px-3 py-1 text-sm text-black/70"
+                            className="rounded-full bg-[#f8f7f4]/60 px-3 py-1 text-sm text-black/70"
                           >
                             {category}
                           </span>
@@ -323,7 +323,7 @@ export default async function EventPage({ params }: EventPageProps) {
             </section>
 
             {hasVenueDetails ? (
-              <section className="rounded-4xl bg-white px-6 py-7 sm:px-8 sm:py-8">
+              <section className="rounded-4xl bg-[#f8f7f4] px-6 py-7 sm:px-8 sm:py-8">
                 <h2 className="text-2xl font-semibold tracking-tight text-[#2a211a]">Sted</h2>
                 <div className="mt-5 space-y-2 text-base text-black/72">
                   {event.venue?.name ? <p className="font-medium text-black/80">{event.venue.name}</p> : null}
@@ -346,7 +346,7 @@ export default async function EventPage({ params }: EventPageProps) {
             ) : null}
 
             {event.contributors && event.contributors.length > 0 ? (
-              <section className="rounded-4xl bg-white px-6 py-7 sm:px-8 sm:py-8">
+              <section className="rounded-4xl bg-[#f8f7f4] px-6 py-7 sm:px-8 sm:py-8">
                 <h2 className="text-2xl font-semibold tracking-tight text-[#2a211a]">
                   På scenen
                 </h2>
@@ -364,7 +364,7 @@ export default async function EventPage({ params }: EventPageProps) {
             ) : null}
 
             {event.partners && event.partners.length > 0 ? (
-              <section className="rounded-4xl bg-white px-6 py-7 sm:px-8 sm:py-8">
+              <section className="rounded-4xl bg-[#f8f7f4] px-6 py-7 sm:px-8 sm:py-8">
                 <h2 className="text-2xl font-semibold tracking-tight text-[#2a211a]">Partnere</h2>
                 <div className="mt-5 space-y-3">
                   {event.partners.map((partner, index) =>
@@ -389,7 +389,7 @@ export default async function EventPage({ params }: EventPageProps) {
             ) : null}
 
             {event.relatedArticles && event.relatedArticles.length > 0 ? (
-              <section className="rounded-4xl bg-white px-6 py-7 sm:px-8 sm:py-8">
+              <section className="rounded-4xl bg-[#f8f7f4] px-6 py-7 sm:px-8 sm:py-8">
                 <h2 className="text-2xl font-semibold tracking-tight text-[#2a211a]">
                   Les mer
                 </h2>
