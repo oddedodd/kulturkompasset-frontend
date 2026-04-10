@@ -111,6 +111,10 @@ function isAllowedText(value: string): boolean {
   return /^[\p{L}\p{N}\p{M}\p{P}\p{Zs}\n\r\t]+$/u.test(value);
 }
 
+function isAllowedPlaceText(value: string): boolean {
+  return /^[\p{L}\p{N}\p{M}\p{P}\p{S}\p{Zs}\n\r\t]+$/u.test(value);
+}
+
 function isLikelyPrice(value: string): boolean {
   return /^[0-9a-zA-ZæøåÆØÅ.,:;+\-/() ]*$/.test(value);
 }
@@ -196,7 +200,8 @@ export async function POST(request: NextRequest) {
   const date = normalizeText(readFormString(formData, "date"));
   const time = normalizeText(readFormString(formData, "time"));
   const organizer = normalizeText(readFormString(formData, "organizer"));
-  const place = normalizeText(readFormString(formData, "place"));
+  const placeInput = normalizeText(readFormString(formData, "place"));
+  const place = placeInput || "Sted ikke oppgitt";
   const contact = normalizeText(readFormString(formData, "contact"));
   const description = normalizeText(readFormString(formData, "description"));
   const price = normalizeText(readFormString(formData, "price"));
@@ -208,7 +213,6 @@ export async function POST(request: NextRequest) {
     name.length > 120 ||
     organizer.length < 2 ||
     organizer.length > 120 ||
-    place.length < 2 ||
     place.length > 160 ||
     contact.length < 2 ||
     contact.length > 120 ||
@@ -225,7 +229,7 @@ export async function POST(request: NextRequest) {
   if (
     !isAllowedText(name) ||
     !isAllowedText(organizer) ||
-    !isAllowedText(place) ||
+    !isAllowedPlaceText(place) ||
     !isAllowedText(contact) ||
     !isAllowedText(description) ||
     !isLikelyPrice(price)
