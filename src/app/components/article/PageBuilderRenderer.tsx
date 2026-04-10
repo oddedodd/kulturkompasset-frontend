@@ -23,7 +23,6 @@ export function PageBuilderRenderer({ blocks, useHeroAsPageTitle = false }: Page
             const backgroundImageUrl =
               getSanityImageUrl(block.backgroundImage, {
                 width: 1600,
-                height: 900,
               }) || block.backgroundImageUrl;
             return (
               <section key={key} className="space-y-6">
@@ -64,7 +63,7 @@ export function PageBuilderRenderer({ blocks, useHeroAsPageTitle = false }: Page
                     alt={block.backgroundImageAlt || block.heading || "Hero"}
                     width={1600}
                     height={900}
-                    className="h-[360px] w-full rounded-xl object-cover sm:h-[420px] sm:rounded-2xl"
+                    className="h-auto w-full rounded-xl object-contain sm:rounded-2xl"
                   />
                 ) : (
                   <div className="h-[260px] w-full rounded-xl bg-gray-200 sm:h-[320px] sm:rounded-2xl" />
