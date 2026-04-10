@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { CalendarDays, UserRound } from "lucide-react";
+import { CalendarDays, MapPin, UserRound } from "lucide-react";
 import type { BulletinItem } from "@/app/lib/types";
 
 const dateFormatter = new Intl.DateTimeFormat("nb-NO", {
@@ -16,6 +16,7 @@ type BulletinCardProps = {
 
 export default function BulletinCard({ bulletin }: BulletinCardProps) {
   const organizerLabel = bulletin.organizer || "Arrangør kommer";
+  const placeLabel = bulletin.place || "Sted kommer";
   const href = bulletin.slug ? `/bulletin/${bulletin.slug}` : "/bulletin";
 
   return (
@@ -41,6 +42,11 @@ export default function BulletinCard({ bulletin }: BulletinCardProps) {
             <div className="flex items-center gap-3">
               <UserRound className="h-4 w-4 shrink-0 opacity-55" aria-hidden="true" />
               <span>{organizerLabel}</span>
+            </div>
+
+            <div className="flex items-center gap-3">
+              <MapPin className="h-4 w-4 shrink-0 opacity-55" aria-hidden="true" />
+              <span>{placeLabel}</span>
             </div>
           </div>
 

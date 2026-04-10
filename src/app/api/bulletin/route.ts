@@ -196,6 +196,7 @@ export async function POST(request: NextRequest) {
   const date = normalizeText(readFormString(formData, "date"));
   const time = normalizeText(readFormString(formData, "time"));
   const organizer = normalizeText(readFormString(formData, "organizer"));
+  const place = normalizeText(readFormString(formData, "place"));
   const contact = normalizeText(readFormString(formData, "contact"));
   const description = normalizeText(readFormString(formData, "description"));
   const price = normalizeText(readFormString(formData, "price"));
@@ -207,6 +208,8 @@ export async function POST(request: NextRequest) {
     name.length > 120 ||
     organizer.length < 2 ||
     organizer.length > 120 ||
+    place.length < 2 ||
+    place.length > 160 ||
     contact.length < 2 ||
     contact.length > 120 ||
     description.length < 10 ||
@@ -222,6 +225,7 @@ export async function POST(request: NextRequest) {
   if (
     !isAllowedText(name) ||
     !isAllowedText(organizer) ||
+    !isAllowedText(place) ||
     !isAllowedText(contact) ||
     !isAllowedText(description) ||
     !isLikelyPrice(price)
@@ -283,6 +287,7 @@ export async function POST(request: NextRequest) {
         date,
         time,
         organizer,
+        place,
         contact,
         description,
         price,
@@ -309,6 +314,7 @@ export async function POST(request: NextRequest) {
       name,
       date: dateTimeIso,
       organizer,
+      place,
       contact,
       description,
       price,
