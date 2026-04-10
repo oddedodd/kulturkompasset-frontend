@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { CalendarDays, Clock3, Mail, Ticket, UserRound } from "lucide-react";
+import { CalendarDays, Clock3, Mail, MapPin, Ticket, UserRound } from "lucide-react";
 import { getBulletinBySlug } from "@/app/lib/bulletins";
 import { getSanityImageUrl } from "@/app/lib/sanity-image";
 import { buildSeoMetadata, sanitizeSeoDescription } from "@/app/lib/seo";
@@ -155,6 +155,13 @@ export default async function BulletinDetailPage({ params }: BulletinPageProps) 
                     <span>{bulletin.organizer}</span>
                   </div>
                 ) : null}
+
+                {bulletin.place ? (
+                  <div className="flex items-start gap-3">
+                    <MapPin className="mt-0.5 h-5 w-5 shrink-0 text-[#dec47a]" />
+                    <span>{bulletin.place}</span>
+                  </div>
+                ) : null}
               </div>
             </div>
 
@@ -213,6 +220,16 @@ export default async function BulletinDetailPage({ params }: BulletinPageProps) 
                         Arrangør
                       </p>
                       <p className="mt-1">{bulletin.organizer}</p>
+                    </div>
+                  </div>
+                ) : null}
+
+                {bulletin.place ? (
+                  <div className="flex gap-3">
+                    <MapPin className="mt-0.5 h-5 w-5 shrink-0 text-[#8a6b2f]" />
+                    <div>
+                      <p className="text-sm uppercase tracking-[0.18em] text-black/45">Sted</p>
+                      <p className="mt-1">{bulletin.place}</p>
                     </div>
                   </div>
                 ) : null}

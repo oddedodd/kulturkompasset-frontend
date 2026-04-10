@@ -8,6 +8,7 @@ type BulletinFormData = {
   dato: string;
   tid: string;
   arrangor: string;
+  sted: string;
   kontaktperson: string;
   beskrivelse: string;
   pris: string;
@@ -19,6 +20,7 @@ const initialFormData: BulletinFormData = {
   dato: "",
   tid: "",
   arrangor: "",
+  sted: "",
   kontaktperson: "",
   beskrivelse: "",
   pris: "",
@@ -50,6 +52,7 @@ export default function SubmitBulletinForm() {
       payload.append("date", formData.dato);
       payload.append("time", formData.tid);
       payload.append("organizer", formData.arrangor);
+      payload.append("place", formData.sted);
       payload.append("contact", formData.kontaktperson);
       payload.append("description", formData.beskrivelse);
       payload.append("price", formData.pris);
@@ -182,6 +185,23 @@ export default function SubmitBulletinForm() {
                   arrangor: event.target.value,
                 }))
               }
+              className="w-full rounded-lg border border-black/20 px-3 py-2 outline-none ring-0 transition focus:border-black"
+            />
+          </label>
+
+          <label className="block">
+            <span className="mb-2 block text-sm font-medium">Sted</span>
+            <input
+              required
+              type="text"
+              value={formData.sted}
+              onChange={(event) =>
+                setFormData((current) => ({
+                  ...current,
+                  sted: event.target.value,
+                }))
+              }
+              placeholder="f.eks. Kulturhuset, Namsos"
               className="w-full rounded-lg border border-black/20 px-3 py-2 outline-none ring-0 transition focus:border-black"
             />
           </label>

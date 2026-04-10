@@ -229,6 +229,7 @@ export const bulletinsPaginatedQuery = groq`
       $searchPattern == "" ||
       coalesce(title, name, "") match $searchPattern ||
       coalesce(organizer, "") match $searchPattern ||
+      coalesce(place, "") match $searchPattern ||
       coalesce(description, "") match $searchPattern
     )
   ] | order(coalesce(startsAt, date) asc, _createdAt desc)[$offset...$end]{
@@ -240,6 +241,7 @@ export const bulletinsPaginatedQuery = groq`
     "heroImageUrl": coalesce(heroImage.asset->url, image.asset->url),
     "heroImageAlt": coalesce(heroImage.alt, image.alt),
     organizer,
+    place,
     description,
     price
   }
@@ -258,6 +260,7 @@ export const bulletinBySlugQuery = groq`
     "heroImageUrl": coalesce(heroImage.asset->url, image.asset->url),
     "heroImageAlt": coalesce(heroImage.alt, image.alt),
     organizer,
+    place,
     contact,
     description,
     price

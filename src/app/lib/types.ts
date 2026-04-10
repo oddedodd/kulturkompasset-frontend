@@ -88,6 +88,7 @@ export type BulletinItem = {
   heroImageUrl?: string;
   heroImageAlt?: string;
   organizer?: string;
+  place?: string;
   description?: string;
   price?: string;
 };
