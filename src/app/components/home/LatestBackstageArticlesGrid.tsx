@@ -4,11 +4,10 @@ import Link from "next/link";
 import { useRef } from "react";
 import type { CSSProperties } from "react";
 import type { Swiper as SwiperType } from "swiper";
-import { A11y, Navigation, Pagination } from "swiper/modules";
+import { A11y, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import "swiper/css";
-import "swiper/css/navigation";
 import "swiper/css/pagination";
 import { getSanityImageUrl } from "@/app/lib/sanity-image";
 import type { BackstageArticleCard } from "../../lib/types";
@@ -50,7 +49,7 @@ export function LatestBackstageArticlesGrid({
         <button
           type="button"
           onClick={() => swiperRef.current?.slidePrev()}
-          className="absolute left-0 top-1/2 z-10 hidden h-11 w-11 -translate-x-4 -translate-y-1/2 items-center justify-center rounded-full bg-black/8 text-black transition hover:bg-black/14 lg:flex"
+          className="absolute left-2 top-1/2 z-10 hidden h-10 w-10 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-black/22 text-black backdrop-blur-sm md:flex"
           aria-label="Forrige historie"
         >
           <ChevronLeft className="h-5 w-5" />
@@ -59,14 +58,14 @@ export function LatestBackstageArticlesGrid({
         <button
           type="button"
           onClick={() => swiperRef.current?.slideNext()}
-          className="absolute right-0 top-1/2 z-10 hidden h-11 w-11 translate-x-4 -translate-y-1/2 items-center justify-center rounded-full bg-black/8 text-black transition hover:bg-black/14 lg:flex"
+          className="absolute right-2 top-1/2 z-10 hidden h-10 w-10 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-black/22 text-black backdrop-blur-sm md:flex"
           aria-label="Neste historie"
         >
           <ChevronRight className="h-5 w-5" />
         </button>
 
         <Swiper
-          modules={[A11y, Pagination, Navigation]}
+          modules={[A11y, Pagination]}
           onSwiper={(swiper) => {
             swiperRef.current = swiper;
           }}
@@ -76,10 +75,10 @@ export function LatestBackstageArticlesGrid({
           pagination={{ clickable: true }}
           style={
             {
-              "--swiper-pagination-color": "#6b5cf6",
+              "--swiper-pagination-color": "#000000",
             } as CSSProperties
           }
-          className="overflow-visible pb-10 [&_.swiper-pagination]:!bottom-0 [&_.swiper-pagination-bullet]:bg-black/18 [&_.swiper-pagination-bullet-active]:bg-[#6b5cf6]"
+          className="overflow-visible pb-14 [&_.swiper-pagination]:!relative [&_.swiper-pagination]:!left-0 [&_.swiper-pagination]:!right-0 [&_.swiper-pagination]:!top-auto [&_.swiper-pagination]:!bottom-auto [&_.swiper-pagination]:!mt-6 [&_.swiper-pagination-bullet]:bg-black/30 [&_.swiper-pagination-bullet-active]:bg-black"
           breakpoints={{
             560: {
               slidesPerView: 1.35,

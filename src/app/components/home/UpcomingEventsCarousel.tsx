@@ -50,7 +50,7 @@ export function UpcomingEventsCarousel({
           <button
             type="button"
             onClick={() => swiperRef.current?.slidePrev()}
-            className="absolute left-2 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-black/22 text-black backdrop-blur-sm"
+            className="absolute left-2 top-1/2 z-10 hidden h-10 w-10 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-black/22 text-black backdrop-blur-sm md:flex"
             aria-label="Forrige arrangement"
           >
             <ChevronLeft
@@ -63,7 +63,7 @@ export function UpcomingEventsCarousel({
           <button
             type="button"
             onClick={() => swiperRef.current?.slideNext()}
-            className="absolute right-2 top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-black/22 text-black backdrop-blur-sm"
+            className="absolute right-2 top-1/2 z-10 hidden h-10 w-10 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-black/22 text-black backdrop-blur-sm md:flex"
             aria-label="Neste arrangement"
           >
             <ChevronRight
