@@ -16,7 +16,7 @@ export default async function SiteLayout({
   return (
     <>
       <SiteHeader navItems={navItems} />
-      <MainPartnerHighlight partners={homePartners} />
+      <MainPartnerHighlight partners={homePartners} compact />
       {children}
     </>
   );

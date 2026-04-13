@@ -3,19 +3,20 @@ import type { HomePartner } from "@/app/lib/types";
 
 type MainPartnerHighlightProps = {
   partners: HomePartner[];
+  compact?: boolean;
 };
 
-export function MainPartnerHighlight({ partners }: MainPartnerHighlightProps) {
+export function MainPartnerHighlight({ partners, compact = false }: MainPartnerHighlightProps) {
   if (partners.length === 0) return null;
 
   return (
-    <section className="mt-8 w-full bg-[#f7f4ee] py-14 sm:py-16">
-      <div className="mx-auto w-full max-w-6xl px-4 text-center">
+    <section className={`w-full bg-[#ece9e3] ${compact ? "mt-0 py-8 sm:py-10" : "mt-8 py-14 sm:py-16"}`}>
+      <div className={`mx-auto w-full px-4 text-center ${compact ? "max-w-5xl" : "max-w-6xl"}`}>
         <p className="text-xs font-semibold uppercase tracking-[0.2em] text-black/65">
-          Kulturkompasset presenteres av samarbeidspartner
+          Kulturkompasset presenteres av
         </p>
 
-        <div className="mt-8 flex flex-wrap items-center justify-center gap-x-12 gap-y-8">
+        <div className={`flex flex-wrap items-center justify-center ${compact ? "mt-5 gap-x-10 gap-y-6" : "mt-8 gap-x-12 gap-y-8"}`}>
           {partners.map((partner) => {
             const logoUrl = partner.logoUrl;
 
@@ -32,7 +33,7 @@ export function MainPartnerHighlight({ partners }: MainPartnerHighlightProps) {
                   <img
                     src={logoUrl}
                     alt={partner.name}
-                    className="max-h-20 w-auto object-contain sm:max-h-24"
+                    className={compact ? "max-h-14 w-auto object-contain sm:max-h-16" : "max-h-20 w-auto object-contain sm:max-h-24"}
                   />
                 </Link>
               ) : (
@@ -40,7 +41,7 @@ export function MainPartnerHighlight({ partners }: MainPartnerHighlightProps) {
                   key={partner._id}
                   src={logoUrl}
                   alt={partner.name}
-                  className="max-h-20 w-auto object-contain sm:max-h-24"
+                  className={compact ? "max-h-14 w-auto object-contain sm:max-h-16" : "max-h-20 w-auto object-contain sm:max-h-24"}
                 />
               );
             }

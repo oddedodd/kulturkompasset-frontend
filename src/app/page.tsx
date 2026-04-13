@@ -45,7 +45,7 @@ export default async function Home() {
     ]);
 
   return (
-    <main className="min-h-screen bg-[#f8f7f4]">
+    <main className="min-h-screen bg-[#fbfaf8]">
       <Welcome navItems={navItems} />
       <FeaturedEventsCarousel events={featuredEvents} />
       <LatestBackstageArticlesGrid articles={backstageArticles} />
