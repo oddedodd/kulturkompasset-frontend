@@ -9,7 +9,7 @@ export function MainPartnerHighlight({ partners }: MainPartnerHighlightProps) {
   if (partners.length === 0) return null;
 
   return (
-    <section className="mt-8 w-full bg-[#f7f4ee] py-14 sm:py-16">
+    <section className="mt-8 w-full bg-[#ece9e3] py-14 sm:py-16">
       <div className="mx-auto w-full max-w-6xl px-4 text-center">
         <p className="text-xs font-semibold uppercase tracking-[0.2em] text-black/65">
           Kulturkompasset presenteres av samarbeidspartner

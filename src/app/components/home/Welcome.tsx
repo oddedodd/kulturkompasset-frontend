@@ -18,7 +18,7 @@ export function Welcome({ navItems }: WelcomeProps) {
 
   return (
     <>
-      <section className="w-full bg-[#f7f4ee]">
+      <section className="w-full bg-[#f3eee4]">
         <div className="px-4">
           <div className="mx-auto w-full max-w-6xl">
             <div className="flex h-24 items-center justify-end">
@@ -44,7 +44,7 @@ export function Welcome({ navItems }: WelcomeProps) {
 
           <div className="relative mt-9 w-full max-w-3xl">
             <div className="absolute left-0 right-0 top-1/2 h-px -translate-y-1/2 bg-black" />
-            <div className="relative mx-auto flex h-16 w-16 items-center justify-center bg-[#f7f4ee]">
+            <div className="relative mx-auto flex h-16 w-16 items-center justify-center bg-[#f3eee4]">
               <Image
                 src="/kk-symbol.svg"
                 alt="Kulturkompasset symbol"
