@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import type { CSSProperties } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { A11y, Autoplay, Pagination } from "swiper/modules";
 import "swiper/css";
@@ -64,7 +65,12 @@ export function FeaturedEventsCarousel({ events }: FeaturedEventsCarouselProps) 
           disableOnInteraction: false,
           pauseOnMouseEnter: true,
         }}
-        className="overflow-hidden rounded-2xl"
+        style={
+          {
+            "--swiper-pagination-color": "#000000",
+          } as CSSProperties
+        }
+        className="overflow-hidden rounded-2xl pb-14 [&_.swiper-pagination]:!relative [&_.swiper-pagination]:!left-0 [&_.swiper-pagination]:!right-0 [&_.swiper-pagination]:!top-auto [&_.swiper-pagination]:!bottom-auto [&_.swiper-pagination]:!mt-6 [&_.swiper-pagination-bullet]:bg-black/30 [&_.swiper-pagination-bullet-active]:bg-black"
       >
         {safeEvents.map((event) => {
           const heroImageUrl =
