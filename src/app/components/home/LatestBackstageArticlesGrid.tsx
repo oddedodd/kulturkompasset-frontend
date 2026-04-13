@@ -1,4 +1,15 @@
+"use client";
+
 import Link from "next/link";
+import { useRef } from "react";
+import type { CSSProperties } from "react";
+import type { Swiper as SwiperType } from "swiper";
+import { A11y, Navigation, Pagination } from "swiper/modules";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
 import { getSanityImageUrl } from "@/app/lib/sanity-image";
 import type { BackstageArticleCard } from "../../lib/types";
 
@@ -15,6 +26,8 @@ const dateFormatter = new Intl.DateTimeFormat("nb-NO", {
 export function LatestBackstageArticlesGrid({
   articles,
 }: LatestBackstageArticlesGridProps) {
+  const swiperRef = useRef<SwiperType | null>(null);
+
   if (articles.length === 0) {
     return null;
   }
@@ -33,53 +46,101 @@ export function LatestBackstageArticlesGrid({
         </Link>
       </div>
 
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
-        {articles.map((article) => {
-          const heroImageUrl =
-            getSanityImageUrl(article.heroImage, {
-              width: 900,
-              height: 1200,
-            }) || article.heroImageUrl;
+      <div className="relative">
+        <button
+          type="button"
+          onClick={() => swiperRef.current?.slidePrev()}
+          className="absolute left-0 top-1/2 z-10 hidden h-11 w-11 -translate-x-4 -translate-y-1/2 items-center justify-center rounded-full bg-black/8 text-black transition hover:bg-black/14 lg:flex"
+          aria-label="Forrige historie"
+        >
+          <ChevronLeft className="h-5 w-5" />
+        </button>
 
-          return (
-          <article
-            key={article._id}
-            className="relative aspect-[4/5] w-full overflow-hidden rounded-2xl md:aspect-[3/4]"
-          >
-            {heroImageUrl ? (
-              <div
-                className="absolute inset-0 bg-cover bg-center transition-transform duration-300"
-                style={{ backgroundImage: `url(${heroImageUrl})` }}
-                aria-hidden
-              />
-            ) : (
-              <div className="absolute inset-0 bg-gray-300" aria-hidden />
-            )}
+        <button
+          type="button"
+          onClick={() => swiperRef.current?.slideNext()}
+          className="absolute right-0 top-1/2 z-10 hidden h-11 w-11 translate-x-4 -translate-y-1/2 items-center justify-center rounded-full bg-black/8 text-black transition hover:bg-black/14 lg:flex"
+          aria-label="Neste historie"
+        >
+          <ChevronRight className="h-5 w-5" />
+        </button>
 
-            <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/45 to-black/20" />
+        <Swiper
+          modules={[A11y, Pagination, Navigation]}
+          onSwiper={(swiper) => {
+            swiperRef.current = swiper;
+          }}
+          spaceBetween={14}
+          slidesPerView={1.15}
+          grabCursor
+          pagination={{ clickable: true }}
+          style={
+            {
+              "--swiper-pagination-color": "#6b5cf6",
+            } as CSSProperties
+          }
+          className="overflow-visible pb-10 [&_.swiper-pagination]:!bottom-0 [&_.swiper-pagination-bullet]:bg-black/18 [&_.swiper-pagination-bullet-active]:bg-[#6b5cf6]"
+          breakpoints={{
+            560: {
+              slidesPerView: 1.35,
+              spaceBetween: 16,
+            },
+            900: {
+              slidesPerView: 2.2,
+              spaceBetween: 18,
+            },
+            1200: {
+              slidesPerView: 3,
+              spaceBetween: 20,
+            },
+          }}
+        >
+          {articles.map((article) => {
+            const heroImageUrl =
+              getSanityImageUrl(article.heroImage, {
+                width: 900,
+                height: 1200,
+              }) || article.heroImageUrl;
 
-            <Link
-              href={`/backstage/${article.slug}`}
-              aria-label={`Åpne artikkel: ${article.title}`}
-              className="absolute inset-0 z-10"
-            />
+            return (
+              <SwiperSlide key={article._id} className="h-auto">
+                <article className="relative aspect-[4/5] w-full overflow-hidden rounded-2xl md:aspect-[3/4]">
+                  {heroImageUrl ? (
+                    <div
+                      className="absolute inset-0 bg-cover bg-center transition-transform duration-300"
+                      style={{ backgroundImage: `url(${heroImageUrl})` }}
+                      aria-hidden
+                    />
+                  ) : (
+                    <div className="absolute inset-0 bg-gray-300" aria-hidden />
+                  )}
 
-            <div className="pointer-events-none relative z-20 flex h-full flex-col justify-end p-5 text-white sm:p-6">
-              {article.publishedAt ? (
-                <p className="text-xs font-medium uppercase tracking-wide text-white/80">
-                  {dateFormatter.format(new Date(article.publishedAt))}
-                </p>
-              ) : null}
-              <h3 className="mt-2 text-2xl font-semibold leading-tight">
-                {article.title}
-              </h3>
-              <p className="mt-3 line-clamp-4 text-sm leading-relaxed text-white/90">
-                {article.excerpt?.trim() || "Les saken i Backstage."}
-              </p>
-            </div>
-          </article>
-          );
-        })}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/45 to-black/20" />
+
+                  <Link
+                    href={`/backstage/${article.slug}`}
+                    aria-label={`Åpne artikkel: ${article.title}`}
+                    className="absolute inset-0 z-10"
+                  />
+
+                  <div className="pointer-events-none relative z-20 flex h-full flex-col justify-end p-5 text-white sm:p-6">
+                    <h3 className="line-clamp-2 text-2xl font-semibold leading-tight">
+                      {article.title}
+                    </h3>
+                    <p className="mt-3 line-clamp-4 text-sm leading-relaxed text-white/90">
+                      {article.excerpt?.trim() || "Les saken i Backstage."}
+                    </p>
+                    {article.publishedAt ? (
+                      <p className="mt-3 text-xs font-medium uppercase tracking-wide text-white/80">
+                        {dateFormatter.format(new Date(article.publishedAt))}
+                      </p>
+                    ) : null}
+                  </div>
+                </article>
+              </SwiperSlide>
+            );
+          })}
+        </Swiper>
       </div>
     </section>
   );
