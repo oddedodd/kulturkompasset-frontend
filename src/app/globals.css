@@ -32,3 +32,19 @@ body {
     transform: translateX(-50%);
   }
 }
+
+.kk-page-builder > .scrollytell-block {
+  margin-bottom: 0 !important;
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+.kk-page-builder > .scrollytell-block + .scrollytell-block {
+  margin-top: 0 !important;
+}
+
+.scrollytell-block .scrollytell-media,
+.scrollytell-block .scrollytell-iframe {
+  margin: 0 !important;
+  padding: 0 !important;
+}

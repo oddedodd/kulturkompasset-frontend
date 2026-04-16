@@ -13,7 +13,7 @@ type PageBuilderRendererProps = {
 
 export function PageBuilderRenderer({ blocks, useHeroAsPageTitle = false }: PageBuilderRendererProps) {
   return (
-    <section className="mt-8 space-y-6 sm:space-y-8">
+    <section className="kk-page-builder mt-8 space-y-6 sm:space-y-8">
       {blocks.map((block, index) => {
         const key = block._key || `${block._type}-${index}`;
         const previousBlockType = index > 0 ? blocks[index - 1]?._type : undefined;
@@ -238,7 +238,7 @@ export function PageBuilderRenderer({ blocks, useHeroAsPageTitle = false }: Page
               </blockquote>
             );
 
-          case "scrollytellBlock":
+          case "scrollytellBlock": {
             return (
               <ScrollytellBlock
                 key={key}
@@ -250,6 +250,7 @@ export function PageBuilderRenderer({ blocks, useHeroAsPageTitle = false }: Page
                 textBoxes={block.textBoxes}
               />
             );
+          }
 
           case "dividerBlock":
             return <hr key={key} className="border-black/15" />;

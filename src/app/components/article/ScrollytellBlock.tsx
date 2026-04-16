@@ -26,8 +26,6 @@ export function ScrollytellBlock({
   backgroundVideoUrl,
   textBoxes,
 }: ScrollytellBlockProps) {
-  if (!textBoxes || textBoxes.length === 0) return null;
-
   const isVideo = backgroundType === "video";
   const vimeoSrc = isVideo ? getVimeoEmbedUrl(backgroundVideoUrl) : null;
   const resolvedImageUrl = !isVideo
@@ -35,47 +33,50 @@ export function ScrollytellBlock({
     : null;
   const hasBackground = isVideo ? !!vimeoSrc : !!resolvedImageUrl;
 
+  if (!textBoxes || textBoxes.length === 0) return null;
+
   return (
     <div
-      className="relative"
-      style={{ width: "100vw", marginLeft: "calc(50% - 50vw)" }}
+      className="relative scrollytell-block"
+      style={{
+        width: "100vw",
+        marginLeft: "calc(50% - 50vw)",
+        marginTop: 0,
+        marginBottom: 0,
+        paddingTop: 0,
+        paddingBottom: 0,
+      }}
     >
-      {hasBackground && (
-        <div className="sticky top-0 h-screen overflow-hidden bg-black">
+      {hasBackground ? (
+        <div className="scrollytell-media sticky top-0 h-screen overflow-hidden">
           {vimeoSrc ? (
             <iframe
               src={vimeoSrc}
               title="Bakgrunnsvideo"
               allow="autoplay; fullscreen"
               allowFullScreen
-              style={{
-                position: "absolute",
-                top: "50%",
-                left: "50%",
-                transform: "translate(-50%, -50%)",
-                width: "max(100%, 177.78vh)",
-                height: "max(100%, 56.25vw)",
-                border: 0,
-                pointerEvents: "none",
-              }}
+              className="scrollytell-iframe"
+              style={coverVideoStyle}
             />
           ) : resolvedImageUrl ? (
             <Image
               src={resolvedImageUrl}
               alt={backgroundImageAlt || ""}
               fill
-              className="object-cover"
+              className="object-cover m-0 p-0"
               sizes="100vw"
               priority
             />
           ) : null}
         </div>
-      )}
+      ) : null}
 
-      {/* zIndex: 1 ensures text boxes sit above the sticky background */}
       <div
         className="relative"
-        style={{ zIndex: 1, marginTop: hasBackground ? "-100vh" : undefined }}
+        style={{
+          zIndex: 1,
+          marginTop: hasBackground ? "-100vh" : undefined,
+        }}
       >
         {textBoxes.map((box, index) => (
           <div
@@ -84,7 +85,7 @@ export function ScrollytellBlock({
           >
             {box.text ? (
               <div
-                className="max-w-lg rounded-xl px-8 py-6 text-center"
+                className="max-w-lg px-8 py-6 text-center"
                 style={{
                   backgroundColor: box.backgroundColor ?? "rgba(0,0,0,0.6)",
                   color: box.textColor ?? "#ffffff",
@@ -97,7 +98,6 @@ export function ScrollytellBlock({
             ) : null}
           </div>
         ))}
-        {/* Extra 100vh so the background stays locked in through the entire last text box */}
         <div style={{ height: "100vh" }} />
       </div>
     </div>
@@ -123,3 +123,17 @@ function getVimeoEmbedUrl(url?: string): string | null {
     return null;
   }
 }
+
+const coverVideoStyle = {
+  position: "absolute" as const,
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: "max(100%, 177.78vh)",
+  height: "max(100%, 56.25vw)",
+  border: 0,
+  margin: 0,
+  padding: 0,
+  display: "block",
+  pointerEvents: "none" as const,
+};
