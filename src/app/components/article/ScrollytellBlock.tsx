@@ -53,10 +53,8 @@ export function ScrollytellBlock({
                 top: "50%",
                 left: "50%",
                 transform: "translate(-50%, -50%)",
-                width: "177.78vh",
-                height: "100vh",
-                minWidth: "100%",
-                minHeight: "100%",
+                width: "max(100%, 177.78vh)",
+                height: "max(100%, 56.25vw)",
                 border: 0,
                 pointerEvents: "none",
               }}
