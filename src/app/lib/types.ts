@@ -233,6 +233,21 @@ export type ArticlePageBuilderBlock =
       _type: "cta";
       label?: string;
       link?: string;
+    })
+  | (PageBuilderBlockBase & {
+      _type: "scrollytellBlock";
+      name?: string;
+      backgroundType?: "image" | "video";
+      backgroundImage?: SanityImageSource;
+      backgroundImageUrl?: string;
+      backgroundImageAlt?: string;
+      backgroundVideoUrl?: string;
+      textBoxes?: Array<{
+        _key?: string;
+        text?: string;
+        textColor?: string;
+        backgroundColor?: string;
+      }>;
     });
 
 export type SanityImageSource = {
