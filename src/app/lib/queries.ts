@@ -446,6 +446,12 @@ export const backstageArticleBySlugQuery = groq`
         backgroundImage,
         "backgroundImageUrl": backgroundImage.asset->url,
         "backgroundImageAlt": backgroundImage.alt
+      },
+      _type == "scrollytellBlock" => {
+        ...,
+        backgroundImage,
+        "backgroundImageUrl": backgroundImage.asset->url,
+        "backgroundImageAlt": backgroundImage.alt
       }
     },
     body
@@ -515,6 +521,12 @@ export const articleBySlugQuery = groq`
         "imageAlt": image.alt
       },
       _type == "blockquoteBlock" => {
+        ...,
+        backgroundImage,
+        "backgroundImageUrl": backgroundImage.asset->url,
+        "backgroundImageAlt": backgroundImage.alt
+      },
+      _type == "scrollytellBlock" => {
         ...,
         backgroundImage,
         "backgroundImageUrl": backgroundImage.asset->url,
