@@ -138,13 +138,23 @@ function resolveTargetPathsAndTags(payload: RevalidatePayload): {
 export async function POST(request: Request) {
   const { searchParams } = new URL(request.url);
   const secret = searchParams.get("secret");
+  const forcedType = searchParams.get("type")?.trim();
+  const forcedSlug = searchParams.get("slug")?.trim();
 
   if (!hasValidSecret(secret)) {
     return NextResponse.json({ revalidated: false, message: "Invalid secret" }, { status: 401 });
   }
 
   const payload = (await request.json().catch(() => null)) as RevalidatePayload;
-  const { paths, layoutPaths, tags, fallback, type, slug } = resolveTargetPathsAndTags(payload);
+  const effectivePayload =
+    forcedType || forcedSlug
+      ? {
+          ...(payload ?? {}),
+          ...(forcedType ? { _type: forcedType } : {}),
+          ...(forcedSlug ? { slug: forcedSlug } : {}),
+        }
+      : payload;
+  const { paths, layoutPaths, tags, fallback, type, slug } = resolveTargetPathsAndTags(effectivePayload);
 
   revalidatePaths(paths);
   revalidateLayouts(layoutPaths);
