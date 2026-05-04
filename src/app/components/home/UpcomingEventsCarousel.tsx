@@ -17,6 +17,7 @@ type UpcomingEventsCarouselProps = {
 };
 
 const dateFormatter = new Intl.DateTimeFormat("nb-NO", {
+  timeZone: "Europe/Oslo",
   weekday: "long",
   day: "numeric",
   month: "long",
