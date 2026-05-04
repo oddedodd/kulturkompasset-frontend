@@ -13,6 +13,7 @@ type EventPageProps = {
 };
 
 const dateTimeFormatter = new Intl.DateTimeFormat("nb-NO", {
+  timeZone: "Europe/Oslo",
   day: "2-digit",
   month: "long",
   year: "numeric",
@@ -30,12 +31,14 @@ function formatDateTime(value?: string): string | null {
 }
 
 const dateFormatter = new Intl.DateTimeFormat("nb-NO", {
+  timeZone: "Europe/Oslo",
   day: "2-digit",
   month: "long",
   year: "numeric",
 });
 
 const timeFormatter = new Intl.DateTimeFormat("nb-NO", {
+  timeZone: "Europe/Oslo",
   hour: "2-digit",
   minute: "2-digit",
 });

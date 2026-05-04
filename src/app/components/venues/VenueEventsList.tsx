@@ -3,6 +3,7 @@ import { CalendarDays, MapPin } from "lucide-react";
 import type { CalendarEvent } from "@/app/lib/types";
 
 const dateFormatter = new Intl.DateTimeFormat("nb-NO", {
+  timeZone: "Europe/Oslo",
   day: "2-digit",
   month: "long",
   year: "numeric",

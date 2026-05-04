@@ -55,6 +55,7 @@ export default async function News() {
               <h2 className="text-2xl font-semibold mb-2">{post.title}</h2>
               <p className="text-gray-500 text-sm mb-4">
                 {new Date(post.date).toLocaleDateString("nb-NO", {
+                  timeZone: "Europe/Oslo",
                   year: "numeric",
                   month: "long",
                   day: "numeric",

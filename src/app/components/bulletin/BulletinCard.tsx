@@ -3,6 +3,7 @@ import { CalendarDays, MapPin, UserRound } from "lucide-react";
 import type { BulletinItem } from "@/app/lib/types";
 
 const dateFormatter = new Intl.DateTimeFormat("nb-NO", {
+  timeZone: "Europe/Oslo",
   weekday: "long",
   day: "numeric",
   month: "long",

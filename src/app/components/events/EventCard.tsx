@@ -4,6 +4,7 @@ import { getSanityImageUrl } from "@/app/lib/sanity-image";
 import type { CalendarEvent } from "@/app/lib/types";
 
 const dateFormatter = new Intl.DateTimeFormat("nb-NO", {
+  timeZone: "Europe/Oslo",
   weekday: "long",
   day: "numeric",
   month: "long",
