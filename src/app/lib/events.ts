@@ -26,7 +26,7 @@ const getEventBySlugCached = unstable_cache(
     }
   },
   ["event-by-slug"],
-  { tags: [CACHE_TAGS.events], revalidate: 86_400 },
+  { tags: [CACHE_TAGS.events, CACHE_TAGS.venues, CACHE_TAGS.articles], revalidate: 86_400 },
 );
 
 export async function getEventBySlug(slug: string): Promise<EventDetail | null> {
