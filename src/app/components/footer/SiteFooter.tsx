@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export function SiteFooter() {
   const currentYear = new Date().getFullYear();
 
@@ -20,9 +22,31 @@ export function SiteFooter() {
               Utforsk
             </h2>
             <ul className="mt-4 space-y-2 text-sm text-white/85">
-              <li>Kalender</li>
-              <li>Historier</li>
-              <li>Oppslagstavla</li>
+              <li>
+                <Link href="/" className="hover:text-white">
+                  Hjem
+                </Link>
+              </li>
+              <li>
+                <Link href="/kalender" className="hover:text-white">
+                  Kalender
+                </Link>
+              </li>
+              <li>
+                <Link href="/backstage" className="hover:text-white">
+                  Historier
+                </Link>
+              </li>
+              <li>
+                <Link href="/bulletin" className="hover:text-white">
+                  Oppslagstavla
+                </Link>
+              </li>
+              <li>
+                <Link href="/personvern" className="hover:text-white">
+                  Personvernerklæring
+                </Link>
+              </li>
             </ul>
           </section>
 
@@ -33,14 +57,14 @@ export function SiteFooter() {
             <ul className="mt-4 space-y-2 text-sm text-white/85">
               <li>Instagram</li>
               <li>Facebook</li>
-              <li>YouTube</li>
             </ul>
           </section>
         </div>
 
         <p className="mt-10 border-t border-white/15 pt-6 text-center text-sm leading-relaxed text-white/75">
-          Kulturkompasset driftes av NA Kreativ, markedsavdelingen i Namdalsavisa. Innholdet er
-          uavhengig av avisens redaksjonelle virksomhet.
+          Kulturkompasset er utviklet og produsert av NA Kreativ,
+          markedsavdelingen i Namdalsavisa. Innholdet er uavhengig av avisens
+          redaksjonelle innhold.
         </p>
 
         <div className="mt-4 text-center text-sm text-white/75">
