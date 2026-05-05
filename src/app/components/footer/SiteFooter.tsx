@@ -1,8 +1,6 @@
 import Link from "next/link";
 
 export function SiteFooter() {
-  const currentYear = new Date().getFullYear();
-
   return (
     <footer className="mt-0 bg-[#1f1d1b] px-6 py-12 text-white">
       <div className="mx-auto w-full max-w-6xl">
@@ -67,9 +65,6 @@ export function SiteFooter() {
           redaksjonelle innhold.
         </p>
 
-        <div className="mt-4 text-center text-sm text-white/75">
-          &copy; NA Kreativ {currentYear}
-        </div>
       </div>
     </footer>
   );
