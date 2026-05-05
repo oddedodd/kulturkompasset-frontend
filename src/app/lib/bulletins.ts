@@ -37,25 +37,28 @@ const getBulletinBySlugCached = unstable_cache(
   { tags: [CACHE_TAGS.bulletins], revalidate: 86_400 },
 );
 
-const getBulletinsSearchCorpusCached = unstable_cache(
-  async (): Promise<BulletinItem[]> => {
-    try {
-      const bulletins = await sanityClient
-        .withConfig({ useCdn: false, perspective: "published" })
-        .fetch<BulletinItem[]>(bulletinsPaginatedQuery, {
-          offset: 0,
-          end: SEARCH_CORPUS_LIMIT,
-          searchPattern: "",
-        });
+async function getBulletinsSearchCorpus(todayStart: string, todayKey: string): Promise<BulletinItem[]> {
+  return unstable_cache(
+    async (): Promise<BulletinItem[]> => {
+      try {
+        const bulletins = await sanityClient
+          .withConfig({ useCdn: false, perspective: "published" })
+          .fetch<BulletinItem[]>(bulletinsPaginatedQuery, {
+            offset: 0,
+            end: SEARCH_CORPUS_LIMIT,
+            searchPattern: "",
+            todayStart,
+          });
 
-      return sanitizeBulletins(bulletins);
-    } catch {
-      return [];
-    }
-  },
-  ["bulletins-search-corpus"],
-  { tags: [CACHE_TAGS.bulletins], revalidate: 86_400 },
-);
+        return sanitizeBulletins(bulletins);
+      } catch {
+        return [];
+      }
+    },
+    ["bulletins-search-corpus", todayKey],
+    { tags: [CACHE_TAGS.bulletins], revalidate: 86_400 },
+  )();
+}
 
 export async function getBulletinsPage({
   offset = 0,
@@ -65,9 +68,11 @@ export async function getBulletinsPage({
   const safeOffset = Number.isFinite(offset) ? Math.max(0, Math.floor(offset)) : 0;
   const safeLimit = Number.isFinite(limit) ? Math.max(1, Math.min(24, Math.floor(limit))) : 9;
   const safeSearch = normalizeText(search);
+  const todayStart = getTodayStartIso();
+  const todayKey = getTodayKey();
 
   if (safeSearch) {
-    const bulletins = await getBulletinsSearchCorpusCached();
+    const bulletins = await getBulletinsSearchCorpus(todayStart, todayKey);
     return bulletins
       .filter((bulletin) =>
         normalizeText(
@@ -93,6 +98,7 @@ export async function getBulletinsPage({
             offset: safeOffset,
             end: safeOffset + safeLimit,
             searchPattern: "",
+            todayStart,
           });
 
         return sanitizeBulletins(bulletins);
@@ -104,6 +110,7 @@ export async function getBulletinsPage({
       "bulletins-page",
       String(safeOffset),
       String(safeLimit),
+      todayKey,
       "__no-search__",
     ],
     { tags: [CACHE_TAGS.bulletins], revalidate: 86_400 },
@@ -134,4 +141,17 @@ function normalizeText(value: string): string {
     .replace(/[\u0300-\u036f]/g, "")
     .toLowerCase()
     .trim();
+}
+
+function getTodayStartIso(): string {
+  const now = new Date();
+  return new Date(now.getFullYear(), now.getMonth(), now.getDate()).toISOString();
+}
+
+function getTodayKey(): string {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, "0");
+  const day = String(now.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
 }

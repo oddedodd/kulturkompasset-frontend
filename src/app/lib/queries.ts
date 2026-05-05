@@ -228,6 +228,7 @@ export const upcomingEventVenuesQuery = groq`
 export const bulletinsPaginatedQuery = groq`
   *[
     _type == "bulletin" &&
+    coalesce(startsAt, date) >= $todayStart &&
     (
       $searchPattern == "" ||
       coalesce(title, name, "") match $searchPattern ||
