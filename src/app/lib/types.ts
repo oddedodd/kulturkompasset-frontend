@@ -25,6 +25,11 @@ export type HomePartner = {
   active?: boolean;
   logo?: SanityImageSource;
   logoUrl?: string;
+  logoDimensions?: {
+    width?: number;
+    height?: number;
+    aspectRatio?: number;
+  };
 };
 
 export type EventDetail = {

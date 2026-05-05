@@ -74,7 +74,8 @@ export const partnersByIdsQuery = groq`
     tier,
     active,
     logo,
-    "logoUrl": logo.asset->url
+    "logoUrl": logo.asset->url,
+    "logoDimensions": logo.asset->metadata.dimensions
   }
 `;
 
@@ -87,7 +88,8 @@ export const allSponsorsQuery = groq`
     name,
     website,
     logo,
-    "logoUrl": logo.asset->url
+    "logoUrl": logo.asset->url,
+    "logoDimensions": logo.asset->metadata.dimensions
   }
 `;
 
@@ -103,7 +105,8 @@ export const homePartnersQuery = groq`
       tier,
       active,
       logo,
-      "logoUrl": logo.asset->url
+      "logoUrl": logo.asset->url,
+      "logoDimensions": logo.asset->metadata.dimensions
     }
   }
 `;
