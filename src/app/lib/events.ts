@@ -9,6 +9,8 @@ import {
 import { sanityClient } from "./sanity.client";
 import type { CalendarEvent, EventDetail } from "./types";
 
+const SEARCH_CORPUS_LIMIT = 500;
+
 const getEventBySlugCached = unstable_cache(
   async (slug: string): Promise<EventDetail | null> => {
     try {
@@ -26,7 +28,7 @@ const getEventBySlugCached = unstable_cache(
     }
   },
   ["event-by-slug"],
-  { tags: [CACHE_TAGS.events], revalidate: 86_400 },
+  { tags: [CACHE_TAGS.events, CACHE_TAGS.venues, CACHE_TAGS.articles], revalidate: 86_400 },
 );
 
 export async function getEventBySlug(slug: string): Promise<EventDetail | null> {
@@ -59,6 +61,40 @@ type GetUpcomingEventsPageInput = {
   search?: string;
 };
 
+async function getUpcomingEventsSearchCorpus({
+  venueName,
+  dateStart,
+}: {
+  venueName: string;
+  dateStart: string;
+}): Promise<CalendarEvent[]> {
+  return unstable_cache(
+    async (): Promise<CalendarEvent[]> => {
+      try {
+        const events = await sanityClient
+          .withConfig({ useCdn: false, perspective: "published" })
+          .fetch<CalendarEvent[]>(upcomingEventsPaginatedQuery, {
+            offset: 0,
+            end: SEARCH_CORPUS_LIMIT,
+            venueName,
+            dateStart,
+            searchPattern: "",
+          });
+
+        return sanitizeEvents(events);
+      } catch {
+        return [];
+      }
+    },
+    [
+      "upcoming-events-search-corpus",
+      venueName || "__all-venues__",
+      dateStart || "__all-dates__",
+    ],
+    { tags: [CACHE_TAGS.events, CACHE_TAGS.venues], revalidate: 86_400 },
+  )();
+}
+
 export async function getUpcomingEventsPage({
   offset = 0,
   limit = 9,
@@ -72,46 +108,32 @@ export async function getUpcomingEventsPage({
   const safeDateStart = toDateStartIso(date);
   const safeSearch = normalizeText(search);
 
-  const cacheKey = [
-    "upcoming-events-page",
-    String(safeOffset),
-    String(safeLimit),
-    safeVenueName || "__all-venues__",
-    safeDateStart || "__all-dates__",
-    safeSearch || "__no-search__",
-  ];
+  if (safeSearch) {
+    const events = await getUpcomingEventsSearchCorpus({
+      venueName: safeVenueName,
+      dateStart: safeDateStart,
+    });
+
+    return events
+      .filter((event) =>
+        normalizeText(
+          [
+            event.title,
+            event.venue?.name,
+            event.venue?.city,
+            ...(event.contributors ?? []),
+            ...(event.categories ?? []),
+          ]
+            .filter(Boolean)
+            .join(" "),
+        ).includes(safeSearch),
+      )
+      .slice(safeOffset, safeOffset + safeLimit);
+  }
 
   return unstable_cache(
     async (): Promise<CalendarEvent[]> => {
       try {
-        if (safeSearch) {
-          const events = await sanityClient
-            .withConfig({ useCdn: false, perspective: "published" })
-            .fetch<CalendarEvent[]>(upcomingEventsPaginatedQuery, {
-              offset: 0,
-              end: 500,
-              venueName: safeVenueName,
-              dateStart: safeDateStart,
-              searchPattern: "",
-            });
-
-          const filtered = sanitizeEvents(events).filter((event) =>
-            normalizeText(
-              [
-                event.title,
-                event.venue?.name,
-                event.venue?.city,
-                ...(event.contributors ?? []),
-                ...(event.categories ?? []),
-              ]
-                .filter(Boolean)
-                .join(" "),
-            ).includes(safeSearch),
-          );
-
-          return filtered.slice(safeOffset, safeOffset + safeLimit);
-        }
-
         const events = await sanityClient
           .withConfig({ useCdn: false, perspective: "published" })
           .fetch<CalendarEvent[]>(upcomingEventsPaginatedQuery, {
@@ -127,7 +149,14 @@ export async function getUpcomingEventsPage({
         return [];
       }
     },
-    cacheKey,
+    [
+      "upcoming-events-page",
+      String(safeOffset),
+      String(safeLimit),
+      safeVenueName || "__all-venues__",
+      safeDateStart || "__all-dates__",
+      "__no-search__",
+    ],
     { tags: [CACHE_TAGS.events, CACHE_TAGS.venues], revalidate: 86_400 },
   )();
 }

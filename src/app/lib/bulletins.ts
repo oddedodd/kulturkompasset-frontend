@@ -4,6 +4,8 @@ import { bulletinBySlugQuery, bulletinsPaginatedQuery } from "./queries";
 import { sanityClient } from "./sanity.client";
 import type { BulletinDetail, BulletinItem } from "./types";
 
+const SEARCH_CORPUS_LIMIT = 500;
+
 type GetBulletinsPageInput = {
   offset?: number;
   limit?: number;
@@ -35,6 +37,26 @@ const getBulletinBySlugCached = unstable_cache(
   { tags: [CACHE_TAGS.bulletins], revalidate: 86_400 },
 );
 
+const getBulletinsSearchCorpusCached = unstable_cache(
+  async (): Promise<BulletinItem[]> => {
+    try {
+      const bulletins = await sanityClient
+        .withConfig({ useCdn: false, perspective: "published" })
+        .fetch<BulletinItem[]>(bulletinsPaginatedQuery, {
+          offset: 0,
+          end: SEARCH_CORPUS_LIMIT,
+          searchPattern: "",
+        });
+
+      return sanitizeBulletins(bulletins);
+    } catch {
+      return [];
+    }
+  },
+  ["bulletins-search-corpus"],
+  { tags: [CACHE_TAGS.bulletins], revalidate: 86_400 },
+);
+
 export async function getBulletinsPage({
   offset = 0,
   limit = 9,
@@ -42,15 +64,25 @@ export async function getBulletinsPage({
 }: GetBulletinsPageInput = {}): Promise<BulletinItem[]> {
   const safeOffset = Number.isFinite(offset) ? Math.max(0, Math.floor(offset)) : 0;
   const safeLimit = Number.isFinite(limit) ? Math.max(1, Math.min(24, Math.floor(limit))) : 9;
-  const safeSearch = search.trim();
+  const safeSearch = normalizeText(search);
 
-  const safeSearchPattern = safeSearch ? `*${safeSearch}*` : "";
-  const cacheKey = [
-    "bulletins-page",
-    String(safeOffset),
-    String(safeLimit),
-    safeSearch || "__no-search__",
-  ];
+  if (safeSearch) {
+    const bulletins = await getBulletinsSearchCorpusCached();
+    return bulletins
+      .filter((bulletin) =>
+        normalizeText(
+          [
+            bulletin.title,
+            bulletin.organizer,
+            bulletin.place,
+            bulletin.description,
+          ]
+            .filter(Boolean)
+            .join(" "),
+        ).includes(safeSearch),
+      )
+      .slice(safeOffset, safeOffset + safeLimit);
+  }
 
   return unstable_cache(
     async (): Promise<BulletinItem[]> => {
@@ -60,7 +92,7 @@ export async function getBulletinsPage({
           .fetch<BulletinItem[]>(bulletinsPaginatedQuery, {
             offset: safeOffset,
             end: safeOffset + safeLimit,
-            searchPattern: safeSearchPattern,
+            searchPattern: "",
           });
 
         return sanitizeBulletins(bulletins);
@@ -68,7 +100,12 @@ export async function getBulletinsPage({
         return [];
       }
     },
-    cacheKey,
+    [
+      "bulletins-page",
+      String(safeOffset),
+      String(safeLimit),
+      "__no-search__",
+    ],
     { tags: [CACHE_TAGS.bulletins], revalidate: 86_400 },
   )();
 }
@@ -89,4 +126,12 @@ function sanitizeBulletins(items: BulletinItem[] = []): BulletinItem[] {
           item.startsAt.trim().length > 0,
       ),
   );
+}
+
+function normalizeText(value: string): string {
+  return value
+    .normalize("NFKD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .trim();
 }

@@ -8,6 +8,8 @@ import {
 import { sanityClient } from "./sanity.client";
 import type { BackstageArticleCard, BackstageArticleDetail } from "./types";
 
+const SEARCH_CORPUS_LIMIT = 500;
+
 const getBackstageArticleBySlugCached = unstable_cache(
   async (slug: string): Promise<BackstageArticleDetail | null> => {
     try {
@@ -64,6 +66,26 @@ type GetBackstageArticlesPageInput = {
   search?: string;
 };
 
+const getBackstageArticlesSearchCorpusCached = unstable_cache(
+  async (): Promise<BackstageArticleCard[]> => {
+    try {
+      const articles = await sanityClient
+        .withConfig({ useCdn: false, perspective: "published" })
+        .fetch<BackstageArticleCard[]>(backstageArticlesPaginatedQuery, {
+          offset: 0,
+          limit: SEARCH_CORPUS_LIMIT,
+          searchPattern: "",
+        });
+
+      return sanitizeCards(articles);
+    } catch {
+      return [];
+    }
+  },
+  ["backstage-articles-search-corpus"],
+  { tags: [CACHE_TAGS.articles], revalidate: 86_400 },
+);
+
 export async function getBackstageArticlesPage({
   offset = 0,
   limit = 9,
@@ -72,40 +94,25 @@ export async function getBackstageArticlesPage({
   const safeOffset = Number.isFinite(offset) ? Math.max(0, Math.floor(offset)) : 0;
   const safeLimit = Number.isFinite(limit) ? Math.max(1, Math.min(24, Math.floor(limit))) : 9;
   const safeSearch = normalizeText(search);
-  const safeSearchPattern = toSearchPattern(search);
 
-  const cacheKey = [
-    "backstage-articles-page",
-    String(safeOffset),
-    String(safeLimit),
-    safeSearch || "__no-search__",
-  ];
+  if (safeSearch) {
+    const articles = await getBackstageArticlesSearchCorpusCached();
+    return articles
+      .filter((article) =>
+        normalizeText([article.title, article.excerpt].filter(Boolean).join(" ")).includes(safeSearch),
+      )
+      .slice(safeOffset, safeOffset + safeLimit);
+  }
 
   return unstable_cache(
     async (): Promise<BackstageArticleCard[]> => {
       try {
-        if (safeSearch) {
-          const articles = await sanityClient
-            .withConfig({ useCdn: false, perspective: "published" })
-            .fetch<BackstageArticleCard[]>(backstageArticlesPaginatedQuery, {
-              offset: 0,
-              limit: 500,
-              searchPattern: "",
-            });
-
-          const filtered = sanitizeCards(articles).filter((article) =>
-            normalizeText([article.title, article.excerpt].filter(Boolean).join(" ")).includes(safeSearch),
-          );
-
-          return filtered.slice(safeOffset, safeOffset + safeLimit);
-        }
-
         const articles = await sanityClient
           .withConfig({ useCdn: false, perspective: "published" })
           .fetch<BackstageArticleCard[]>(backstageArticlesPaginatedQuery, {
             offset: safeOffset,
             limit: safeLimit,
-            searchPattern: safeSearchPattern,
+            searchPattern: "",
           });
 
         return sanitizeCards(articles);
@@ -113,7 +120,12 @@ export async function getBackstageArticlesPage({
         return [];
       }
     },
-    cacheKey,
+    [
+      "backstage-articles-page",
+      String(safeOffset),
+      String(safeLimit),
+      "__no-search__",
+    ],
     { tags: [CACHE_TAGS.articles], revalidate: 86_400 },
   )();
 }
@@ -128,14 +140,6 @@ function sanitizeCards(cards: BackstageArticleCard[] = []): BackstageArticleCard
           typeof article.slug === "string",
       ),
   );
-}
-
-function toSearchPattern(search: string): string {
-  const value = search.trim();
-  if (!value) return "";
-  const sanitized = value.replace(/[*?]/g, "").replace(/\s+/g, "*");
-  if (!sanitized) return "";
-  return `*${sanitized}*`;
 }
 
 function normalizeText(value: string): string {
