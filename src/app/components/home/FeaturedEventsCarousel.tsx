@@ -110,11 +110,11 @@ export function FeaturedEventsCarousel({ events }: FeaturedEventsCarouselProps) 
                     <h2 className="mt-2 text-3xl font-semibold leading-tight sm:text-4xl">
                       {event.title}
                     </h2>
-                    <p className="mt-3 text-base text-white/90">
-                      {event.contributors && event.contributors.length > 0
-                        ? event.contributors.join(", ")
-                        : "Medvirkende kommer"}
-                    </p>
+                    {event.contributors && event.contributors.length > 0 && (
+                      <p className="mt-3 text-base text-white/90">
+                        {event.contributors.join(", ")}
+                      </p>
+                    )}
                   </div>
                 </article>
               </Link>
@@ -141,11 +141,11 @@ export function FeaturedEventsCarousel({ events }: FeaturedEventsCarouselProps) 
                   <h2 className="mt-2 text-3xl font-semibold leading-tight sm:text-4xl">
                     {event.title}
                   </h2>
-                  <p className="mt-3 text-base text-white/90">
-                    {event.contributors && event.contributors.length > 0
-                      ? event.contributors.join(", ")
-                      : "Medvirkende kommer"}
-                  </p>
+                  {event.contributors && event.contributors.length > 0 && (
+                    <p className="mt-3 text-base text-white/90">
+                      {event.contributors.join(", ")}
+                    </p>
+                  )}
                 </div>
               </article>
             )}
