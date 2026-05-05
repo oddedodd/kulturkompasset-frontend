@@ -133,8 +133,8 @@ export default function BulletinsGrid({
       {bulletins.length === 0 && !isRefreshing ? (
         <section className="mx-auto mt-6 w-full max-w-6xl rounded-2xl bg-gray-100 px-6 py-16 text-center text-black/70">
           {debouncedSearch
-            ? "Ingen bulletiner matcher søket ditt."
-            : "Ingen bulletiner akkurat nå."}
+            ? "Ingen oppslag matcher søket ditt."
+            : "Ingen oppslag akkurat nå."}
         </section>
       ) : null}
 
@@ -161,7 +161,9 @@ export default function BulletinsGrid({
                 disabled={isLoadingMore}
                 className="rounded-full border border-black/20 px-5 py-2 text-sm font-medium text-black transition hover:border-black disabled:cursor-not-allowed disabled:opacity-60"
               >
-                {isLoadingMore ? "Laster flere bulletiner..." : "Last inn flere bulletiner"}
+                {isLoadingMore
+                  ? "Laster flere oppslag..."
+                  : "Last inn flere oppslag"}
               </button>
             </div>
           ) : null}
@@ -176,7 +178,7 @@ export default function BulletinsGrid({
 
       {isLoadingMore ? (
         <p className="mx-auto mt-2 w-full max-w-6xl text-center text-sm text-black/60">
-          Laster flere bulletiner...
+          Laster flere oppslag...
         </p>
       ) : null}
 
