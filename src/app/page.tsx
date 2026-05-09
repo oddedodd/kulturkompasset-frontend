@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
+import { SiteFooter } from "./components/footer/SiteFooter";
 import { FeaturedEventsCarousel } from "./components/home/FeaturedEventsCarousel";
 import { LatestBackstageArticlesGrid } from "./components/home/LatestBackstageArticlesGrid";
 import { MainPartnerHighlight } from "./components/home/MainPartnerHighlight";
 import { UpcomingEventsCarousel } from "./components/home/UpcomingEventsCarousel";
 import { Welcome } from "./components/home/Welcome";
+import { SponsorsCarousel } from "./components/sponsors/SponsorsCarousel";
 import { getLatestBackstageArticles } from "./lib/articles";
 import { getUpcomingEventsPage } from "./lib/events";
 import { getHomepageFeaturedEvents } from "./lib/featured-events";
@@ -12,6 +14,7 @@ import { getMainNavigation } from "./lib/navigation";
 import { getSanityImageUrl } from "./lib/sanity-image";
 import { buildSeoMetadata, sanitizeSeoDescription } from "./lib/seo";
 import { getSitePageSeo } from "./lib/site-seo";
+import { getAllSponsors } from "./lib/sponsors";
 
 export async function generateMetadata(): Promise<Metadata> {
   const seo = await getSitePageSeo("home");
@@ -35,22 +38,27 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function Home() {
-  const [featuredEvents, backstageArticles, homePartners, upcomingEvents, navItems] =
+  const [featuredEvents, backstageArticles, homePartners, upcomingEvents, navItems, sponsors] =
     await Promise.all([
       getHomepageFeaturedEvents(),
       getLatestBackstageArticles(),
       getHomePartners(),
       getUpcomingEventsPage({ offset: 0, limit: 12 }),
       getMainNavigation(),
+      getAllSponsors(),
     ]);
 
   return (
-    <main className="min-h-screen bg-[#fbfaf8]">
-      <Welcome navItems={navItems} />
-      <FeaturedEventsCarousel events={featuredEvents} />
-      <LatestBackstageArticlesGrid articles={backstageArticles} />
-      <MainPartnerHighlight partners={homePartners} />
-      <UpcomingEventsCarousel events={upcomingEvents} />
-    </main>
+    <>
+      <main className="min-h-screen bg-[#fbfaf8]">
+        <Welcome navItems={navItems} />
+        <FeaturedEventsCarousel events={featuredEvents} />
+        <LatestBackstageArticlesGrid articles={backstageArticles} />
+        <MainPartnerHighlight partners={homePartners} />
+        <UpcomingEventsCarousel events={upcomingEvents} />
+      </main>
+      <SponsorsCarousel sponsors={sponsors} />
+      <SiteFooter />
+    </>
   );
 }

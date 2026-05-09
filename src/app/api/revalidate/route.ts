@@ -10,6 +10,7 @@ const TOP_LEVEL_PATHS = [
   "/bulletin",
   "/om",
   "/news",
+  "/embed/na-carousel-v1",
 ] as const;
 
 const REVALIDATE_TAGS = Object.values(CACHE_TAGS);
@@ -74,6 +75,7 @@ function resolveTargetPathsAndTags(payload: RevalidatePayload): {
       tags.add(CACHE_TAGS.events);
       paths.add("/");
       paths.add("/kalender");
+      paths.add("/embed/na-carousel-v1");
       if (slug) paths.add(`/event/${slug}`);
       break;
     case "article":
@@ -89,6 +91,9 @@ function resolveTargetPathsAndTags(payload: RevalidatePayload): {
         if (slug) paths.add(`/backstage/${slug}`);
       }
       paths.add("/");
+      if (contentType === "backstage" || !contentType) {
+        paths.add("/embed/na-carousel-v1");
+      }
       break;
     case "bulletin":
       tags.add(CACHE_TAGS.bulletins);
@@ -100,6 +105,7 @@ function resolveTargetPathsAndTags(payload: RevalidatePayload): {
       paths.add("/");
       paths.add("/kalender");
       paths.add("/venues");
+      paths.add("/embed/na-carousel-v1");
       if (slug) paths.add(`/venues/${slug}`);
       break;
     case "partner":

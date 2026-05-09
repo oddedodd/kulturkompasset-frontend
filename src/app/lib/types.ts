@@ -132,6 +132,10 @@ export type BackstageArticleCard = {
   heroImageAlt?: string;
 };
 
+export type NewspaperEmbedCarouselItem =
+  | ({ type: "event" } & CalendarEvent)
+  | ({ type: "article" } & BackstageArticleCard);
+
 export type BackstageArticleDetail = {
   _id: string;
   title: string;
