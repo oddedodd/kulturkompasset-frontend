@@ -14,7 +14,7 @@ export default async function NewspaperCarouselEmbedPage() {
   const items = await getNewspaperEmbedCarouselItems();
 
   return (
-    <main className="min-h-screen bg-[#fff6d7]">
+    <main className="min-h-screen bg-[#fbfaf8]">
       <NewspaperEmbedCarousel items={items} />
     </main>
   );

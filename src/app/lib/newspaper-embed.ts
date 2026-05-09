@@ -13,6 +13,7 @@ import type {
 
 const EVENT_LIMIT = 8;
 const ARTICLE_LIMIT = 4;
+const EXCLUDED_ARTICLE_SLUGS = new Set(["mot-de-fine-folka"]);
 
 const getNewspaperEmbedCarouselItemsCached = unstable_cache(
   async (): Promise<NewspaperEmbedCarouselItem[]> => {
@@ -98,7 +99,8 @@ function sanitizeArticles(
         article &&
           typeof article._id === "string" &&
           typeof article.title === "string" &&
-          typeof article.slug === "string",
+          typeof article.slug === "string" &&
+          !EXCLUDED_ARTICLE_SLUGS.has(article.slug),
       ),
   );
 }
