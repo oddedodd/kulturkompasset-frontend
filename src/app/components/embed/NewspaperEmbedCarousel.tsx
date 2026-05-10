@@ -73,7 +73,7 @@ export function NewspaperEmbedCarousel({
           <button
             type="button"
             onClick={() => swiperRef.current?.slidePrev()}
-            className="absolute left-1 top-36 z-20 inline-flex h-11 w-11 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-[#cfcac3]/90 text-black shadow-sm backdrop-blur-sm transition hover:bg-[#bdb7af] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2 sm:left-2 sm:top-32"
+            className="absolute left-1 top-44 z-20 inline-flex h-11 w-11 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-[#cfcac3]/90 text-black shadow-sm backdrop-blur-sm transition hover:bg-[#bdb7af] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2 sm:left-2 sm:top-40"
             aria-label="Forrige"
           >
             <ChevronLeft className="h-5 w-5" aria-hidden="true" />
@@ -82,7 +82,7 @@ export function NewspaperEmbedCarousel({
           <button
             type="button"
             onClick={toggleAutoplay}
-            className="absolute right-1 top-14 z-20 inline-flex h-11 w-11 cursor-pointer items-center justify-center rounded-full bg-[#cfcac3]/90 text-black shadow-sm backdrop-blur-sm transition hover:bg-[#bdb7af] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2 sm:right-2 sm:top-12"
+            className="absolute right-1 top-20 z-20 inline-flex h-11 w-11 cursor-pointer items-center justify-center rounded-full bg-[#cfcac3]/90 text-black shadow-sm backdrop-blur-sm transition hover:bg-[#bdb7af] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2 sm:right-2 sm:top-16"
             aria-label={isPaused ? "Start karusell" : "Pause karusell"}
             aria-pressed={isPaused}
           >
@@ -96,7 +96,7 @@ export function NewspaperEmbedCarousel({
           <button
             type="button"
             onClick={() => swiperRef.current?.slideNext()}
-            className="absolute right-1 top-36 z-20 inline-flex h-11 w-11 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-[#cfcac3]/90 text-black shadow-sm backdrop-blur-sm transition hover:bg-[#bdb7af] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2 sm:right-2 sm:top-32"
+            className="absolute right-1 top-44 z-20 inline-flex h-11 w-11 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-[#cfcac3]/90 text-black shadow-sm backdrop-blur-sm transition hover:bg-[#bdb7af] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2 sm:right-2 sm:top-40"
             aria-label="Neste"
           >
             <ChevronRight className="h-5 w-5" aria-hidden="true" />
