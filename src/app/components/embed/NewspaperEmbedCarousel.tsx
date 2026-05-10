@@ -73,7 +73,7 @@ export function NewspaperEmbedCarousel({
           <button
             type="button"
             onClick={() => swiperRef.current?.slidePrev()}
-            className="absolute left-1 top-1/2 z-20 inline-flex h-11 w-11 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-[#cfcac3]/90 text-black shadow-sm backdrop-blur-sm transition hover:bg-[#bdb7af] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2 sm:left-2"
+            className="absolute left-1 top-36 z-20 inline-flex h-11 w-11 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-[#cfcac3]/90 text-black shadow-sm backdrop-blur-sm transition hover:bg-[#bdb7af] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2 sm:left-2 sm:top-32"
             aria-label="Forrige"
           >
             <ChevronLeft className="h-5 w-5" aria-hidden="true" />
@@ -82,7 +82,7 @@ export function NewspaperEmbedCarousel({
           <button
             type="button"
             onClick={toggleAutoplay}
-            className="absolute right-1 top-[calc(50%-5.75rem)] z-20 inline-flex h-11 w-11 cursor-pointer items-center justify-center rounded-full bg-[#cfcac3]/90 text-black shadow-sm backdrop-blur-sm transition hover:bg-[#bdb7af] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2 sm:right-2"
+            className="absolute right-1 top-14 z-20 inline-flex h-11 w-11 cursor-pointer items-center justify-center rounded-full bg-[#cfcac3]/90 text-black shadow-sm backdrop-blur-sm transition hover:bg-[#bdb7af] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2 sm:right-2 sm:top-12"
             aria-label={isPaused ? "Start karusell" : "Pause karusell"}
             aria-pressed={isPaused}
           >
@@ -96,7 +96,7 @@ export function NewspaperEmbedCarousel({
           <button
             type="button"
             onClick={() => swiperRef.current?.slideNext()}
-            className="absolute right-1 top-1/2 z-20 inline-flex h-11 w-11 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-[#cfcac3]/90 text-black shadow-sm backdrop-blur-sm transition hover:bg-[#bdb7af] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2 sm:right-2"
+            className="absolute right-1 top-36 z-20 inline-flex h-11 w-11 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-[#cfcac3]/90 text-black shadow-sm backdrop-blur-sm transition hover:bg-[#bdb7af] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2 sm:right-2 sm:top-32"
             aria-label="Neste"
           >
             <ChevronRight className="h-5 w-5" aria-hidden="true" />
@@ -176,28 +176,28 @@ function EventEmbedCard({
         href={href}
         target="_top"
         aria-label={`Åpne arrangement: ${item.title}`}
-        className="relative flex h-full min-h-[37rem] flex-col overflow-hidden rounded-[1.35rem] bg-[#e9e5e0] transition hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black sm:min-h-[34rem]"
+        className="relative flex h-full min-h-[24rem] flex-col overflow-hidden rounded-[1.1rem] bg-[#e9e5e0] transition hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black sm:min-h-[24.5rem] lg:min-h-[26rem]"
       >
-        <span className="absolute right-4 top-4 z-10 rounded-full bg-[#312821] px-3 py-1 text-xs font-medium text-white shadow-sm">
+        <span className="absolute right-3 top-3 z-10 rounded-full bg-[#312821] px-2.5 py-1 text-[0.68rem] font-medium text-white shadow-sm sm:right-4 sm:top-4 sm:text-xs">
           Arrangement
         </span>
 
         {heroImageUrl ? (
           <div
-            className="h-80 w-full shrink-0 bg-cover bg-center sm:h-56"
+            className="h-56 w-full shrink-0 bg-cover bg-center sm:h-48"
             style={{ backgroundImage: `url(${heroImageUrl})` }}
             aria-hidden="true"
           />
         ) : (
-          <div className="h-80 w-full shrink-0 bg-[#d8d0c5] sm:h-56" aria-hidden />
+          <div className="h-56 w-full shrink-0 bg-[#d8d0c5] sm:h-48" aria-hidden />
         )}
 
-        <div className="flex flex-1 flex-col p-6 text-[#312821]">
-          <h2 className="line-clamp-3 text-[2rem] font-semibold leading-tight tracking-tight">
+        <div className="flex flex-1 flex-col p-4 text-[#312821] sm:p-5">
+          <h2 className="line-clamp-3 text-[1.35rem] font-semibold leading-tight tracking-tight sm:text-[1.45rem] md:text-[1.55rem]">
             {item.title}
           </h2>
 
-          <div className="mt-5 space-y-3 text-base leading-snug text-black/65">
+          <div className="mt-4 space-y-2.5 text-sm leading-snug text-black/65 sm:text-[0.95rem]">
             <div className="flex items-center gap-2">
               <CalendarDays
                 className="h-4 w-4 shrink-0 opacity-55"
@@ -238,9 +238,9 @@ function ArticleEmbedCard({
         href={`/backstage/${item.slug}`}
         target="_top"
         aria-label={`Åpne Backstage-artikkel: ${item.title}`}
-        className="group relative block h-full min-h-[37rem] overflow-hidden rounded-[1.35rem] bg-[#28221d] transition hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black sm:min-h-[34rem]"
+        className="group relative block h-full min-h-[24rem] overflow-hidden rounded-[1.1rem] bg-[#28221d] transition hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black sm:min-h-[24.5rem] lg:min-h-[26rem]"
       >
-        <span className="absolute right-4 top-4 z-20 rounded-full bg-white/88 px-3 py-1 text-xs font-medium text-[#312821] shadow-sm backdrop-blur-sm">
+        <span className="absolute right-3 top-3 z-20 rounded-full bg-white/88 px-2.5 py-1 text-[0.68rem] font-medium text-[#312821] shadow-sm backdrop-blur-sm sm:right-4 sm:top-4 sm:text-xs">
           Historie
         </span>
 
@@ -256,11 +256,11 @@ function ArticleEmbedCard({
 
         <div className="absolute inset-0 bg-gradient-to-t from-black/88 via-black/38 to-black/8" />
 
-        <div className="absolute bottom-0 left-0 right-0 z-10 p-6 text-white">
-          <h2 className="line-clamp-2 text-[1.7rem] font-semibold leading-tight">
+        <div className="absolute bottom-0 left-0 right-0 z-10 p-4 text-white sm:p-5">
+          <h2 className="line-clamp-2 text-[1.35rem] font-semibold leading-tight sm:text-[1.45rem] md:text-[1.55rem]">
             {item.title}
           </h2>
-          <p className="mt-3 line-clamp-3 text-base leading-relaxed text-white/90">
+          <p className="mt-2 line-clamp-3 text-sm leading-relaxed text-white/90 sm:text-[0.95rem]">
             {item.excerpt?.trim() || "Les saken i Backstage."}
           </p>
         </div>
