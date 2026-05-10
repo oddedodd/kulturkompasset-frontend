@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { headers } from "next/headers";
 import CookieYes from "./components/analytics/CookieYes";
 import GoogleAnalytics from "./components/analytics/GoogleAnalytics";
 import "./globals.css";
@@ -27,20 +28,29 @@ export const metadata: Metadata = {
   },
 };
 
+function isNewspaperEmbedPath(pathname: string): boolean {
+  return (
+    pathname === "/embed/na-carousel-v1" ||
+    pathname.startsWith("/embed/na-carousel-v1/")
+  );
+}
+
 export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const requestHeaders = await headers();
+  const pathname = requestHeaders.get("x-kk-pathname") ?? "";
+  const shouldIncludeAnalytics = !isNewspaperEmbedPath(pathname);
+
   return (
     <html lang="en">
-      <head>
-        <CookieYes />
-      </head>
+      <head>{shouldIncludeAnalytics ? <CookieYes /> : null}</head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <GoogleAnalytics />
+        {shouldIncludeAnalytics ? <GoogleAnalytics /> : null}
         {children}
       </body>
     </html>
