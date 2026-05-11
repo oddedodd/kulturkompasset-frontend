@@ -18,10 +18,11 @@ import {
 import "swiper/css";
 import "swiper/css/pagination";
 import { getSanityImageUrl } from "@/app/lib/sanity-image";
-import type { NewspaperEmbedCarouselItem } from "@/app/lib/types";
+import type { HomePartner, NewspaperEmbedCarouselItem } from "@/app/lib/types";
 
 type NewspaperEmbedCarouselProps = {
   items: NewspaperEmbedCarouselItem[];
+  partner?: HomePartner | null;
 };
 
 const eventDateFormatter = new Intl.DateTimeFormat("nb-NO", {
@@ -33,6 +34,7 @@ const eventDateFormatter = new Intl.DateTimeFormat("nb-NO", {
 
 export function NewspaperEmbedCarousel({
   items,
+  partner,
 }: NewspaperEmbedCarouselProps) {
   const swiperRef = useRef<SwiperType | null>(null);
   const [isPaused, setIsPaused] = useState(false);
@@ -56,17 +58,45 @@ export function NewspaperEmbedCarousel({
   }
 
   return (
-    <section className="w-full bg-[#fbfaf8] px-2 py-3 text-[#312821] sm:px-4">
+    <section className="w-full bg-[#fbfaf8] px-2 py-2 text-[#312821] sm:px-4">
       <div className="mx-auto w-full max-w-7xl">
-        <div className="mb-5 flex justify-start pt-2">
+        <div className="mb-3 flex items-center justify-between gap-4 pt-1">
           <Image
             src="/logo01.svg"
             alt="KulturKompasset"
             width={1106}
             height={145}
-            className="h-7 w-auto sm:h-8"
+            className="h-6 w-auto min-w-0 sm:h-7"
             priority
           />
+          {partner?.logoUrl ? (
+            <div className="flex shrink-0 flex-col items-start justify-center gap-px text-left">
+              <span className="text-[9px] font-medium uppercase leading-none tracking-[0.12em] text-[#312821]/70 sm:text-[10px]">
+                Presenteres av:
+              </span>
+              {partner.website ? (
+                <Link
+                  href={partner.website}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center justify-end"
+                  aria-label={`Besøk ${partner.name}`}
+                >
+                  <img
+                    src={partner.logoUrl}
+                    alt={partner.name}
+                    className="max-h-5 w-auto max-w-[38vw] object-contain sm:max-h-6 sm:max-w-44"
+                  />
+                </Link>
+              ) : (
+                <img
+                  src={partner.logoUrl}
+                  alt={partner.name}
+                  className="max-h-5 w-auto max-w-[38vw] object-contain sm:max-h-6 sm:max-w-44"
+                />
+              )}
+            </div>
+          ) : null}
         </div>
 
         <div className="relative">
