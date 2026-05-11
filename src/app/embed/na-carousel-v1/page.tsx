@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { NewspaperEmbedCarousel } from "@/app/components/embed/NewspaperEmbedCarousel";
+import { getMainHomePartner } from "@/app/lib/home-partner";
 import { getNewspaperEmbedCarouselItems } from "@/app/lib/newspaper-embed";
 
 export const metadata: Metadata = {
@@ -11,11 +12,14 @@ export const metadata: Metadata = {
 };
 
 export default async function NewspaperCarouselEmbedPage() {
-  const items = await getNewspaperEmbedCarouselItems();
+  const [items, partner] = await Promise.all([
+    getNewspaperEmbedCarouselItems(),
+    getMainHomePartner(),
+  ]);
 
   return (
     <main className="min-h-screen bg-[#fbfaf8]">
-      <NewspaperEmbedCarousel items={items} />
+      <NewspaperEmbedCarousel items={items} partner={partner} />
     </main>
   );
 }
