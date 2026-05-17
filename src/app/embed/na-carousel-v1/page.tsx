@@ -4,7 +4,7 @@ import { getMainHomePartner } from "@/app/lib/home-partner";
 import { getNewspaperEmbedCarouselItems } from "@/app/lib/newspaper-embed";
 
 export const dynamic = "force-static";
-export const revalidate = 300;
+export const revalidate = 14_400;
 
 export const metadata: Metadata = {
   title: "Namdalsavisa karusell",
