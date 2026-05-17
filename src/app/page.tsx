@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import CookieYes from "./components/analytics/CookieYes";
+import GoogleAnalytics from "./components/analytics/GoogleAnalytics";
 import { SiteFooter } from "./components/footer/SiteFooter";
 import { FeaturedEventsCarousel } from "./components/home/FeaturedEventsCarousel";
 import { LatestBackstageArticlesGrid } from "./components/home/LatestBackstageArticlesGrid";
@@ -50,6 +52,8 @@ export default async function Home() {
 
   return (
     <>
+      <CookieYes />
+      <GoogleAnalytics />
       <main className="min-h-screen bg-[#fbfaf8]">
         <Welcome navItems={navItems} />
         <FeaturedEventsCarousel events={featuredEvents} />

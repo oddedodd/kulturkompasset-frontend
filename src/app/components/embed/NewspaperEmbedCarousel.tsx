@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import { useRef, useState } from "react";
 import type { CSSProperties } from "react";
 import type { Swiper as SwiperType } from "swiper";
@@ -61,13 +60,12 @@ export function NewspaperEmbedCarousel({
     <section className="w-full bg-[#fbfaf8] px-2 py-2 text-[#312821] sm:px-4">
       <div className="mx-auto w-full max-w-7xl">
         <div className="mb-3 flex items-center justify-between gap-4 pt-1">
-          <Image
+          <img
             src="/logo01.svg"
             alt="KulturKompasset"
             width={1106}
             height={145}
             className="h-6 w-auto min-w-0 sm:h-7"
-            priority
           />
           {partner?.logoUrl ? (
             <div className="flex shrink-0 flex-col items-start justify-center gap-px text-left">

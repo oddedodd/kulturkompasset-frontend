@@ -1,3 +1,5 @@
+import CookieYes from "@/app/components/analytics/CookieYes";
+import GoogleAnalytics from "@/app/components/analytics/GoogleAnalytics";
 import { SiteFooter } from "@/app/components/footer/SiteFooter";
 import { SiteHeader } from "@/app/components/header/SiteHeader";
 import { MainPartnerHighlight } from "@/app/components/home/MainPartnerHighlight";
@@ -19,6 +21,8 @@ export default async function SiteLayout({
 
   return (
     <>
+      <CookieYes />
+      <GoogleAnalytics />
       <SiteHeader navItems={navItems} />
       <MainPartnerHighlight partners={homePartners} compact />
       {children}
