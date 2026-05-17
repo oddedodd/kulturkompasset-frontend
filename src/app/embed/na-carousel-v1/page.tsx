@@ -3,6 +3,9 @@ import { NewspaperEmbedCarousel } from "@/app/components/embed/NewspaperEmbedCar
 import { getMainHomePartner } from "@/app/lib/home-partner";
 import { getNewspaperEmbedCarouselItems } from "@/app/lib/newspaper-embed";
 
+export const dynamic = "force-static";
+export const revalidate = 300;
+
 export const metadata: Metadata = {
   title: "Namdalsavisa karusell",
   robots: {

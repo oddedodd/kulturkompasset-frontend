@@ -13,6 +13,7 @@ import type {
 
 const EVENT_LIMIT = 8;
 const ARTICLE_LIMIT = 4;
+const EMBED_REVALIDATE_SECONDS = 300;
 const EXCLUDED_ARTICLE_SLUGS = new Set(["mot-de-fine-folka"]);
 
 const getNewspaperEmbedCarouselItemsCached = unstable_cache(
@@ -20,7 +21,7 @@ const getNewspaperEmbedCarouselItemsCached = unstable_cache(
     try {
       const [events, articles] = await Promise.all([
         sanityClient
-          .withConfig({ useCdn: false, perspective: "published" })
+          .withConfig({ useCdn: true, perspective: "published" })
           .fetch<CalendarEvent[]>(upcomingEventsPaginatedQuery, {
             offset: 0,
             end: EVENT_LIMIT,
@@ -29,7 +30,7 @@ const getNewspaperEmbedCarouselItemsCached = unstable_cache(
             searchPattern: "",
           }),
         sanityClient
-          .withConfig({ useCdn: false, perspective: "published" })
+          .withConfig({ useCdn: true, perspective: "published" })
           .fetch<BackstageArticleCard[]>(backstageArticlesPaginatedQuery, {
             offset: 0,
             limit: ARTICLE_LIMIT,
@@ -48,7 +49,7 @@ const getNewspaperEmbedCarouselItemsCached = unstable_cache(
   ["newspaper-embed-carousel-items"],
   {
     tags: [CACHE_TAGS.events, CACHE_TAGS.venues, CACHE_TAGS.articles],
-    revalidate: 86_400,
+    revalidate: EMBED_REVALIDATE_SECONDS,
   },
 );
 
