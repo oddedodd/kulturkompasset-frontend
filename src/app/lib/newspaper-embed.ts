@@ -13,7 +13,7 @@ import type {
 
 const EVENT_LIMIT = 8;
 const ARTICLE_LIMIT = 4;
-const EMBED_REVALIDATE_SECONDS = 300;
+const EMBED_REVALIDATE_SECONDS = 14_400;
 const EXCLUDED_ARTICLE_SLUGS = new Set(["mot-de-fine-folka"]);
 
 const getNewspaperEmbedCarouselItemsCached = unstable_cache(
