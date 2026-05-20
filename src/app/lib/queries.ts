@@ -82,11 +82,15 @@ export const partnersByIdsQuery = groq`
 export const allSponsorsQuery = groq`
   *[
     _type == "partner" &&
+    active == true &&
+    (tier == "partner" || tier == "Partner") &&
     defined(logo.asset)
   ] | order(name asc){
     _id,
     name,
     website,
+    tier,
+    active,
     logo,
     "logoUrl": logo.asset->url,
     "logoDimensions": logo.asset->metadata.dimensions
