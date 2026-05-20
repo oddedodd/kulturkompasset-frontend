@@ -4,6 +4,10 @@ import { allSponsorsQuery } from "./queries";
 import { sanityClient } from "./sanity.client";
 import type { HomePartner } from "./types";
 
+function isActivePartnerSponsor(partner: HomePartner): boolean {
+  return partner.active === true && partner.tier?.toLowerCase() === "partner";
+}
+
 const getSponsorsCached = unstable_cache(
   async (): Promise<HomePartner[]> => {
     try {
@@ -18,7 +22,8 @@ const getSponsorsCached = unstable_cache(
               typeof partner._id === "string" &&
               typeof partner.name === "string" &&
               typeof partner.logoUrl === "string" &&
-              partner.logoUrl.trim().length > 0,
+              partner.logoUrl.trim().length > 0 &&
+              isActivePartnerSponsor(partner),
           ),
       );
     } catch {

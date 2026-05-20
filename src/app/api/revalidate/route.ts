@@ -63,9 +63,11 @@ function resolveTargetPathsAndTags(payload: RevalidatePayload): {
   type: string;
   slug?: string;
 } {
-  const type = payload?._type?.trim() ?? "";
-  const slug = extractSlug(payload);
   const contentType = payload?.contentType?.trim() ?? "";
+  const type =
+    payload?._type?.trim() ||
+    (contentType === "partner" || contentType === "sponsor" ? contentType : "");
+  const slug = extractSlug(payload);
   const paths = new Set<string>();
   const layoutPaths = new Set<string>();
   const tags = new Set<string>();
@@ -109,10 +111,11 @@ function resolveTargetPathsAndTags(payload: RevalidatePayload): {
       if (slug) paths.add(`/venues/${slug}`);
       break;
     case "partner":
+    case "sponsor":
       tags.add(CACHE_TAGS.partners);
       tags.add(CACHE_TAGS.siteSettings);
       tags.add(CACHE_TAGS.events);
-      paths.add("/");
+      TOP_LEVEL_PATHS.forEach((path) => paths.add(path));
       layoutPaths.add("/");
       break;
     case "siteSettings":
