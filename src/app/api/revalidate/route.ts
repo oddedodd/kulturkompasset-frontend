@@ -85,15 +85,18 @@ function resolveTargetPathsAndTags(payload: RevalidatePayload): {
       if (contentType === "backstage") {
         paths.add("/backstage");
         if (slug) paths.add(`/backstage/${slug}`);
+        paths.add("/");
+        paths.add("/embed/na-carousel-v1");
+      } else if (contentType === "preview") {
+        if (slug) paths.add(`/preview/${slug}`);
       } else if (slug === "om-kulturkompasset") {
         paths.add("/om");
+        paths.add("/");
       } else {
         paths.add("/backstage");
         paths.add("/om");
         if (slug) paths.add(`/backstage/${slug}`);
-      }
-      paths.add("/");
-      if (contentType === "backstage" || !contentType) {
+        paths.add("/");
         paths.add("/embed/na-carousel-v1");
       }
       break;

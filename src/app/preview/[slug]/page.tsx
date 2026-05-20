@@ -1,22 +1,28 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { ArticlePage } from "@/app/components/article/ArticlePage";
-import { getBackstageArticleBySlug } from "@/app/lib/articles";
+import { getPreviewArticleBySlug } from "@/app/lib/articles";
 import { getSanityImageUrl } from "@/app/lib/sanity-image";
 import { buildSeoMetadata, sanitizeSeoDescription } from "@/app/lib/seo";
 
-type BackstageArticlePageProps = {
+type PreviewArticlePageProps = {
   params: Promise<{ slug: string }>;
 };
 
 export async function generateMetadata({
   params,
-}: BackstageArticlePageProps): Promise<Metadata> {
+}: PreviewArticlePageProps): Promise<Metadata> {
   const { slug } = await params;
-  const article = await getBackstageArticleBySlug(slug);
+  const article = await getPreviewArticleBySlug(slug);
 
   if (!article) {
-    return { title: "Artikkel ikke funnet" };
+    return {
+      title: "Preview ikke funnet",
+      robots: {
+        index: false,
+        follow: false,
+      },
+    };
   }
 
   const seoDescription = sanitizeSeoDescription(article.seo?.metaDescription);
@@ -38,19 +44,19 @@ export async function generateMetadata({
   return buildSeoMetadata({
     title,
     description,
-    path: `/backstage/${slug}`,
+    path: `/preview/${slug}`,
     imageUrl,
-    noIndex: article.seo?.noIndex,
+    noIndex: true,
   });
 }
 
-export default async function BackstageArticlePage({ params }: BackstageArticlePageProps) {
+export default async function PreviewArticlePage({ params }: PreviewArticlePageProps) {
   const { slug } = await params;
-  const article = await getBackstageArticleBySlug(slug);
+  const article = await getPreviewArticleBySlug(slug);
 
   if (!article) {
     notFound();
   }
 
-  return <ArticlePage article={article} backLink={{ href: "/backstage", label: "Tilbake til Historier" }} />;
+  return <ArticlePage article={article} />;
 }
