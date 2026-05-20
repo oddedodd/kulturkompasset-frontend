@@ -142,7 +142,7 @@ export const eventBySlugQuery = groq`
       name,
       website
     },
-    "relatedArticles": relatedArticles[]->{
+    "relatedArticles": relatedArticles[]->[contentType == "backstage"]{
       _id,
       title,
       "slug": slug.current
@@ -383,6 +383,93 @@ export const backstageArticleBySlugQuery = groq`
   *[
     _type == "article" &&
     contentType == "backstage" &&
+    slug.current == $slug
+  ][0]{
+    _id,
+    title,
+    subtitle,
+    "slug": slug.current,
+    excerpt,
+    publishedAt,
+    "authors": authors[]->{
+      _id,
+      name,
+      image,
+      "imageUrl": image.asset->url,
+      "imageAlt": image.alt
+    },
+    heroImage,
+    "heroImageUrl": heroImage.asset->url,
+    "heroImageAlt": heroImage.alt,
+    "seo": seo{
+      metaTitle,
+      metaDescription,
+      noIndex,
+      ogImage,
+      "ogImageUrl": ogImage.asset->url
+    },
+    "pageBuilder": pageBuilder[]{
+      ...,
+      _type == "heroBlock" => {
+        ...,
+        backgroundImage,
+        "backgroundImageUrl": backgroundImage.asset->url,
+        "backgroundImageAlt": backgroundImage.alt
+      },
+      _type == "imageBlock" => {
+        ...,
+        image,
+        "imageUrl": image.asset->url,
+        "imageAlt": image.alt
+      },
+      _type == "imageGalleryBlock" => {
+        ...,
+        "images": images[]{
+          ...,
+          "image": {
+            "asset": asset,
+            "crop": crop,
+            "hotspot": hotspot,
+            "alt": alt
+          },
+          "url": asset->url,
+          alt,
+          caption
+        }
+      },
+      _type == "imageTextLeftBlock" => {
+        ...,
+        image,
+        "imageUrl": image.asset->url,
+        "imageAlt": image.alt
+      },
+      _type == "imageTextRightBlock" => {
+        ...,
+        image,
+        "imageUrl": image.asset->url,
+        "imageAlt": image.alt
+      },
+      _type == "blockquoteBlock" => {
+        ...,
+        backgroundImage,
+        "backgroundImageUrl": backgroundImage.asset->url,
+        "backgroundImageAlt": backgroundImage.alt
+      },
+      _type == "scrollytellBlock" => {
+        ...,
+        backgroundImage,
+        "backgroundImageUrl": backgroundImage.asset->url,
+        "backgroundImageAlt": backgroundImage.alt
+      }
+    },
+    body
+  }
+`;
+
+export const previewArticleBySlugQuery = groq`
+  *[
+    _type == "article" &&
+    contentType == "preview" &&
     slug.current == $slug
   ][0]{
     _id,

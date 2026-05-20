@@ -4,6 +4,7 @@ import {
   backstageArticleBySlugQuery,
   backstageArticlesPaginatedQuery,
   latestBackstageArticlesQuery,
+  previewArticleBySlugQuery,
 } from "./queries";
 import { sanityClient } from "./sanity.client";
 import type { BackstageArticleCard, BackstageArticleDetail } from "./types";
@@ -27,6 +28,26 @@ const getBackstageArticleBySlugCached = unstable_cache(
     }
   },
   ["backstage-article-by-slug"],
+  { tags: [CACHE_TAGS.articles], revalidate: 86_400 },
+);
+
+const getPreviewArticleBySlugCached = unstable_cache(
+  async (slug: string): Promise<BackstageArticleDetail | null> => {
+    try {
+      const article = await sanityClient
+        .withConfig({ useCdn: false, perspective: "published" })
+        .fetch<BackstageArticleDetail | null>(previewArticleBySlugQuery, { slug });
+
+      if (!article || typeof article._id !== "string" || typeof article.title !== "string") {
+        return null;
+      }
+
+      return article;
+    } catch {
+      return null;
+    }
+  },
+  ["preview-article-by-slug"],
   { tags: [CACHE_TAGS.articles], revalidate: 86_400 },
 );
 
@@ -58,6 +79,10 @@ export async function getLatestBackstageArticles(): Promise<BackstageArticleCard
 
 export async function getBackstageArticleBySlug(slug: string): Promise<BackstageArticleDetail | null> {
   return getBackstageArticleBySlugCached(slug);
+}
+
+export async function getPreviewArticleBySlug(slug: string): Promise<BackstageArticleDetail | null> {
+  return getPreviewArticleBySlugCached(slug);
 }
 
 type GetBackstageArticlesPageInput = {
