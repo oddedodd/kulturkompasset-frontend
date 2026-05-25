@@ -27,6 +27,17 @@ const initialFormData: BulletinFormData = {
   bilde: null,
 };
 
+function RequiredMark() {
+  return (
+    <>
+      <span className="ml-1 text-red-700" aria-hidden="true">
+        *
+      </span>
+      <span className="sr-only"> obligatorisk</span>
+    </>
+  );
+}
+
 export default function SubmitBulletinForm() {
   const router = useRouter();
   const [formData, setFormData] = useState<BulletinFormData>(initialFormData);
@@ -38,6 +49,10 @@ export default function SubmitBulletinForm() {
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setSubmitError(null);
+
+    if (contactFaxNumber.trim().length > 0) {
+      return;
+    }
 
     if (!formData.bilde) {
       setSubmitError("Du må velge en bildefil.");
@@ -105,6 +120,10 @@ export default function SubmitBulletinForm() {
         <p className="mt-3 text-black/70">
           Fyll ut skjemaet under for å sende inn et arrangement.
         </p>
+        <p className="mt-5 text-sm font-medium text-black/65">
+          Felt merket med <span className="text-red-700">*</span> er
+          obligatoriske.
+        </p>
 
         <form onSubmit={handleSubmit} className="mt-8 space-y-5">
           <div className="absolute -left-[9999px] top-auto h-px w-px overflow-hidden">
@@ -121,7 +140,10 @@ export default function SubmitBulletinForm() {
           </div>
 
           <label className="block">
-            <span className="mb-2 block text-sm font-medium">Navn</span>
+            <span className="mb-2 block text-sm font-medium">
+              Navn
+              <RequiredMark />
+            </span>
             <input
               required
               type="text"
@@ -137,7 +159,10 @@ export default function SubmitBulletinForm() {
           </label>
 
           <label className="block">
-            <span className="mb-2 block text-sm font-medium">Dato</span>
+            <span className="mb-2 block text-sm font-medium">
+              Dato
+              <RequiredMark />
+            </span>
             <input
               required
               type="date"
@@ -155,6 +180,7 @@ export default function SubmitBulletinForm() {
           <label className="block">
             <span className="mb-2 block text-sm font-medium">
               Tid (00, 15, 30, 45)
+              <RequiredMark />
             </span>
             <input
               required
@@ -175,7 +201,10 @@ export default function SubmitBulletinForm() {
           </label>
 
           <label className="block">
-            <span className="mb-2 block text-sm font-medium">Arrangør</span>
+            <span className="mb-2 block text-sm font-medium">
+              Arrangør
+              <RequiredMark />
+            </span>
             <input
               required
               type="text"
@@ -191,7 +220,10 @@ export default function SubmitBulletinForm() {
           </label>
 
           <label className="block">
-            <span className="mb-2 block text-sm font-medium">Sted</span>
+            <span className="mb-2 block text-sm font-medium">
+              Sted
+              <RequiredMark />
+            </span>
             <input
               required
               type="text"
@@ -208,7 +240,10 @@ export default function SubmitBulletinForm() {
           </label>
 
           <label className="block">
-            <span className="mb-2 block text-sm font-medium">Kontaktperson</span>
+            <span className="mb-2 block text-sm font-medium">
+              Kontaktperson
+              <RequiredMark />
+            </span>
             <input
               required
               type="text"
@@ -224,7 +259,10 @@ export default function SubmitBulletinForm() {
           </label>
 
           <label className="block">
-            <span className="mb-2 block text-sm font-medium">Beskrivelse</span>
+            <span className="mb-2 block text-sm font-medium">
+              Beskrivelse
+              <RequiredMark />
+            </span>
             <textarea
               required
               value={formData.beskrivelse}
@@ -240,7 +278,10 @@ export default function SubmitBulletinForm() {
           </label>
 
           <label className="block">
-            <span className="mb-2 block text-sm font-medium">Pris</span>
+            <span className="mb-2 block text-sm font-medium">
+              Pris
+              <RequiredMark />
+            </span>
             <input
               required
               type="text"
@@ -257,7 +298,10 @@ export default function SubmitBulletinForm() {
           </label>
 
           <label className="block">
-            <span className="mb-2 block text-sm font-medium">Bilde</span>
+            <span className="mb-2 block text-sm font-medium">
+              Bilde
+              <RequiredMark />
+            </span>
             <input
               required
               type="file"

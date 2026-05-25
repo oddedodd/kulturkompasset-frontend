@@ -31,6 +31,17 @@ const initialFormData: TipsFormData = {
   submitterEmail: "",
 };
 
+function RequiredMark() {
+  return (
+    <>
+      <span className="ml-1 text-red-700" aria-hidden="true">
+        *
+      </span>
+      <span className="sr-only"> obligatorisk</span>
+    </>
+  );
+}
+
 export default function SubmitTipsForm() {
   const router = useRouter();
   const [formData, setFormData] = useState<TipsFormData>(initialFormData);
@@ -42,6 +53,10 @@ export default function SubmitTipsForm() {
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setSubmitError(null);
+
+    if (contactFaxNumber.trim().length > 0) {
+      return;
+    }
 
     if (!formData.image) {
       setSubmitError("Du må velge en bildefil.");
@@ -107,6 +122,10 @@ export default function SubmitTipsForm() {
           Innsendte tips gjennomgås før eventuell videre behandling. Noen tips
           kan bli løftet fram som redaksjonelle saker eller arrangementer.
         </p>
+        <p className="mt-5 text-sm font-medium text-black/65">
+          Felt merket med <span className="text-red-700">*</span> er
+          obligatoriske.
+        </p>
 
         <form onSubmit={handleSubmit} className="mt-8 space-y-5">
           <div className="absolute -left-[9999px] top-auto h-px w-px overflow-hidden">
@@ -123,7 +142,10 @@ export default function SubmitTipsForm() {
           </div>
 
           <label className="block">
-            <span className="mb-2 block text-sm font-medium">Navn på tips</span>
+            <span className="mb-2 block text-sm font-medium">
+              Navn på tips
+              <RequiredMark />
+            </span>
             <input
               required
               type="text"
@@ -207,7 +229,10 @@ export default function SubmitTipsForm() {
           </label>
 
           <label className="block">
-            <span className="mb-2 block text-sm font-medium">Beskrivelse</span>
+            <span className="mb-2 block text-sm font-medium">
+              Beskrivelse
+              <RequiredMark />
+            </span>
             <textarea
               required
               value={formData.description}
@@ -223,7 +248,10 @@ export default function SubmitTipsForm() {
           </label>
 
           <label className="block">
-            <span className="mb-2 block text-sm font-medium">Bilde</span>
+            <span className="mb-2 block text-sm font-medium">
+              Bilde
+              <RequiredMark />
+            </span>
             <input
               required
               type="file"
@@ -240,7 +268,10 @@ export default function SubmitTipsForm() {
 
           <div className="grid gap-5 sm:grid-cols-2">
             <label className="block">
-              <span className="mb-2 block text-sm font-medium">Navn på innsender</span>
+              <span className="mb-2 block text-sm font-medium">
+                Navn på innsender
+                <RequiredMark />
+              </span>
               <input
                 required
                 type="text"
@@ -256,7 +287,10 @@ export default function SubmitTipsForm() {
             </label>
 
             <label className="block">
-              <span className="mb-2 block text-sm font-medium">Telefonnummer</span>
+              <span className="mb-2 block text-sm font-medium">
+                Telefonnummer
+                <RequiredMark />
+              </span>
               <input
                 required
                 type="tel"
@@ -273,7 +307,10 @@ export default function SubmitTipsForm() {
           </div>
 
           <label className="block">
-            <span className="mb-2 block text-sm font-medium">E-post</span>
+            <span className="mb-2 block text-sm font-medium">
+              E-post
+              <RequiredMark />
+            </span>
             <input
               required
               type="email"

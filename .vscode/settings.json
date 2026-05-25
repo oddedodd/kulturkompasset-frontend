@@ -1,0 +1,22 @@
+{
+    "window.title": "Kulturkompasset Frontend — ${rootName} - NEXTJS",
+    "window.nativeTabs": false,
+    "window.titleBarStyle": "custom",
+  
+    "workbench.colorCustomizations": {
+      "titleBar.activeBackground": "#581c87",
+      "titleBar.activeForeground": "#ffffff",
+  
+      "titleBar.inactiveBackground": "#581c87cc",
+      "titleBar.inactiveForeground": "#dddddd",
+  
+      "activityBar.background": "#4c1d95",
+      "activityBar.foreground": "#ffffff",
+  
+      "statusBar.background": "#4c1d95",
+      "statusBar.foreground": "#ffffff",
+  
+      "statusBar.debuggingBackground": "#6b21a8",
+      "statusBar.debuggingForeground": "#ffffff"
+    }
+  }
