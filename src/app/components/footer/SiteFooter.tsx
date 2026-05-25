@@ -9,6 +9,14 @@ export function SiteFooter() {
           <strong>NA Kreativ</strong>, markedsavdelingen i Namdalsavisa.
           Innholdet er <u>uavhengig</u> av avisens redaksjonelle innhold.
         </p>
+        <div className="mt-6 flex justify-center">
+          <Link
+            href="/personvern"
+            className="text-sm font-medium text-white/65 underline underline-offset-4 transition hover:text-white"
+          >
+            Personvernerklæring
+          </Link>
+        </div>
       </div>
     </footer>
   );

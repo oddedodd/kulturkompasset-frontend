@@ -20,7 +20,7 @@ export default function PersonvernPage() {
         <h1 className="mt-6 text-4xl font-semibold tracking-tight sm:text-5xl">
           Personvernerklæring for Kulturkompasset
         </h1>
-        <p className="mt-3 text-black/70">Sist oppdatert: [05.05.2026]</p>
+        <p className="mt-3 text-black/70">Sist oppdatert: 25.05.2026</p>
 
         <section className="mt-10 space-y-10 text-black/85">
           <section>
@@ -50,7 +50,19 @@ export default function PersonvernPage() {
             </h2>
             <p className="mt-3 leading-relaxed">
               Vi samler i utgangspunktet ikke inn personopplysninger direkte fra
-              deg som bruker.
+              deg som vanlig besøkende på nettsiden.
+            </p>
+            <p className="mt-3 leading-relaxed">
+              Dersom du sender inn et arrangement til oppslagstavla, behandler vi
+              informasjonen du oppgir i skjemaet, for eksempel navn på
+              arrangement, dato, tidspunkt, arrangør, sted, kontaktperson,
+              beskrivelse, pris og bilde.
+            </p>
+            <p className="mt-3 leading-relaxed">
+              Dersom du sender inn et tips til Kulturkompasset, behandler vi
+              informasjonen du oppgir i skjemaet, for eksempel navn på tips,
+              dato, sted, pris, eventuell lenke til billettsalg, beskrivelse,
+              bilde, navn på innsender, telefonnummer og e-postadresse.
             </p>
             <p className="mt-3 leading-relaxed">
               Det eneste verktøyet vi benytter for innsikt i bruk av nettsiden
@@ -84,17 +96,29 @@ export default function PersonvernPage() {
               Kulturkompasset bruker informasjonskapsler via Google Analytics
               for å analysere trafikk og bruksmønster.
             </p>
+            <p className="mt-3 leading-relaxed">
+              Vi bruker også en nødvendig informasjonskapsel,
+              <code className="rounded bg-black/5 px-1 py-0.5 text-sm">
+                kk_contribution_prompt_seen
+              </code>
+              , for å huske at du har lukket eller klikket på påminnelsen om å
+              sende inn tips eller arrangement. Den lagres i 7 dager og brukes
+              kun til å unngå at påminnelsen vises for ofte.
+            </p>
             <p className="mt-3 leading-relaxed">Dette kan inkludere:</p>
             <ul className="mt-3 list-disc space-y-1 pl-6">
               <li>Cookies som skiller mellom brukere</li>
               <li>Cookies som måler trafikk og brukeratferd</li>
+              <li>
+                Cookies som husker en enkel visningspreferanse på nettsiden
+              </li>
             </ul>
             <p className="mt-3 leading-relaxed">Du kan selv:</p>
             <ul className="mt-3 list-disc space-y-1 pl-6">
               <li>Blokkere eller slette cookies i nettleseren din</li>
               <li>
-                Trekke tilbake samtykke via cookie-banner (dersom du har
-                implementert det - og det bør du)
+                Trekke tilbake samtykke via cookie-banner for cookies som krever
+                samtykke
               </li>
             </ul>
           </section>
@@ -111,6 +135,8 @@ export default function PersonvernPage() {
                 Se hvilke arrangementer og sider som er mest relevante for
                 brukerne
               </li>
+              <li>Behandle innsendte arrangementer og tips</li>
+              <li>Kontakte innsender ved behov for oppfølging</li>
             </ul>
             <p className="mt-3 leading-relaxed">Vi bruker ikke data til:</p>
             <ul className="mt-3 list-disc space-y-1 pl-6">
@@ -135,12 +161,23 @@ export default function PersonvernPage() {
             <p className="mt-3 leading-relaxed">
               Vi deler ellers ikke personopplysninger med tredjeparter.
             </p>
+            <p className="mt-3 leading-relaxed">
+              Innsendte tips og arrangementer lagres i vårt publiseringssystem
+              Sanity. Opplysninger fra skjemaene brukes til å vurdere,
+              administrere og eventuelt publisere innsendt innhold.
+            </p>
           </section>
 
           <section>
             <h2 className="text-2xl font-semibold">6. Lagring av data</h2>
             <p className="mt-3 leading-relaxed">
               Data lagres så lenge det er nødvendig for analyseformål.
+            </p>
+            <p className="mt-3 leading-relaxed">
+              Innsendte tips og arrangementer lagres så lenge det er nødvendig
+              for å behandle, følge opp og dokumentere innsendingen, eller til
+              du ber om sletting der vi ikke har et saklig behov for videre
+              lagring.
             </p>
             <p className="mt-3 leading-relaxed">
               Du kan selv begrense dette gjennom:
@@ -160,8 +197,8 @@ export default function PersonvernPage() {
               <li>Å protestere mot behandling</li>
             </ul>
             <p className="mt-3 leading-relaxed">
-              Siden vi ikke samler direkte identifiserbare personopplysninger,
-              vil disse rettighetene i praksis være begrenset.
+              For opplysninger du selv har sendt inn via skjema, kan du kontakte
+              oss dersom du ønsker innsyn, retting eller sletting.
             </p>
           </section>
 
