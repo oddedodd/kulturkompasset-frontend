@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { ArticlePage } from "@/app/components/article/ArticlePage";
+import { ContributionPromptPopup } from "@/app/components/contribution/ContributionPromptPopup";
 import { getBackstageArticleBySlug } from "@/app/lib/articles";
 import { getSanityImageUrl } from "@/app/lib/sanity-image";
 import { buildSeoMetadata, sanitizeSeoDescription } from "@/app/lib/seo";
@@ -52,5 +53,10 @@ export default async function BackstageArticlePage({ params }: BackstageArticleP
     notFound();
   }
 
-  return <ArticlePage article={article} backLink={{ href: "/backstage", label: "Tilbake til Historier" }} />;
+  return (
+    <>
+      <ArticlePage article={article} backLink={{ href: "/backstage", label: "Tilbake til Historier" }} />
+      <ContributionPromptPopup />
+    </>
+  );
 }

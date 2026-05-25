@@ -4,6 +4,7 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import { PortableText } from "@portabletext/react";
 import { CalendarDays, Clock3, Globe, MapPin, Tag, Ticket, Users } from "lucide-react";
+import { ContributionPromptPopup } from "@/app/components/contribution/ContributionPromptPopup";
 import { getEventBySlug } from "@/app/lib/events";
 import { getSanityImageUrl } from "@/app/lib/sanity-image";
 import { buildSeoMetadata, sanitizeSeoDescription } from "@/app/lib/seo";
@@ -418,6 +419,7 @@ export default async function EventPage({ params }: EventPageProps) {
           </aside>
         </div>
       </article>
+      <ContributionPromptPopup />
     </main>
   );
 }

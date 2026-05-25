@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import CookieYes from "./components/analytics/CookieYes";
 import GoogleAnalytics from "./components/analytics/GoogleAnalytics";
 import { SiteFooter } from "./components/footer/SiteFooter";
+import { ContributionPrompt } from "./components/home/ContributionPrompt";
 import { FeaturedEventsCarousel } from "./components/home/FeaturedEventsCarousel";
 import { LatestBackstageArticlesGrid } from "./components/home/LatestBackstageArticlesGrid";
 import { MainPartnerHighlight } from "./components/home/MainPartnerHighlight";
@@ -59,6 +60,7 @@ export default async function Home() {
         <FeaturedEventsCarousel events={featuredEvents} />
         <LatestBackstageArticlesGrid articles={backstageArticles} />
         <MainPartnerHighlight partners={homePartners} />
+        <ContributionPrompt />
         <UpcomingEventsCarousel events={upcomingEvents} />
       </main>
       <SponsorsCarousel sponsors={sponsors} />
