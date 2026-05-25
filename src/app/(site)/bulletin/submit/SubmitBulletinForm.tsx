@@ -94,15 +94,16 @@ export default function SubmitBulletinForm() {
           Send inn arrangement
         </h1>
         <p className="mt-4 text-black/70">
-          Her kan du sende inn offentlige arrangementer som du vil dele med
+          Her kan du sende inn offentlige arrangementer som du ønsker å dele med
           lokalmiljøet.
         </p>
         <p className="mt-2 text-black/70">
-          Innsendinger her er brukerbidrag og holdes adskilt fra redaksjonelle
-          arrangementer.
+          Alle innsendte arrangementer gjennomgås før publisering. Noen
+          arrangementer kan bli løftet fram som redaksjonelle saker eller
+          arrangementer av NA Kreativ, mens øvrige publiseres på oppslagstavla.
         </p>
         <p className="mt-3 text-black/70">
-          Fyll ut skjemaet under for å foreslå et offentlig arrangement.
+          Fyll ut skjemaet under for å sende inn et arrangement.
         </p>
 
         <form onSubmit={handleSubmit} className="mt-8 space-y-5">
@@ -274,9 +275,9 @@ export default function SubmitBulletinForm() {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="rounded-lg bg-black px-5 py-3 text-sm font-medium text-white transition hover:bg-black/80"
+            className="cursor-pointer rounded-lg bg-black px-5 py-3 text-sm font-medium text-white transition hover:bg-black/80 disabled:cursor-not-allowed disabled:opacity-70"
           >
-            {isSubmitting ? "Sender inn..." : "Send inn"}
+            Send inn
           </button>
         </form>
 
@@ -286,6 +287,29 @@ export default function SubmitBulletinForm() {
           </div>
         ) : null}
       </section>
+
+      {isSubmitting ? (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-[#f7f4ee]/85 px-6 backdrop-blur-sm"
+          role="status"
+          aria-live="polite"
+          aria-label="Arrangementet sendes inn"
+        >
+          <div className="flex max-w-sm flex-col items-center rounded-2xl bg-[#f8f7f4] px-8 py-7 text-center shadow-xl">
+            <span
+              className="h-10 w-10 animate-spin rounded-full border-4 border-black/15 border-t-black"
+              aria-hidden="true"
+            />
+            <p className="mt-5 text-lg font-semibold text-[#1f1d1a]">
+              Arrangementet sendes inn
+            </p>
+            <p className="mt-2 text-sm leading-relaxed text-black/65">
+              Dette kan ta et øyeblikk. Ikke lukk siden mens vi laster opp
+              innholdet.
+            </p>
+          </div>
+        </div>
+      ) : null}
     </main>
   );
 }

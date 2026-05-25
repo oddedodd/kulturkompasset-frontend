@@ -1,11 +1,14 @@
 import Image from "next/image";
+import Link from "next/link";
 
 type ContributionPromptProps = {
   eyebrow?: string;
   title?: string;
   description?: string;
   primaryLabel?: string;
+  primaryHref?: string;
   secondaryLabel?: string;
+  secondaryHref?: string;
 };
 
 export function ContributionPrompt({
@@ -13,7 +16,9 @@ export function ContributionPrompt({
   title = "Kulturkompasset peker dit du tipser oss om.",
   description = "Et arrangement vi ikke har fanget opp? En historie som fortjener å bli fortalt? Send det inn — vi leser alt som kommer.",
   primaryLabel = "Send inn tips",
+  primaryHref = "/tips/submit",
   secondaryLabel = "Meld inn arrangement",
+  secondaryHref = "/bulletin/submit",
 }: ContributionPromptProps) {
   const titleParts = title.split(" du ");
 
@@ -53,21 +58,21 @@ export function ContributionPrompt({
         </p>
 
         <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-          <button
-            type="button"
-            className="inline-flex h-11 min-w-36 cursor-default items-center justify-center rounded-full bg-[#171717] px-6 text-sm font-semibold text-white"
+          <Link
+            href={primaryHref}
+            className="inline-flex h-11 min-w-36 items-center justify-center rounded-full bg-[#171717] px-6 text-sm font-semibold text-white transition-all duration-200 ease-out hover:-translate-y-0.5 hover:bg-black/80 focus-visible:-translate-y-0.5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-black/30"
           >
             {primaryLabel}
             <span className="ml-2" aria-hidden="true">
               →
             </span>
-          </button>
-          <button
-            type="button"
-            className="inline-flex h-11 min-w-44 cursor-default items-center justify-center rounded-full border border-black/65 px-6 text-sm font-semibold text-[#1f1d1a]"
+          </Link>
+          <Link
+            href={secondaryHref}
+            className="inline-flex h-11 min-w-44 items-center justify-center rounded-full border border-black/65 px-6 text-sm font-semibold text-[#1f1d1a] transition-all duration-200 ease-out hover:-translate-y-0.5 hover:border-[#171717] hover:bg-[#171717] hover:text-white focus-visible:-translate-y-0.5 focus-visible:border-[#171717] focus-visible:bg-[#171717] focus-visible:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-black/30"
           >
             {secondaryLabel}
-          </button>
+          </Link>
         </div>
       </div>
     </section>
