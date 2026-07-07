@@ -2,6 +2,7 @@ import { createHash } from "crypto";
 import { NextRequest, NextResponse } from "next/server";
 import { getBulletinsPage } from "@/app/lib/bulletins";
 import { sanityWriteClient } from "@/app/lib/sanity.write-client";
+import { sendSubmissionNotification } from "@/app/lib/submission-notifications";
 
 const MAX_IMAGE_BYTES = 5 * 1024 * 1024;
 const MIN_SUBMIT_MS = 4000;
@@ -329,6 +330,24 @@ export async function POST(request: NextRequest) {
           _ref: uploadedAsset._id,
         },
         alt: `Bilde for ${name}`,
+      },
+    });
+
+    await sendSubmissionNotification({
+      kind: "bulletin",
+      documentId: created._id,
+      title: name,
+      date: dateTimeIso,
+      organizer,
+      place,
+      contact,
+      price,
+      description,
+      image: {
+        fileName: image.name,
+        contentType: image.type,
+        size: image.size,
+        url: uploadedAsset.url,
       },
     });
 
