@@ -1,6 +1,7 @@
 import { createHash } from "crypto";
 import { NextRequest, NextResponse } from "next/server";
 import { sanityWriteClient } from "@/app/lib/sanity.write-client";
+import { sendSubmissionNotification } from "@/app/lib/submission-notifications";
 
 const MAX_IMAGE_BYTES = 5 * 1024 * 1024;
 const MIN_SUBMIT_MS = 4000;
@@ -348,6 +349,26 @@ export async function POST(request: NextRequest) {
       submitterPhone,
       submitterEmail,
       submittedAt: new Date().toISOString(),
+    });
+
+    await sendSubmissionNotification({
+      kind: "tips",
+      documentId: created._id,
+      title: name,
+      date: dateTimeIso,
+      place,
+      price,
+      ticketUrl,
+      description,
+      submitterName,
+      submitterPhone,
+      submitterEmail,
+      image: {
+        fileName: image.name,
+        contentType: image.type,
+        size: image.size,
+        url: uploadedAsset.url,
+      },
     });
 
     return NextResponse.json(
