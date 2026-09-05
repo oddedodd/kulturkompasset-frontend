@@ -466,6 +466,116 @@ export const backstageArticleBySlugQuery = groq`
   }
 `;
 
+export const aktueltArticlesPaginatedQuery = groq`
+  *[
+    _type == "article" &&
+    contentType == "aktuelt" &&
+    defined(slug.current) &&
+    (
+      $searchPattern == "" ||
+      title match $searchPattern ||
+      excerpt match $searchPattern ||
+      count(authors[]->name[@ match $searchPattern]) > 0
+    )
+  ] | order(coalesce(publishedAt, _createdAt) desc, _id asc)[$offset...($offset + $limit)]{
+    _id,
+    title,
+    "slug": slug.current,
+    excerpt,
+    publishedAt,
+    heroImage,
+    "heroImageUrl": heroImage.asset->url,
+    "heroImageAlt": heroImage.alt
+  }
+`;
+
+export const aktueltArticleBySlugQuery = groq`
+  *[
+    _type == "article" &&
+    contentType == "aktuelt" &&
+    slug.current == $slug
+  ][0]{
+    _id,
+    title,
+    subtitle,
+    "slug": slug.current,
+    excerpt,
+    publishedAt,
+    "authors": authors[]->{
+      _id,
+      name,
+      image,
+      "imageUrl": image.asset->url,
+      "imageAlt": image.alt
+    },
+    heroImage,
+    "heroImageUrl": heroImage.asset->url,
+    "heroImageAlt": heroImage.alt,
+    "seo": seo{
+      metaTitle,
+      metaDescription,
+      noIndex,
+      ogImage,
+      "ogImageUrl": ogImage.asset->url
+    },
+    "pageBuilder": pageBuilder[]{
+      ...,
+      _type == "heroBlock" => {
+        ...,
+        backgroundImage,
+        "backgroundImageUrl": backgroundImage.asset->url,
+        "backgroundImageAlt": backgroundImage.alt
+      },
+      _type == "imageBlock" => {
+        ...,
+        image,
+        "imageUrl": image.asset->url,
+        "imageAlt": image.alt
+      },
+      _type == "imageGalleryBlock" => {
+        ...,
+        "images": images[]{
+          ...,
+          "image": {
+            "asset": asset,
+            "crop": crop,
+            "hotspot": hotspot,
+            "alt": alt
+          },
+          "url": asset->url,
+          alt,
+          caption
+        }
+      },
+      _type == "imageTextLeftBlock" => {
+        ...,
+        image,
+        "imageUrl": image.asset->url,
+        "imageAlt": image.alt
+      },
+      _type == "imageTextRightBlock" => {
+        ...,
+        image,
+        "imageUrl": image.asset->url,
+        "imageAlt": image.alt
+      },
+      _type == "blockquoteBlock" => {
+        ...,
+        backgroundImage,
+        "backgroundImageUrl": backgroundImage.asset->url,
+        "backgroundImageAlt": backgroundImage.alt
+      },
+      _type == "scrollytellBlock" => {
+        ...,
+        backgroundImage,
+        "backgroundImageUrl": backgroundImage.asset->url,
+        "backgroundImageAlt": backgroundImage.alt
+      }
+    },
+    body
+  }
+`;
+
 export const previewArticleBySlugQuery = groq`
   *[
     _type == "article" &&

@@ -6,6 +6,7 @@ const TOP_LEVEL_PATHS = [
   "/",
   "/kalender",
   "/backstage",
+  "/aktuelt",
   "/venues",
   "/bulletin",
   "/om",
@@ -87,6 +88,10 @@ function resolveTargetPathsAndTags(payload: RevalidatePayload): {
         if (slug) paths.add(`/backstage/${slug}`);
         paths.add("/");
         paths.add("/embed/na-carousel-v1");
+      } else if (contentType === "aktuelt") {
+        paths.add("/aktuelt");
+        if (slug) paths.add(`/aktuelt/${slug}`);
+        paths.add("/");
       } else if (contentType === "preview") {
         if (slug) paths.add(`/preview/${slug}`);
       } else if (slug === "om-kulturkompasset") {
@@ -94,8 +99,10 @@ function resolveTargetPathsAndTags(payload: RevalidatePayload): {
         paths.add("/");
       } else {
         paths.add("/backstage");
+        paths.add("/aktuelt");
         paths.add("/om");
         if (slug) paths.add(`/backstage/${slug}`);
+        if (slug) paths.add(`/aktuelt/${slug}`);
         paths.add("/");
         paths.add("/embed/na-carousel-v1");
       }
