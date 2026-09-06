@@ -29,6 +29,7 @@ export function ArticlePage({ article, backLink }: ArticlePageProps) {
       height: 900,
     }) || article.heroImageUrl;
   const remainingBlocks = startsWithHeroBlock ? (article.pageBuilder?.slice(1) ?? []) : (article.pageBuilder ?? []);
+  const authors = (article.authors ?? []).filter((author) => Boolean(author?.name));
 
   return (
     <main className="min-h-screen bg-[#f8f7f4] px-6 py-16 sm:py-24">
@@ -67,11 +68,37 @@ export function ArticlePage({ article, backLink }: ArticlePageProps) {
           <PageBuilderRenderer blocks={article.pageBuilder.slice(0, 1)} useHeroAsPageTitle />
         ) : null}
 
-        {article.publishedAt ? (
-          <section className="mx-auto mt-8 flex max-w-3xl flex-col items-center text-center">
-            <p className="text-sm font-medium uppercase tracking-wide text-black/55">
-              {dateFormatter.format(new Date(article.publishedAt))}
-            </p>
+        {authors.length > 0 || article.publishedAt ? (
+          <section className="mx-auto mt-8 flex max-w-3xl flex-wrap items-center justify-center gap-x-4 gap-y-3 text-center">
+            {authors.map((author, index) => {
+              const avatarUrl =
+                getSanityImageUrl(author.image, { width: 96, height: 96 }) || author.imageUrl;
+
+              return (
+                <div key={author._id || `${author.name}-${index}`} className="flex items-center gap-3">
+                  {avatarUrl ? (
+                    <Image
+                      src={avatarUrl}
+                      alt={author.imageAlt || author.name || "Bidragsyter"}
+                      width={96}
+                      height={96}
+                      className="h-10 w-10 shrink-0 rounded-full object-cover"
+                    />
+                  ) : null}
+                  <span className="text-base font-semibold tracking-tight text-black/80">{author.name}</span>
+                </div>
+              );
+            })}
+
+            {authors.length > 0 && article.publishedAt ? (
+              <span aria-hidden className="h-5 w-px bg-black/15" />
+            ) : null}
+
+            {article.publishedAt ? (
+              <p className="text-xs font-medium uppercase tracking-[0.12em] text-black/50">
+                {dateFormatter.format(new Date(article.publishedAt))}
+              </p>
+            ) : null}
           </section>
         ) : null}
 

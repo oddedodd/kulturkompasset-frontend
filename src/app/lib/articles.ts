@@ -1,6 +1,8 @@
 import { unstable_cache } from "next/cache";
 import { CACHE_TAGS } from "./cache-tags";
 import {
+  aktueltArticleBySlugQuery,
+  aktueltArticlesPaginatedQuery,
   backstageArticleBySlugQuery,
   backstageArticlesPaginatedQuery,
   latestBackstageArticlesQuery,
@@ -147,6 +149,94 @@ export async function getBackstageArticlesPage({
     },
     [
       "backstage-articles-page",
+      String(safeOffset),
+      String(safeLimit),
+      "__no-search__",
+    ],
+    { tags: [CACHE_TAGS.articles], revalidate: 86_400 },
+  )();
+}
+
+const getAktueltArticleBySlugCached = unstable_cache(
+  async (slug: string): Promise<BackstageArticleDetail | null> => {
+    try {
+      const article = await sanityClient
+        .withConfig({ useCdn: false, perspective: "published" })
+        .fetch<BackstageArticleDetail | null>(aktueltArticleBySlugQuery, { slug });
+
+      if (!article || typeof article._id !== "string" || typeof article.title !== "string") {
+        return null;
+      }
+
+      return article;
+    } catch {
+      return null;
+    }
+  },
+  ["aktuelt-article-by-slug"],
+  { tags: [CACHE_TAGS.articles], revalidate: 86_400 },
+);
+
+export async function getAktueltArticleBySlug(slug: string): Promise<BackstageArticleDetail | null> {
+  return getAktueltArticleBySlugCached(slug);
+}
+
+const getAktueltArticlesSearchCorpusCached = unstable_cache(
+  async (): Promise<BackstageArticleCard[]> => {
+    try {
+      const articles = await sanityClient
+        .withConfig({ useCdn: false, perspective: "published" })
+        .fetch<BackstageArticleCard[]>(aktueltArticlesPaginatedQuery, {
+          offset: 0,
+          limit: SEARCH_CORPUS_LIMIT,
+          searchPattern: "",
+        });
+
+      return sanitizeCards(articles);
+    } catch {
+      return [];
+    }
+  },
+  ["aktuelt-articles-search-corpus"],
+  { tags: [CACHE_TAGS.articles], revalidate: 86_400 },
+);
+
+export async function getAktueltArticlesPage({
+  offset = 0,
+  limit = 9,
+  search = "",
+}: GetBackstageArticlesPageInput = {}): Promise<BackstageArticleCard[]> {
+  const safeOffset = Number.isFinite(offset) ? Math.max(0, Math.floor(offset)) : 0;
+  const safeLimit = Number.isFinite(limit) ? Math.max(1, Math.min(24, Math.floor(limit))) : 9;
+  const safeSearch = normalizeText(search);
+
+  if (safeSearch) {
+    const articles = await getAktueltArticlesSearchCorpusCached();
+    return articles
+      .filter((article) =>
+        normalizeText([article.title, article.excerpt].filter(Boolean).join(" ")).includes(safeSearch),
+      )
+      .slice(safeOffset, safeOffset + safeLimit);
+  }
+
+  return unstable_cache(
+    async (): Promise<BackstageArticleCard[]> => {
+      try {
+        const articles = await sanityClient
+          .withConfig({ useCdn: false, perspective: "published" })
+          .fetch<BackstageArticleCard[]>(aktueltArticlesPaginatedQuery, {
+            offset: safeOffset,
+            limit: safeLimit,
+            searchPattern: "",
+          });
+
+        return sanitizeCards(articles);
+      } catch {
+        return [];
+      }
+    },
+    [
+      "aktuelt-articles-page",
       String(safeOffset),
       String(safeLimit),
       "__no-search__",

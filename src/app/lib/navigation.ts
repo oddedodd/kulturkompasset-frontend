@@ -17,6 +17,7 @@ type SiteSettings = {
 const sectionToPath: Record<string, string> = {
   kalender: "/kalender",
   backstage: "/backstage",
+  aktuelt: "/aktuelt",
   "barn-og-familie": "/barn-og-familie",
   spillelister: "/spillelister",
   "om-kulturkompasset": "/om",
