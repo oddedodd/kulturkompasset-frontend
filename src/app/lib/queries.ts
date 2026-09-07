@@ -1,6 +1,115 @@
 // src/lib/queries.ts
 import { groq } from 'next-sanity';
 
+/**
+ * Portable Text i sidebyggeren kan inneholde arrangement: `eventCard` som eget
+ * kort mellom avsnittene, og `eventLink` som lenkemarkering i teksten. Begge
+ * peker på et event-dokument som må hentes opp her for at frontend skal kunne
+ * vise bilde, tittel, ingress og lenke.
+ */
+const richTextProjection = groq`
+  "content": content[]{
+    ...,
+    _type == "eventCard" => {
+      ...,
+      "event": event->{
+        _id,
+        title,
+        "slug": slug.current,
+        summary,
+        startsAt,
+        endsAt,
+        status,
+        heroImage,
+        "heroImageUrl": heroImage.asset->url,
+        "heroImageAlt": heroImage.alt,
+        "venue": venue->{name, city}
+      }
+    },
+    _type == "block" => {
+      ...,
+      markDefs[]{
+        ...,
+        _type == "eventLink" => {
+          ...,
+          "event": event->{
+            _id,
+            title,
+            "slug": slug.current,
+            startsAt,
+            endsAt,
+            status
+          }
+        }
+      }
+    }
+  }
+`;
+
+const articlePageBuilderProjection = groq`
+  "pageBuilder": pageBuilder[]{
+    ...,
+    _type == "heroBlock" => {
+      ...,
+      backgroundImage,
+      "backgroundImageUrl": backgroundImage.asset->url,
+      "backgroundImageAlt": backgroundImage.alt
+    },
+    _type == "imageBlock" => {
+      ...,
+      image,
+      "imageUrl": image.asset->url,
+      "imageAlt": image.alt
+    },
+    _type == "imageGalleryBlock" => {
+      ...,
+      "images": images[]{
+        ...,
+        "image": {
+          "asset": asset,
+          "crop": crop,
+          "hotspot": hotspot,
+          "alt": alt
+        },
+        "url": asset->url,
+        alt,
+        caption
+      }
+    },
+    _type == "textBlock" => {
+      ...,
+      ${richTextProjection}
+    },
+    _type == "imageTextLeftBlock" => {
+      ...,
+      image,
+      "imageUrl": image.asset->url,
+      "imageAlt": image.alt,
+      ${richTextProjection}
+    },
+    _type == "imageTextRightBlock" => {
+      ...,
+      image,
+      "imageUrl": image.asset->url,
+      "imageAlt": image.alt,
+      ${richTextProjection}
+    },
+    _type == "blockquoteBlock" => {
+      ...,
+      backgroundImage,
+      "backgroundImageUrl": backgroundImage.asset->url,
+      "backgroundImageAlt": backgroundImage.alt
+    },
+    _type == "scrollytellBlock" => {
+      ...,
+      backgroundImage,
+      "backgroundImageUrl": backgroundImage.asset->url,
+      "backgroundImageAlt": backgroundImage.alt
+    }
+  }
+`;
+
+
 export const latestNewsQuery = groq`
   *[_type == "news"] | order(date desc) [0..4]{
     _id,
@@ -408,60 +517,7 @@ export const backstageArticleBySlugQuery = groq`
       ogImage,
       "ogImageUrl": ogImage.asset->url
     },
-    "pageBuilder": pageBuilder[]{
-      ...,
-      _type == "heroBlock" => {
-        ...,
-        backgroundImage,
-        "backgroundImageUrl": backgroundImage.asset->url,
-        "backgroundImageAlt": backgroundImage.alt
-      },
-      _type == "imageBlock" => {
-        ...,
-        image,
-        "imageUrl": image.asset->url,
-        "imageAlt": image.alt
-      },
-      _type == "imageGalleryBlock" => {
-        ...,
-        "images": images[]{
-          ...,
-          "image": {
-            "asset": asset,
-            "crop": crop,
-            "hotspot": hotspot,
-            "alt": alt
-          },
-          "url": asset->url,
-          alt,
-          caption
-        }
-      },
-      _type == "imageTextLeftBlock" => {
-        ...,
-        image,
-        "imageUrl": image.asset->url,
-        "imageAlt": image.alt
-      },
-      _type == "imageTextRightBlock" => {
-        ...,
-        image,
-        "imageUrl": image.asset->url,
-        "imageAlt": image.alt
-      },
-      _type == "blockquoteBlock" => {
-        ...,
-        backgroundImage,
-        "backgroundImageUrl": backgroundImage.asset->url,
-        "backgroundImageAlt": backgroundImage.alt
-      },
-      _type == "scrollytellBlock" => {
-        ...,
-        backgroundImage,
-        "backgroundImageUrl": backgroundImage.asset->url,
-        "backgroundImageAlt": backgroundImage.alt
-      }
-    },
+    ${articlePageBuilderProjection},
     body
   }
 `;
@@ -518,60 +574,7 @@ export const aktueltArticleBySlugQuery = groq`
       ogImage,
       "ogImageUrl": ogImage.asset->url
     },
-    "pageBuilder": pageBuilder[]{
-      ...,
-      _type == "heroBlock" => {
-        ...,
-        backgroundImage,
-        "backgroundImageUrl": backgroundImage.asset->url,
-        "backgroundImageAlt": backgroundImage.alt
-      },
-      _type == "imageBlock" => {
-        ...,
-        image,
-        "imageUrl": image.asset->url,
-        "imageAlt": image.alt
-      },
-      _type == "imageGalleryBlock" => {
-        ...,
-        "images": images[]{
-          ...,
-          "image": {
-            "asset": asset,
-            "crop": crop,
-            "hotspot": hotspot,
-            "alt": alt
-          },
-          "url": asset->url,
-          alt,
-          caption
-        }
-      },
-      _type == "imageTextLeftBlock" => {
-        ...,
-        image,
-        "imageUrl": image.asset->url,
-        "imageAlt": image.alt
-      },
-      _type == "imageTextRightBlock" => {
-        ...,
-        image,
-        "imageUrl": image.asset->url,
-        "imageAlt": image.alt
-      },
-      _type == "blockquoteBlock" => {
-        ...,
-        backgroundImage,
-        "backgroundImageUrl": backgroundImage.asset->url,
-        "backgroundImageAlt": backgroundImage.alt
-      },
-      _type == "scrollytellBlock" => {
-        ...,
-        backgroundImage,
-        "backgroundImageUrl": backgroundImage.asset->url,
-        "backgroundImageAlt": backgroundImage.alt
-      }
-    },
+    ${articlePageBuilderProjection},
     body
   }
 `;
@@ -605,60 +608,7 @@ export const previewArticleBySlugQuery = groq`
       ogImage,
       "ogImageUrl": ogImage.asset->url
     },
-    "pageBuilder": pageBuilder[]{
-      ...,
-      _type == "heroBlock" => {
-        ...,
-        backgroundImage,
-        "backgroundImageUrl": backgroundImage.asset->url,
-        "backgroundImageAlt": backgroundImage.alt
-      },
-      _type == "imageBlock" => {
-        ...,
-        image,
-        "imageUrl": image.asset->url,
-        "imageAlt": image.alt
-      },
-      _type == "imageGalleryBlock" => {
-        ...,
-        "images": images[]{
-          ...,
-          "image": {
-            "asset": asset,
-            "crop": crop,
-            "hotspot": hotspot,
-            "alt": alt
-          },
-          "url": asset->url,
-          alt,
-          caption
-        }
-      },
-      _type == "imageTextLeftBlock" => {
-        ...,
-        image,
-        "imageUrl": image.asset->url,
-        "imageAlt": image.alt
-      },
-      _type == "imageTextRightBlock" => {
-        ...,
-        image,
-        "imageUrl": image.asset->url,
-        "imageAlt": image.alt
-      },
-      _type == "blockquoteBlock" => {
-        ...,
-        backgroundImage,
-        "backgroundImageUrl": backgroundImage.asset->url,
-        "backgroundImageAlt": backgroundImage.alt
-      },
-      _type == "scrollytellBlock" => {
-        ...,
-        backgroundImage,
-        "backgroundImageUrl": backgroundImage.asset->url,
-        "backgroundImageAlt": backgroundImage.alt
-      }
-    },
+    ${articlePageBuilderProjection},
     body
   }
 `;
@@ -684,60 +634,7 @@ export const articleBySlugQuery = groq`
     heroImage,
     "heroImageUrl": heroImage.asset->url,
     "heroImageAlt": heroImage.alt,
-    "pageBuilder": pageBuilder[]{
-      ...,
-      _type == "heroBlock" => {
-        ...,
-        backgroundImage,
-        "backgroundImageUrl": backgroundImage.asset->url,
-        "backgroundImageAlt": backgroundImage.alt
-      },
-      _type == "imageBlock" => {
-        ...,
-        image,
-        "imageUrl": image.asset->url,
-        "imageAlt": image.alt
-      },
-      _type == "imageGalleryBlock" => {
-        ...,
-        "images": images[]{
-          ...,
-          "image": {
-            "asset": asset,
-            "crop": crop,
-            "hotspot": hotspot,
-            "alt": alt
-          },
-          "url": asset->url,
-          alt,
-          caption
-        }
-      },
-      _type == "imageTextLeftBlock" => {
-        ...,
-        image,
-        "imageUrl": image.asset->url,
-        "imageAlt": image.alt
-      },
-      _type == "imageTextRightBlock" => {
-        ...,
-        image,
-        "imageUrl": image.asset->url,
-        "imageAlt": image.alt
-      },
-      _type == "blockquoteBlock" => {
-        ...,
-        backgroundImage,
-        "backgroundImageUrl": backgroundImage.asset->url,
-        "backgroundImageAlt": backgroundImage.alt
-      },
-      _type == "scrollytellBlock" => {
-        ...,
-        backgroundImage,
-        "backgroundImageUrl": backgroundImage.asset->url,
-        "backgroundImageAlt": backgroundImage.alt
-      }
-    },
+    ${articlePageBuilderProjection},
     body
   }
 `;

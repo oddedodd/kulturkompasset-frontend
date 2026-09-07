@@ -166,6 +166,46 @@ export type SeoFields = {
   ogImageUrl?: string;
 };
 
+/**
+ * Arrangement referert fra Portable Text. `eventCard` viser kortet med bilde,
+ * tittel og ingress; `eventLink` er en lenkemarkering inne i brødteksten.
+ */
+export type PortableTextEventRef = {
+  _id?: string;
+  title?: string;
+  slug?: string;
+  summary?: string;
+  startsAt?: string;
+  endsAt?: string;
+  status?: "upcoming" | "completed" | "cancelled";
+  heroImage?: SanityImageSource;
+  heroImageUrl?: string;
+  heroImageAlt?: string;
+  venue?: {
+    name?: string;
+    city?: string;
+  };
+};
+
+/** Portable Text i sidebyggeren: vanlige tekstblokker blandet med arrangementskort. */
+export type ArticleRichTextContent = Array<PortableTextBlock | PortableTextEventCard>;
+
+export type PortableTextEventCard = {
+  _key?: string;
+  _type: "eventCard";
+  /** Overstyrer arrangementets tittel når redaktøren har fylt den ut. */
+  title?: string;
+  /** Overstyrer arrangementets ingress når redaktøren har fylt den ut. */
+  summary?: string;
+  event?: PortableTextEventRef;
+};
+
+export type PortableTextEventLink = {
+  _key?: string;
+  _type: "eventLink";
+  event?: PortableTextEventRef;
+};
+
 type PageBuilderBlockBase = {
   _key?: string;
   _type: string;
@@ -187,7 +227,7 @@ export type ArticlePageBuilderBlock =
     })
   | (PageBuilderBlockBase & {
       _type: "textBlock";
-      content?: PortableTextBlock[];
+      content?: ArticleRichTextContent;
     })
   | (PageBuilderBlockBase & {
       _type: "imageBlock";
@@ -212,7 +252,7 @@ export type ArticlePageBuilderBlock =
       image?: SanityImageSource;
       imageUrl?: string;
       imageAlt?: string;
-      content?: PortableTextBlock[];
+      content?: ArticleRichTextContent;
     })
   | (PageBuilderBlockBase & {
       _type: "videoBlock";
