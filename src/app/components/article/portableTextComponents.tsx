@@ -1,5 +1,7 @@
 import Link from "next/link";
 import type { PortableTextComponents } from "@portabletext/react";
+import type { PortableTextEventCard, PortableTextEventLink } from "@/app/lib/types";
+import { ArticleEventCard, getEventNotice } from "./ArticleEventCard";
 
 export const articlePortableTextComponents: PortableTextComponents = {
   block: {
@@ -19,6 +21,10 @@ export const articlePortableTextComponents: PortableTextComponents = {
         {children}
       </blockquote>
     ),
+  },
+  types: {
+    // Arrangement satt inn mellom avsnittene i sidebyggeren.
+    eventCard: ({ value }) => <ArticleEventCard card={value as PortableTextEventCard} />,
   },
   marks: {
     strong: ({ children }) => <strong className="font-semibold text-black">{children}</strong>,
@@ -43,6 +49,25 @@ export const articlePortableTextComponents: PortableTextComponents = {
       return (
         <Link
           href={href}
+          className="underline decoration-black/40 underline-offset-4 hover:decoration-black"
+        >
+          {children}
+        </Link>
+      );
+    },
+    // Lenkemarkering som peker på et arrangement i kalenderen.
+    eventLink: ({ children, value }) => {
+      const event = (value as PortableTextEventLink | undefined)?.event;
+      if (!event?.slug) {
+        return <>{children}</>;
+      }
+
+      const notice = getEventNotice(event);
+
+      return (
+        <Link
+          href={`/event/${event.slug}`}
+          title={notice ? `${event.title ?? "Arrangement"} • ${notice}` : event.title}
           className="underline decoration-black/40 underline-offset-4 hover:decoration-black"
         >
           {children}
