@@ -206,6 +206,18 @@ export type PortableTextEventLink = {
   event?: PortableTextEventRef;
 };
 
+/**
+ * Dokumentet en `linkBlock` peker på. `title` er slått sammen fra `title` og
+ * `name` i GROQ, siden dokumenttypene ikke er enige om hva feltet heter.
+ */
+export type LinkBlockTarget = {
+  _id?: string;
+  _type?: string;
+  contentType?: string;
+  slug?: string;
+  title?: string;
+};
+
 type PageBuilderBlockBase = {
   _key?: string;
   _type: string;
@@ -274,6 +286,18 @@ export type ArticlePageBuilderBlock =
       backgroundImage?: SanityImageSource;
       backgroundImageUrl?: string;
       backgroundImageAlt?: string;
+    })
+  | (PageBuilderBlockBase & {
+      _type: "linkBlock";
+      linkType?: "internal" | "section" | "external";
+      internalTarget?: LinkBlockTarget;
+      section?: string;
+      externalUrl?: string;
+      title?: string;
+      summary?: string;
+      image?: SanityImageSource;
+      imageUrl?: string;
+      imageAlt?: string;
     })
   | (PageBuilderBlockBase & {
       _type: "dividerBlock";
