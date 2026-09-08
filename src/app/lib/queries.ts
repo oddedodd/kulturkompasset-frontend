@@ -76,6 +76,20 @@ const articlePageBuilderProjection = groq`
         caption
       }
     },
+    _type == "linkBlock" => {
+      ...,
+      image,
+      "imageUrl": image.asset->url,
+      "imageAlt": image.alt,
+      "internalTarget": internalTarget->{
+        _id,
+        _type,
+        contentType,
+        "slug": slug.current,
+        // venue, contributor og bulletin kaller tittelfeltet sitt "name".
+        "title": coalesce(title, name)
+      }
+    },
     _type == "textBlock" => {
       ...,
       ${richTextProjection}

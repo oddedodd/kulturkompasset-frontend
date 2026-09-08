@@ -23,6 +23,40 @@ const sectionToPath: Record<string, string> = {
   "om-kulturkompasset": "/om",
 };
 
+/**
+ * Kanonisk navn per seksjon, brukt når menyen ikke har et punkt for den.
+ * Speiler NAVIGATION_SECTIONS i studioet, som er lista redaktøren velger fra.
+ */
+const sectionTitles: Record<string, string> = {
+  kalender: "Kalender",
+  backstage: "Backstage",
+  aktuelt: "Aktuelt",
+  venues: "Venues",
+  "barn-og-familie": "Barn og familie",
+  spillelister: "Spillelister",
+  bulletin: "Oppslagstavla",
+  "om-kulturkompasset": "Om Kulturkompasset",
+};
+
+/**
+ * Stien en seksjon peker på. Menyen og `linkBlock` i sidebyggeren bruker den
+ * samme oppslagstabellen, så de to kan ikke komme i utakt.
+ *
+ * Studioets seksjonsliste og `sectionToPath` er ikke identiske — studioet
+ * tilbyr blant annet `venues` og `bulletin`, som ikke står her. De faller
+ * tilbake til `/<seksjon>`, som treffer riktig rute for begge.
+ */
+export function sectionHref(section: string): string {
+  return sectionToPath[section] ?? `/${section}`;
+}
+
+/** Teksten en seksjon vises med: menyens egen tekst, ellers kanonisk navn. */
+export async function getSectionLabel(section: string): Promise<string | undefined> {
+  const settings = await getMainNavigationSettingsCached();
+  const match = settings?.mainNavigation?.find((item) => item?.section === section);
+  return match?.label || sectionTitles[section];
+}
+
 const homeNavItem: NavItem = {
   label: "Hjem",
   href: "/",
@@ -45,7 +79,7 @@ function mapToNavItem(item: SanityMenuItem): NavItem | null {
 
   return {
     label: item.label,
-    href: sectionToPath[item.section] ?? `/${item.section}`,
+    href: sectionHref(item.section),
     featured: item.section === "backstage",
   };
 }

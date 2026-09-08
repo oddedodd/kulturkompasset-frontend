@@ -3,6 +3,7 @@ import Image from "next/image";
 import { getSanityImageUrl } from "@/app/lib/sanity-image";
 import type { ArticlePageBuilderBlock } from "@/app/lib/types";
 import { ArticleImageGallery } from "./ArticleImageGallery";
+import { ArticleLinkCard } from "./ArticleLinkCard";
 import { articlePortableTextComponents } from "./portableTextComponents";
 import { ScrollytellBlock } from "./ScrollytellBlock";
 
@@ -251,6 +252,9 @@ export function PageBuilderRenderer({ blocks, useHeroAsPageTitle = false }: Page
               />
             );
           }
+
+          case "linkBlock":
+            return <ArticleLinkCard key={key} block={block} />;
 
           case "dividerBlock":
             return <hr key={key} className="border-black/15" />;
