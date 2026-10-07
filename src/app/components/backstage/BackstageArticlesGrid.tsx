@@ -68,11 +68,12 @@ export default function BackstageArticlesGrid({
         if (requestId !== requestIdRef.current) return;
 
         if (append) {
-          let appendedIds: string[] = [];
+          // Updater functions run lazily during render, so the ids must be derived
+          // here and not inside setArticles. Re-adding an existing id is a no-op.
+          const appendedIds = nextArticles.map((article) => article._id);
           setArticles((current) => {
             const currentIds = new Set(current.map((article) => article._id));
             const uniqueArticles = nextArticles.filter((article) => !currentIds.has(article._id));
-            appendedIds = uniqueArticles.map((article) => article._id);
             return [...current, ...uniqueArticles];
           });
           if (appendedIds.length > 0) {
@@ -227,9 +228,17 @@ export default function BackstageArticlesGrid({
       ) : null}
 
       {isLoadingMore ? (
-        <p className="mx-auto mt-2 w-full max-w-6xl text-center text-sm text-black/60">
+        <div
+          role="status"
+          aria-live="polite"
+          className="mx-auto mt-4 flex w-full max-w-6xl items-center justify-center gap-3 py-4 text-sm text-black/60"
+        >
+          <span
+            className="h-5 w-5 animate-spin rounded-full border-2 border-black/15 border-t-black/70"
+            aria-hidden
+          />
           Laster flere artikler...
-        </p>
+        </div>
       ) : null}
 
       {error ? (
